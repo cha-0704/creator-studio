@@ -109,27 +109,24 @@
 <body class="theme-studio">
   <div class="app-container">
     
-    <!-- Top Global Header -->
-    <header class="app-header" style="padding: 0.5rem 0.75rem 0.3rem;">
-      <div class="logo-area">
-        <div class="logo-badge" style="font-size:0.75rem; padding:2px 5px;">6/45</div>
-        <div class="logo-text-group">
-          <h1 class="logo-title" style="font-size:1.05rem;">LOTTO <span style="color:#ffd700;">LIVE</span></h1>
-        </div>
+    <!-- Top Global Header (No Text Cutoff) -->
+    <header class="app-header" style="padding: 0.6rem 0.8rem; display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: nowrap;">
+      <div class="logo-area" style="display: flex; align-items: center; gap: 6px; flex-shrink: 0;">
+        <span class="logo-badge" style="background: #ffd700; color: #000; font-weight: 900; font-size: 0.72rem; padding: 2px 6px; border-radius: 4px;">6/45</span>
+        <h1 class="logo-title" style="font-size: 1.05rem; font-weight: 900; color: #fff; margin: 0; white-space: nowrap; letter-spacing: -0.5px;">LOTTO <span style="color: #ffd700;">LIVE</span></h1>
       </div>
-      <div class="header-actions" style="gap:5px;">
-        <button id="btn-open-saju" class="btn-vault-pill" style="background:linear-gradient(135deg,rgba(255,215,0,0.2),rgba(255,140,0,0.2)); border-color:#ffd700; padding:4px 8px; font-size:0.72rem;" title="사주·별자리 번호">
-          <i data-lucide="sparkles" style="color:#ffd700; width:13px; height:13px;"></i>
-          <span>사주</span>
-          <span class="premium-badge" style="padding:1px 5px; font-size:0.65rem;">$1</span>
+      <div class="header-actions" style="display: flex; align-items: center; gap: 6px; flex-shrink: 0;">
+        <button id="btn-open-saju" class="btn-vault-pill" style="background: linear-gradient(135deg, rgba(255,215,0,0.18), rgba(255,140,0,0.18)); border: 1px solid #ffd700; padding: 5px 8px; border-radius: 20px; font-size: 0.75rem; font-weight: 800; color: #ffd700; display: flex; align-items: center; gap: 4px; cursor: pointer; white-space: nowrap;" title="사주·별자리 맞춤">
+          <i data-lucide="sparkles" style="width: 13px; height: 13px;"></i>
+          <span>사주 $1</span>
         </button>
-        <button id="btn-sound-toggle" class="icon-btn" style="width:30px; height:30px;" title="사운드 ON/OFF">
-          <i data-lucide="volume-2" style="width:14px; height:14px;"></i>
+        <button id="btn-sound-toggle" class="icon-btn" style="width: 32px; height: 32px; border-radius: 50%; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); color: #fff; display: flex; align-items: center; justify-content: center; cursor: pointer;" title="소리">
+          <i data-lucide="volume-2" style="width: 14px; height: 14px;"></i>
         </button>
-        <button id="btn-open-vault" class="btn-vault-pill" style="padding:4px 8px; font-size:0.72rem;">
-          <i data-lucide="folder-heart" style="width:13px; height:13px;"></i>
-          <span>보관</span>
-          <span id="vault-badge-count" class="badge-count" style="font-size:0.65rem; padding:1px 5px;">0</span>
+        <button id="btn-open-vault" class="btn-vault-pill" style="background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.15); padding: 5px 8px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; color: #cbd5e1; display: flex; align-items: center; gap: 4px; cursor: pointer; white-space: nowrap;">
+          <i data-lucide="folder-heart" style="width: 13px; height: 13px;"></i>
+          <span>보관함</span>
+          <span id="vault-badge-count" class="badge-count" style="background: #ef4444; color: #fff; font-size: 0.65rem; font-weight: 900; padding: 1px 5px; border-radius: 999px;">0</span>
         </button>
       </div>
     </header>
