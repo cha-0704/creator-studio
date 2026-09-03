@@ -1,0 +1,1386 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>추석 한가위 온가족 3D 스마트 윷놀이 | 무료 민속놀이</title>
+  <meta name="description" content="추석 명절 온 가족이 함께 즐기는 실감나는 3D 윷놀이 게임! 나무 윷가락 타격감과 소리, 자동 말판 연동, 빽도와 잡기까지 완벽 지원!">
+  <meta property="og:title" content="추석 온가족 3D 스마트 윷놀이 한판!">
+  <meta property="og:description" content="손맛 끝내주는 리얼 3D 나무 윷놀이! 도, 개, 걸, 윷, 모, 빽도! 지금 바로 윷을 던져보세요!">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Jua&family=Noto+Sans+KR:wght@400;600;800;900&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+  <!-- Google AdSense -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6240419995457155" crossorigin="anonymous"></script>
+
+  <style>
+    :root {
+      --primary: #e11d48;
+      --primary-dark: #be123c;
+      --secondary: #f59e0b;
+      --wood-dark: #5c3014;
+      --wood-mid: #965327;
+      --wood-light: #c88a4b;
+      --wood-flat: #f3dfb9;
+      --wood-flat-line: #522e14;
+      --mat-bg: #8d2121;
+      --mat-border: #641212;
+      --bg-dark: #0f172a;
+      --panel-bg: #1e293b;
+      --text-gold: #fbbf24;
+      --p1-color: #3b82f6;
+      --p2-color: #ef4444;
+      --font-game: 'Jua', 'Noto Sans KR', sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+    }
+
+    body {
+      font-family: var(--font-game);
+      background: radial-gradient(circle at top, #2a111a 0%, #0d1117 100%);
+      color: #f8fafc;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 10px 8px 40px;
+      overflow-x: hidden;
+    }
+
+    /* Container */
+    .game-container {
+      width: 100%;
+      max-width: 520px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    /* Header */
+    .game-header {
+      background: rgba(30, 41, 59, 0.85);
+      border: 1px solid rgba(251, 191, 36, 0.3);
+      backdrop-filter: blur(10px);
+      border-radius: 16px;
+      padding: 10px 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+    }
+    .game-title-wrap {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .badge-fest {
+      background: linear-gradient(135deg, #ef4444, #f59e0b);
+      color: #fff;
+      font-size: 0.75rem;
+      padding: 3px 8px;
+      border-radius: 20px;
+      font-weight: bold;
+      letter-spacing: 0.5px;
+      box-shadow: 0 2px 6px rgba(239,68,68,0.4);
+    }
+    .game-title {
+      font-size: 1.25rem;
+      color: var(--text-gold);
+      letter-spacing: -0.5px;
+      text-shadow: 0 2px 8px rgba(251,191,36,0.3);
+    }
+    .header-actions {
+      display: flex;
+      gap: 6px;
+    }
+    .btn-icon-hdr {
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.15);
+      color: #cbd5e1;
+      width: 34px;
+      height: 34px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-icon-hdr:active {
+      transform: scale(0.92);
+      background: rgba(255,255,255,0.2);
+    }
+
+    /* Turn Status Bar */
+    .turn-status-card {
+      background: linear-gradient(135deg, #1e293b, #0f172a);
+      border: 2px solid #334155;
+      border-radius: 14px;
+      padding: 10px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    }
+    .team-badge-wrap {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .team-pill {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 0.95rem;
+      font-weight: 800;
+      transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .team-pill.p1 {
+      background: rgba(59, 130, 246, 0.2);
+      border: 2px solid var(--p1-color);
+      color: #93c5fd;
+    }
+    .team-pill.p2 {
+      background: rgba(239, 68, 68, 0.2);
+      border: 2px solid var(--p2-color);
+      color: #fca5a5;
+    }
+    .team-pill.active {
+      transform: scale(1.08);
+      box-shadow: 0 0 16px currentColor;
+    }
+    .score-info {
+      font-size: 0.85rem;
+      color: #94a3b8;
+    }
+    .score-info strong {
+      color: #f8fafc;
+      font-size: 1rem;
+    }
+
+    /* 3D Yut Throwing Arena (멍석) */
+    .yut-arena-wrapper {
+      position: relative;
+      width: 100%;
+      height: 240px;
+      background: radial-gradient(circle, #a82828 0%, #681515 70%, #430c0c 100%);
+      border: 6px solid #4a1e09;
+      border-radius: 22px;
+      box-shadow: inset 0 0 30px rgba(0,0,0,0.6), 0 10px 25px rgba(0,0,0,0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      perspective: 900px;
+    }
+
+    /* Traditional Korean Mat Texture Pattern */
+    .yut-arena-wrapper::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: 
+        repeating-linear-gradient(45deg, rgba(0,0,0,0.06) 0px, rgba(0,0,0,0.06) 4px, transparent 4px, transparent 8px),
+        repeating-linear-gradient(-45deg, rgba(255,255,255,0.04) 0px, rgba(255,255,255,0.04) 4px, transparent 4px, transparent 8px);
+      pointer-events: none;
+    }
+    .mat-corner-deco {
+      position: absolute;
+      width: 32px;
+      height: 32px;
+      border: 3px solid var(--text-gold);
+      opacity: 0.4;
+      pointer-events: none;
+    }
+    .mat-corner-deco.tl { top: 8px; left: 8px; border-right: none; border-bottom: none; }
+    .mat-corner-deco.tr { top: 8px; right: 8px; border-left: none; border-bottom: none; }
+    .mat-corner-deco.bl { bottom: 8px; left: 8px; border-right: none; border-top: none; }
+    .mat-corner-deco.br { bottom: 8px; right: 8px; border-left: none; border-top: none; }
+
+    /* 4 Yut Sticks Container */
+    .yut-sticks-container {
+      display: flex;
+      gap: 16px;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      height: 100%;
+      padding: 10px;
+      z-index: 2;
+    }
+
+    /* Individual 3D Yut Stick */
+    .yut-stick {
+      width: 44px;
+      height: 180px;
+      position: relative;
+      transform-style: preserve-3d;
+      transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.3, 1);
+      cursor: pointer;
+    }
+
+    /* Rounded Back (등) - Round Wood */
+    .yut-face {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      border-radius: 22px;
+      backface-visibility: hidden;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-around;
+      padding: 18px 0;
+      box-shadow: inset 0 0 12px rgba(0,0,0,0.5), 0 8px 18px rgba(0,0,0,0.4);
+    }
+
+    .yut-face.back {
+      background: linear-gradient(90deg, #50270e 0%, #87451a 30%, #b86e33 60%, #683011 100%);
+      border: 2px solid #3d1b08;
+      transform: rotateY(0deg);
+    }
+    .yut-face.back::before {
+      content: '';
+      position: absolute;
+      width: 30%;
+      height: 90%;
+      top: 5%;
+      left: 20%;
+      background: linear-gradient(90deg, rgba(255,255,255,0.25), transparent);
+      border-radius: 12px;
+      pointer-events: none;
+    }
+
+    /* Flat Front (배) - Flat Wood with X marks */
+    .yut-face.front {
+      background: linear-gradient(180deg, #faebd7 0%, #eed5b1 50%, #e2c092 100%);
+      border: 2px solid #8c572b;
+      transform: rotateY(180deg);
+      box-shadow: inset 0 0 10px rgba(100,50,15,0.3), 0 8px 18px rgba(0,0,0,0.4);
+    }
+
+    .x-mark {
+      font-size: 1.1rem;
+      font-weight: 900;
+      color: var(--wood-flat-line);
+      opacity: 0.85;
+      transform: scaleY(0.9);
+      text-shadow: 0 1px 1px rgba(255,255,255,0.4);
+    }
+
+    /* 빽도 (Back-Do) Special Mark */
+    .backdo-badge {
+      background: #dc2626;
+      color: #fff;
+      font-size: 0.65rem;
+      padding: 2px 4px;
+      border-radius: 4px;
+      font-weight: 800;
+      margin-bottom: 2px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.4);
+    }
+
+    /* Result Toast & Callout */
+    .throw-result-overlay {
+      position: absolute;
+      top: 15px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+      background: rgba(15, 23, 42, 0.9);
+      border: 2px solid var(--text-gold);
+      padding: 6px 20px;
+      border-radius: 30px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.6);
+      z-index: 10;
+      animation: popBounce 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    @keyframes popBounce {
+      0% { transform: scale(0.5); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+    .result-name {
+      font-size: 1.5rem;
+      font-weight: 900;
+      color: var(--text-gold);
+      letter-spacing: -0.5px;
+      text-shadow: 0 0 10px rgba(251,191,36,0.6);
+    }
+    .result-sub {
+      font-size: 0.75rem;
+      color: #e2e8f0;
+    }
+
+    /* Action Throw Button Area */
+    .controls-wrapper {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .btn-throw-main {
+      width: 100%;
+      height: 60px;
+      background: linear-gradient(135deg, #f59e0b 0%, #d97706 50%, #b45309 100%);
+      color: #451a03;
+      border: 2px solid #fef3c7;
+      border-radius: 18px;
+      font-size: 1.35rem;
+      font-weight: 900;
+      letter-spacing: 0.5px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      cursor: pointer;
+      box-shadow: 0 6px 0 #78350f, 0 10px 20px rgba(217,119,6,0.4);
+      transition: all 0.1s;
+    }
+    .btn-throw-main:active {
+      transform: translateY(4px);
+      box-shadow: 0 2px 0 #78350f, 0 4px 10px rgba(217,119,6,0.3);
+    }
+    .btn-throw-main:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    /* Pending Results Bar (윷/모 나왔을 때 연속 던지기 보관함) */
+    .pending-results-bar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(30, 41, 59, 0.7);
+      border: 1px dashed rgba(251, 191, 36, 0.4);
+      border-radius: 12px;
+      padding: 6px 12px;
+      min-height: 44px;
+      overflow-x: auto;
+    }
+    .pending-label {
+      font-size: 0.8rem;
+      color: #94a3b8;
+      white-space: nowrap;
+    }
+    .move-chip {
+      background: linear-gradient(135deg, #e11d48, #be123c);
+      color: #fff;
+      padding: 4px 10px;
+      border-radius: 16px;
+      font-size: 0.85rem;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      cursor: pointer;
+      border: 1px solid #fda4af;
+      box-shadow: 0 2px 6px rgba(225,29,72,0.4);
+      animation: pulseChip 1.5s infinite;
+      white-space: nowrap;
+    }
+    @keyframes pulseChip {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+
+    /* Yut Board (윷판) */
+    .board-card {
+      background: rgba(30, 41, 59, 0.9);
+      border: 2px solid #334155;
+      border-radius: 18px;
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+    }
+    .board-header {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+      padding: 0 4px;
+    }
+    .board-title {
+      font-size: 0.95rem;
+      color: #cbd5e1;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* SVG Yut Board */
+    .svg-yut-board {
+      width: 100%;
+      max-width: 380px;
+      height: 280px;
+      background: #111827;
+      border-radius: 16px;
+      border: 1px solid #374151;
+      box-shadow: inset 0 0 15px rgba(0,0,0,0.8);
+    }
+
+    /* Board Nodes */
+    .board-node {
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .board-node circle.node-bg {
+      fill: #1f2937;
+      stroke: #4b5563;
+      stroke-width: 2.5;
+      transition: all 0.2s;
+    }
+    .board-node.highlight circle.node-bg {
+      fill: #f59e0b;
+      stroke: #fef08a;
+      stroke-width: 4;
+      animation: nodePulse 1s infinite alternate;
+    }
+    @keyframes nodePulse {
+      from { transform: scale(1); }
+      to { transform: scale(1.2); }
+    }
+    .board-node.special circle.node-bg {
+      fill: #374151;
+      stroke: #fbbf24;
+      stroke-width: 3.5;
+    }
+
+    /* Game Pieces (말) */
+    .piece-token {
+      transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+      cursor: pointer;
+    }
+    .piece-token circle {
+      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));
+    }
+    .piece-token.p1 circle {
+      fill: #2563eb;
+      stroke: #93c5fd;
+      stroke-width: 2.5;
+    }
+    .piece-token.p2 circle {
+      fill: #dc2626;
+      stroke: #fca5a5;
+      stroke-width: 2.5;
+    }
+    .piece-token text {
+      fill: #ffffff;
+      font-size: 11px;
+      font-weight: 900;
+      text-anchor: middle;
+      dominant-baseline: central;
+    }
+
+    /* Waiting Pieces Bar */
+    .waiting-pieces-bar {
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+      margin-top: 10px;
+      padding: 8px 12px;
+      background: rgba(15, 23, 42, 0.6);
+      border-radius: 12px;
+    }
+    .team-piece-dock {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .dock-label {
+      font-size: 0.8rem;
+      font-weight: bold;
+    }
+    .dock-label.p1 { color: #60a5fa; }
+    .dock-label.p2 { color: #f87171; }
+    .dock-pieces {
+      display: flex;
+      gap: 4px;
+    }
+    .mini-piece {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.7rem;
+      font-weight: 800;
+      color: #fff;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.4);
+    }
+    .mini-piece.p1 { background: var(--p1-color); border: 1.5px solid #93c5fd; }
+    .mini-piece.p2 { background: var(--p2-color); border: 1.5px solid #fca5a5; }
+
+    /* Share & SNS Floating Bar */
+    .share-dock {
+      display: flex;
+      gap: 8px;
+      width: 100%;
+    }
+    .btn-sns {
+      flex: 1;
+      height: 46px;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 12px;
+      color: #e2e8f0;
+      font-size: 0.85rem;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-sns:active {
+      transform: scale(0.95);
+      background: rgba(255,255,255,0.15);
+    }
+    .btn-sns.insta {
+      background: linear-gradient(135deg, rgba(225,48,108,0.2), rgba(245,96,64,0.2));
+      border-color: rgba(225,48,108,0.5);
+      color: #fda4af;
+    }
+
+    /* Modal */
+    .game-modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.85);
+      backdrop-filter: blur(6px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      z-index: 100;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s;
+    }
+    .game-modal.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .modal-box {
+      background: linear-gradient(135deg, #1e293b, #0f172a);
+      border: 2px solid var(--text-gold);
+      border-radius: 20px;
+      padding: 24px;
+      max-width: 400px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.8);
+      transform: scale(0.8);
+      transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .game-modal.active .modal-box {
+      transform: scale(1);
+    }
+    .modal-title {
+      font-size: 1.6rem;
+      color: var(--text-gold);
+      margin-bottom: 10px;
+    }
+    .modal-desc {
+      font-size: 0.95rem;
+      color: #cbd5e1;
+      line-height: 1.6;
+      margin-bottom: 20px;
+      font-family: 'Noto Sans KR', sans-serif;
+    }
+    .btn-modal-close {
+      width: 100%;
+      padding: 12px;
+      background: linear-gradient(135deg, #f59e0b, #d97706);
+      border: none;
+      border-radius: 12px;
+      color: #451a03;
+      font-size: 1.1rem;
+      font-weight: 900;
+      cursor: pointer;
+    }
+
+    /* Audio Mute state */
+    .muted {
+      opacity: 0.4 !important;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="game-container">
+    <!-- Top Header -->
+    <header class="game-header">
+      <div class="game-title-wrap">
+        <span class="badge-fest">추석특집 🌕</span>
+        <h1 class="game-title">스마트 3D 윷놀이</h1>
+      </div>
+      <div class="header-actions">
+        <button id="btn-sound" class="btn-icon-hdr" title="소리 켜기/끄기">
+          <i data-lucide="volume-2"></i>
+        </button>
+        <button id="btn-rules" class="btn-icon-hdr" title="게임 규칙">
+          <i data-lucide="help-circle"></i>
+        </button>
+        <button id="btn-reset" class="btn-icon-hdr" title="새 게임 시작">
+          <i data-lucide="rotate-ccw"></i>
+        </button>
+      </div>
+    </header>
+
+    <!-- Turn Status -->
+    <div class="turn-status-card">
+      <div class="team-badge-wrap">
+        <div id="badge-p1" class="team-pill p1 active">
+          <i data-lucide="user"></i> 청팀 (1P)
+        </div>
+        <div id="badge-p2" class="team-pill p2">
+          <i data-lucide="user"></i> 홍팀 (2P)
+        </div>
+      </div>
+      <div class="score-info">
+        완주: <strong id="score-p1" style="color:#60a5fa">0</strong> / <strong id="score-p2" style="color:#f87171">0</strong> (총 4개)
+      </div>
+    </div>
+
+    <!-- 3D Yut Throwing Arena (멍석) -->
+    <div class="yut-arena-wrapper">
+      <div class="mat-corner-deco tl"></div>
+      <div class="mat-corner-deco tr"></div>
+      <div class="mat-corner-deco bl"></div>
+      <div class="mat-corner-deco br"></div>
+
+      <!-- Result Banner -->
+      <div id="throw-result" class="throw-result-overlay" style="display: none;">
+        <span class="result-name" id="result-text">윷!</span>
+        <span class="result-sub" id="result-desc">+4칸 & 한 번 더!</span>
+      </div>
+
+      <!-- 4 Yut Sticks -->
+      <div class="yut-sticks-container">
+        <!-- Stick 1 (Back-Do possible stick) -->
+        <div class="yut-stick" id="stick-0">
+          <div class="yut-face back"></div>
+          <div class="yut-face front">
+            <span class="backdo-badge">빽도</span>
+            <div class="x-mark">✕</div>
+            <div class="x-mark">✕</div>
+            <div class="x-mark">✕</div>
+          </div>
+        </div>
+        <!-- Stick 2 -->
+        <div class="yut-stick" id="stick-1">
+          <div class="yut-face back"></div>
+          <div class="yut-face front">
+            <div class="x-mark">✕</div>
+            <div class="x-mark">✕</div>
+            <div class="x-mark">✕</div>
+            <div class="x-mark">✕</div>
+          </div>
+        </div>
+        <!-- Stick 3 -->
+        <div class="yut-stick" id="stick-2">
+          <div class="yut-face back"></div>
+          <div class="yut-face front">
+            <div class="x-mark">✕</div>
+            <div class="x-mark">✕</div>
+            <div class="x-mark">✕</div>
+            <div class="x-mark">✕</div>
+          </div>
+        </div>
+        <!-- Stick 4 -->
+        <div class="yut-stick" id="stick-3">
+          <div class="yut-face back"></div>
+          <div class="yut-face front">
+            <div class="x-mark">✕</div>
+            <div class="x-mark">✕</div>
+            <div class="x-mark">✕</div>
+            <div class="x-mark">✕</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Throw Controls & Queue -->
+    <div class="controls-wrapper">
+      <button id="btn-throw" class="btn-throw-main">
+        <i data-lucide="zap"></i>
+        <span id="btn-throw-text">윷 던지기! (터치)</span>
+      </button>
+
+      <!-- Move Select Queue -->
+      <div id="queue-bar" class="pending-results-bar">
+        <span class="pending-label">이동 선택:</span>
+        <div id="queue-chips" style="display:flex; gap:6px; flex-wrap:wrap;">
+          <span style="font-size:0.8rem; color:#64748b;">윷을 던져주세요!</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Yut Board (윷판) -->
+    <div class="board-card">
+      <div class="board-header">
+        <div class="board-title">
+          <i data-lucide="map-pin" style="color:var(--text-gold); width:16px;"></i>
+          <span>한가위 전통 말판 (터치하여 이동)</span>
+        </div>
+        <span id="board-guide" style="font-size:0.75rem; color:#f59e0b;">말을 선택하세요</span>
+      </div>
+
+      <!-- SVG Board -->
+      <svg id="svg-board" class="svg-yut-board" viewBox="0 0 340 280">
+        <!-- Connecting Path Lines -->
+        <!-- Outer Square -->
+        <path d="M 290 240 L 290 40 L 50 40 L 50 240 Z" fill="none" stroke="#374151" stroke-width="4" stroke-linecap="round" />
+        <!-- Diagonal Cross -->
+        <path d="M 290 40 L 50 240" fill="none" stroke="#374151" stroke-width="4" stroke-linecap="round" />
+        <path d="M 50 40 L 290 240" fill="none" stroke="#374151" stroke-width="4" stroke-linecap="round" />
+
+        <!-- Nodes Group (Will be populated by JS) -->
+        <g id="board-nodes"></g>
+
+        <!-- Pieces Group (Will be dynamically rendered) -->
+        <g id="board-pieces"></g>
+      </svg>
+
+      <!-- Waiting Pieces Dock -->
+      <div class="waiting-pieces-bar">
+        <div class="team-piece-dock">
+          <span class="dock-label p1">청팀 대기:</span>
+          <div id="p1-dock" class="dock-pieces"></div>
+        </div>
+        <div class="team-piece-dock">
+          <span class="dock-label p2">홍팀 대기:</span>
+          <div id="p2-dock" class="dock-pieces"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Share & Social Links -->
+    <div class="share-dock">
+      <button id="btn-share-link" class="btn-sns">
+        <i data-lucide="share-2"></i> 링크 복사
+      </button>
+      <button id="btn-insta-share" class="btn-sns insta">
+        <i data-lucide="instagram"></i> 인스타 자랑하기
+      </button>
+    </div>
+  </div>
+
+  <!-- Rules Modal -->
+  <div id="modal-rules" class="game-modal">
+    <div class="modal-box">
+      <h3 class="modal-title">🌕 윷놀이 규칙</h3>
+      <div class="modal-desc">
+        <p><strong>• 도(1칸), 개(2칸), 걸(3칸), 윷(4칸), 모(5칸)</strong></p>
+        <p><strong>• 빽도(-1칸)</strong>: 뒤로 1칸 후퇴!</p>
+        <p><strong>• 윷이나 모</strong>가 나오면 <strong>한 번 더</strong> 던집니다!</p>
+        <p><strong>• 상대 말을 잡으면</strong> 한 번 더 던질 수 있습니다!</p>
+        <p><strong>• 말 업기</strong>: 같은 팀 말이 모이면 함께 이동!</p>
+        <p><strong>• 4개의 말</strong>을 먼저 모두 완주시키면 승리합니다!</p>
+      </div>
+      <button id="btn-close-rules" class="btn-modal-close">확인 완료!</button>
+    </div>
+  </div>
+
+  <!-- Win Modal -->
+  <div id="modal-win" class="game-modal">
+    <div class="modal-box">
+      <h3 class="modal-title" id="win-title">🎉 청팀 대승리! 🎉</h3>
+      <div class="modal-desc" id="win-desc">
+        추석 한가위 명절의 대승리입니다!<br>온 가족과 함께 행운 가득한 명절 보내세요!
+      </div>
+      <button id="btn-win-restart" class="btn-modal-close">한판 더 하기! 🚀</button>
+    </div>
+  </div>
+
+  <!-- Game Logic Script -->
+  <script>
+    // --- Audio Sound FX via Web Audio API ---
+    let soundEnabled = true;
+    let audioCtx = null;
+
+    function getAudioContext() {
+      if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      }
+      return audioCtx;
+    }
+
+    function playWoodHit() {
+      if (!soundEnabled) return;
+      try {
+        const ctx = getAudioContext();
+        if (ctx.state === 'suspended') ctx.resume();
+
+        // 3 consecutive wood tap clicks for realistic stick clatter
+        [0, 0.06, 0.12, 0.18].forEach((timeOffset, idx) => {
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(220 + Math.random() * 150, ctx.currentTime + timeOffset);
+          osc.frequency.exponentialRampToValueAtTime(60, ctx.currentTime + timeOffset + 0.05);
+
+          gain.gain.setValueAtTime(0.7 - (idx * 0.12), ctx.currentTime + timeOffset);
+          gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + timeOffset + 0.05);
+
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start(ctx.currentTime + timeOffset);
+          osc.stop(ctx.currentTime + timeOffset + 0.06);
+        });
+      } catch (e) {
+        console.error(e);
+      }
+    }
+
+    function playCheerSound() {
+      if (!soundEnabled) return;
+      try {
+        const ctx = getAudioContext();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(440, ctx.currentTime);
+        osc.frequency.linearRampToValueAtTime(880, ctx.currentTime + 0.2);
+        gain.gain.setValueAtTime(0.5, ctx.currentTime);
+        gain.gain.linearRampToValueAtTime(0.01, ctx.currentTime + 0.4);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start(ctx.currentTime);
+        osc.stop(ctx.currentTime + 0.4);
+      } catch (e) {}
+    }
+
+    // --- Yut Board Node Coordinates (29 Nodes) ---
+    // Outer 20 nodes (0 to 19): 0 is Start/Finish (Bottom-Right), counter-clockwise
+    // 0(참먹이), 1..4(오른쪽 변), 5(우상귀), 6..9(윗변), 10(좌상귀), 11..14(좌변), 15(좌하귀), 16..19(아랫변)
+    // Diagonal Nodes:
+    // 20, 21: 우상(5) -> 중심(22)
+    // 22: 방(중심)
+    // 23, 24: 중심(22) -> 좌하(15)
+    // 25, 26: 좌상(10) -> 중심(22)
+    // 27, 28: 중심(22) -> 우하(0)
+    const NODES = [
+      // Outer 0..19
+      { id: 0, x: 290, y: 240, special: true, name: '출발/도착' },
+      { id: 1, x: 290, y: 200 },
+      { id: 2, x: 290, y: 160 },
+      { id: 3, x: 290, y: 120 },
+      { id: 4, x: 290, y: 80 },
+      { id: 5, x: 290, y: 40, special: true, name: '우상' },
+      { id: 6, x: 242, y: 40 },
+      { id: 7, x: 194, y: 40 },
+      { id: 8, x: 146, y: 40 },
+      { id: 9, x: 98, y: 40 },
+      { id: 10, x: 50, y: 40, special: true, name: '좌상' },
+      { id: 11, x: 50, y: 80 },
+      { id: 12, x: 50, y: 120 },
+      { id: 13, x: 50, y: 160 },
+      { id: 14, x: 50, y: 200 },
+      { id: 15, x: 50, y: 240, special: true, name: '좌하' },
+      { id: 16, x: 98, y: 240 },
+      { id: 17, x: 146, y: 240 },
+      { id: 18, x: 194, y: 240 },
+      { id: 19, x: 242, y: 240 },
+      // Diagonal: 5 -> Center(22)
+      { id: 20, x: 250, y: 73 },
+      { id: 21, x: 210, y: 107 },
+      // Center (22)
+      { id: 22, x: 170, y: 140, special: true, name: '방(중심)' },
+      // Diagonal: Center(22) -> 15 (좌하)
+      { id: 23, x: 130, y: 173 },
+      { id: 24, x: 90, y: 207 },
+      // Diagonal: 10 -> Center(22)
+      { id: 25, x: 90, y: 73 },
+      { id: 26, x: 130, y: 107 },
+      // Diagonal: Center(22) -> 0 (우하)
+      { id: 27, x: 210, y: 173 },
+      { id: 28, x: 250, y: 207 }
+    ];
+
+    // Node Next Step Routing Table
+    function getNextNode(currentId, branchPreference = false) {
+      if (currentId === 5) return branchPreference ? 20 : 6;
+      if (currentId === 10) return branchPreference ? 25 : 11;
+      if (currentId === 22) return branchPreference ? 27 : 23;
+
+      if (currentId >= 0 && currentId <= 18) return currentId + 1;
+      if (currentId === 19) return 0; // complete or hit 0
+
+      // Diagonals
+      if (currentId === 20) return 21;
+      if (currentId === 21) return 22;
+      if (currentId === 23) return 24;
+      if (currentId === 24) return 15;
+
+      if (currentId === 25) return 26;
+      if (currentId === 26) return 22;
+      if (currentId === 27) return 28;
+      if (currentId === 28) return 0;
+
+      return 0;
+    }
+
+    // Previous Node for 빽도 (-1)
+    function getPrevNode(currentId) {
+      if (currentId === 0) return 19;
+      if (currentId === 20) return 5;
+      if (currentId === 25) return 10;
+      if (currentId === 22) return 21; // or 26
+      if (currentId === 23) return 22;
+      if (currentId === 27) return 22;
+      if (currentId === 15) return 24;
+      return currentId - 1;
+    }
+
+    // Game State
+    let currentTurn = 'p1'; // 'p1' (blue) or 'p2' (red)
+    let moveQueue = []; // stored rolls [ { name: '윷', steps: 4 }, ... ]
+    let canThrow = true;
+    let pieces = {
+      p1: [ { id: 0, pos: -1, count: 1, finished: false }, { id: 1, pos: -1, count: 1, finished: false }, { id: 2, pos: -1, count: 1, finished: false }, { id: 3, pos: -1, count: 1, finished: false } ],
+      p2: [ { id: 0, pos: -1, count: 1, finished: false }, { id: 1, pos: -1, count: 1, finished: false }, { id: 2, pos: -1, count: 1, finished: false }, { id: 3, pos: -1, count: 1, finished: false } ]
+    };
+
+    // DOM Elements
+    const btnThrow = document.getElementById('btn-throw');
+    const btnThrowText = document.getElementById('btn-throw-text');
+    const resultOverlay = document.getElementById('throw-result');
+    const resultText = document.getElementById('result-text');
+    const resultDesc = document.getElementById('result-desc');
+    const queueChips = document.getElementById('queue-chips');
+    const badgeP1 = document.getElementById('badge-p1');
+    const badgeP2 = document.getElementById('badge-p2');
+    const scoreP1 = document.getElementById('score-p1');
+    const scoreP2 = document.getElementById('score-p2');
+    const svgBoard = document.getElementById('svg-board');
+    const boardNodes = document.getElementById('board-nodes');
+    const boardPieces = document.getElementById('board-pieces');
+    const p1Dock = document.getElementById('p1-dock');
+    const p2Dock = document.getElementById('p2-dock');
+    const btnSound = document.getElementById('btn-sound');
+    const btnRules = document.getElementById('btn-rules');
+    const btnReset = document.getElementById('btn-reset');
+    const modalRules = document.getElementById('modal-rules');
+    const btnCloseRules = document.getElementById('btn-close-rules');
+    const modalWin = document.getElementById('modal-win');
+    const btnWinRestart = document.getElementById('btn-win-restart');
+
+    // Initialize Board Nodes SVG
+    function initBoardSVG() {
+      boardNodes.innerHTML = '';
+      NODES.forEach(node => {
+        const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+        g.setAttribute('class', `board-node ${node.special ? 'special' : ''}`);
+        g.setAttribute('id', `node-${node.id}`);
+        g.dataset.id = node.id;
+
+        const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+        circle.setAttribute('class', 'node-bg');
+        circle.setAttribute('cx', node.x);
+        circle.setAttribute('cy', node.y);
+        circle.setAttribute('r', node.special ? '14' : '10');
+
+        g.appendChild(circle);
+
+        if (node.special && node.name) {
+          const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+          text.setAttribute('x', node.x);
+          text.setAttribute('y', node.y + 1);
+          text.setAttribute('fill', '#fbbf24');
+          text.setAttribute('font-size', '8');
+          text.setAttribute('font-weight', 'bold');
+          text.setAttribute('text-anchor', 'middle');
+          text.setAttribute('dominant-baseline', 'central');
+          text.textContent = node.id === 0 ? '출발' : (node.id === 22 ? '방' : '●');
+          g.appendChild(text);
+        }
+
+        g.addEventListener('click', () => onNodeClicked(node.id));
+        boardNodes.appendChild(g);
+      });
+    }
+
+    // Render Pieces & Docks
+    function renderBoard() {
+      boardPieces.innerHTML = '';
+
+      // Count scores
+      const p1Fin = pieces.p1.filter(p => p.finished).reduce((acc, cur) => acc + cur.count, 0);
+      const p2Fin = pieces.p2.filter(p => p.finished).reduce((acc, cur) => acc + cur.count, 0);
+      scoreP1.textContent = p1Fin;
+      scoreP2.textContent = p2Fin;
+
+      // Check Winner
+      if (p1Fin >= 4) {
+        showWinModal('청팀 (1P) 승리! 🎉');
+        return;
+      }
+      if (p2Fin >= 4) {
+        showWinModal('홍팀 (2P) 승리! 🎊');
+        return;
+      }
+
+      // Render Active Board Pieces
+      ['p1', 'p2'].forEach(team => {
+        pieces[team].forEach(piece => {
+          if (piece.pos >= 0 && !piece.finished) {
+            const node = NODES[piece.pos];
+            if (!node) return;
+
+            const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+            g.setAttribute('class', `piece-token ${team}`);
+            g.setAttribute('transform', `translate(${node.x}, ${node.y})`);
+            g.dataset.team = team;
+            g.dataset.id = piece.id;
+
+            const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+            circle.setAttribute('r', '11');
+
+            const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+            text.textContent = piece.count > 1 ? `x${piece.count}` : (team === 'p1' ? '청' : '홍');
+
+            g.appendChild(circle);
+            g.appendChild(text);
+
+            g.addEventListener('click', (e) => {
+              e.stopPropagation();
+              onPieceClicked(team, piece.id);
+            });
+
+            boardPieces.appendChild(g);
+          }
+        });
+      });
+
+      // Render Waiting Pieces in Dock
+      renderDocks();
+    }
+
+    function renderDocks() {
+      p1Dock.innerHTML = '';
+      p2Dock.innerHTML = '';
+
+      pieces.p1.forEach((p, idx) => {
+        if (p.pos === -1 && !p.finished) {
+          const div = document.createElement('div');
+          div.className = 'mini-piece p1';
+          div.textContent = idx + 1;
+          div.style.cursor = currentTurn === 'p1' && moveQueue.length > 0 ? 'pointer' : 'default';
+          div.addEventListener('click', () => onPieceClicked('p1', p.id));
+          p1Dock.appendChild(div);
+        }
+      });
+
+      pieces.p2.forEach((p, idx) => {
+        if (p.pos === -1 && !p.finished) {
+          const div = document.createElement('div');
+          div.className = 'mini-piece p2';
+          div.textContent = idx + 1;
+          div.style.cursor = currentTurn === 'p2' && moveQueue.length > 0 ? 'pointer' : 'default';
+          div.addEventListener('click', () => onPieceClicked('p2', p.id));
+          p2Dock.appendChild(div);
+        }
+      });
+    }
+
+    // --- YUT THROW PHYSICS & LOGIC ---
+    function throwYut() {
+      if (!canThrow) return;
+      canThrow = false;
+      btnThrow.disabled = true;
+
+      // 4 sticks: flat front = 1 (X marked), round back = 0
+      // Normal Yut probability:
+      // 도: 1 flat (3 back) -> 1
+      // 개: 2 flat (2 back) -> 2
+      // 걸: 3 flat (1 back) -> 3
+      // 윷: 4 flat (0 back) -> 4 (한번 더)
+      // 모: 0 flat (4 back) -> 5 (한번 더)
+      // 빽도: stick 0 is flat, others back -> -1
+
+      // Randomize individual sticks with realistic flip animation
+      const sticks = [0, 1, 2, 3];
+      const results = sticks.map(id => Math.random() < 0.55 ? 1 : 0); // 1 = Flat(배), 0 = Back(등)
+
+      // Animate 3D Flipping in arena
+      sticks.forEach(id => {
+        const el = document.getElementById(`stick-${id}`);
+        const randomRotX = 720 + Math.floor(Math.random() * 360);
+        const randomRotZ = -15 + Math.floor(Math.random() * 30);
+        const isFlat = results[id] === 1;
+        const targetRotY = isFlat ? 180 : 0;
+
+        el.style.transform = `translateY(-40px) rotateX(${randomRotX}deg) rotateZ(${randomRotZ}deg)`;
+
+        setTimeout(() => {
+          el.style.transform = `translateY(0px) rotateX(0deg) rotateY(${targetRotY}deg) rotateZ(${randomRotZ * 0.3}deg)`;
+        }, 300);
+      });
+
+      playWoodHit();
+
+      // Calculate Result Type
+      setTimeout(() => {
+        const flatCount = results.reduce((a, b) => a + b, 0);
+        let rollName = '';
+        let rollSteps = 0;
+        let bonusThrow = false;
+
+        if (flatCount === 1) {
+          if (results[0] === 1) {
+            rollName = '빽도 (Back-Do)';
+            rollSteps = -1;
+          } else {
+            rollName = '도';
+            rollSteps = 1;
+          }
+        } else if (flatCount === 2) {
+          rollName = '개';
+          rollSteps = 2;
+        } else if (flatCount === 3) {
+          rollName = '걸';
+          rollSteps = 3;
+        } else if (flatCount === 4) {
+          rollName = '윷! 🎊';
+          rollSteps = 4;
+          bonusThrow = true;
+        } else if (flatCount === 0) {
+          rollName = '모! 🌕';
+          rollSteps = 5;
+          bonusThrow = true;
+        }
+
+        // Show Result Banner
+        resultText.textContent = rollName;
+        resultDesc.textContent = bonusThrow ? `+${rollSteps}칸 (한 번 더!)` : (rollSteps === -1 ? '뒤로 1칸 후퇴!' : `+${rollSteps}칸 전진!`);
+        resultOverlay.style.display = 'flex';
+        playCheerSound();
+
+        // Push to Move Queue
+        moveQueue.push({ name: rollName, steps: rollSteps });
+        renderQueue();
+
+        if (bonusThrow) {
+          btnThrowText.textContent = '한 번 더 던지기! 🔥';
+          canThrow = true;
+          btnThrow.disabled = false;
+        } else {
+          btnThrowText.textContent = '말을 이동하세요 👇';
+          canThrow = false;
+          btnThrow.disabled = true;
+        }
+      }, 700);
+    }
+
+    // Render Move Queue Chips
+    function renderQueue() {
+      queueChips.innerHTML = '';
+      if (moveQueue.length === 0) {
+        queueChips.innerHTML = `<span style="font-size:0.8rem; color:#64748b;">${canThrow ? '윷을 던져주세요!' : '말 이동 완료!'}</span>`;
+        return;
+      }
+
+      moveQueue.forEach((item, index) => {
+        const chip = document.createElement('div');
+        chip.className = 'move-chip';
+        chip.innerHTML = `<span>${item.name}</span> <i data-lucide="play" style="width:12px;height:12px;"></i>`;
+        chip.addEventListener('click', () => {
+          // Auto select or highlight
+        });
+        queueChips.appendChild(chip);
+      });
+      lucide.createIcons();
+    }
+
+    // Handle Piece Movement
+    function onPieceClicked(team, pieceId) {
+      if (team !== currentTurn) return;
+      if (moveQueue.length === 0) {
+        alert('먼저 윷을 던져주세요!');
+        return;
+      }
+
+      // Pick first move in queue
+      const move = moveQueue.shift();
+      renderQueue();
+
+      executeMove(team, pieceId, move.steps);
+    }
+
+    function onNodeClicked(nodeId) {
+      // Find current turn's piece on this node
+      const piece = pieces[currentTurn].find(p => p.pos === nodeId && !p.finished);
+      if (piece) {
+        onPieceClicked(currentTurn, piece.id);
+      }
+    }
+
+    function executeMove(team, pieceId, steps) {
+      const piece = pieces[team].find(p => p.id === pieceId);
+      if (!piece || piece.finished) return;
+
+      let startPos = piece.pos;
+      let newPos = startPos;
+      let finished = false;
+
+      if (steps === -1) {
+        // Back-Do
+        if (startPos === -1) {
+          // Cannot backdo if not on board -> stays in dock
+          newPos = -1;
+        } else {
+          newPos = getPrevNode(startPos);
+        }
+      } else {
+        // Forward Move
+        if (startPos === -1) {
+          // Launching new piece
+          newPos = 0; // Starts at 0
+          for (let i = 1; i < steps; i++) {
+            newPos = getNextNode(newPos, false);
+          }
+        } else {
+          // Branch decision at special corner nodes
+          let branch = (startPos === 5 || startPos === 10 || startPos === 22);
+          newPos = getNextNode(startPos, branch);
+
+          for (let i = 1; i < steps; i++) {
+            if (newPos === 0 || (startPos === 19 && newPos === 0)) {
+              finished = true;
+              break;
+            }
+            newPos = getNextNode(newPos, false);
+          }
+        }
+      }
+
+      // Check if piece completed board
+      if (startPos !== -1 && (newPos === 0 && steps > 0 && startPos !== 0)) {
+        finished = true;
+      }
+
+      piece.pos = finished ? 999 : newPos;
+      piece.finished = finished;
+
+      // Check Horse Stacking (말 업기)
+      if (!finished && newPos !== -1) {
+        const sameTeamPieces = pieces[team].filter(p => p.id !== piece.id && p.pos === newPos && !p.finished);
+        if (sameTeamPieces.length > 0) {
+          sameTeamPieces.forEach(other => {
+            piece.count += other.count;
+            other.finished = true; // merged
+            other.pos = 999;
+          });
+          playCheerSound();
+        }
+
+        // Check Enemy Catch (말 잡기!)
+        const enemyTeam = team === 'p1' ? 'p2' : 'p1';
+        const enemyPieces = pieces[enemyTeam].filter(p => p.pos === newPos && !p.finished);
+        if (enemyPieces.length > 0) {
+          enemyPieces.forEach(ep => {
+            ep.pos = -1; // back to dock
+            ep.count = 1;
+          });
+          playCheerSound();
+          alert(`💥 상대 말을 잡았습니다! [한 번 더 던지기 획득!]`);
+          canThrow = true;
+          btnThrow.disabled = false;
+          btnThrowText.textContent = '말 잡음! 한 번 더! 🔥';
+        }
+      }
+
+      renderBoard();
+
+      // Check if turn ends
+      if (moveQueue.length === 0 && !canThrow) {
+        switchTurn();
+      }
+    }
+
+    function switchTurn() {
+      currentTurn = currentTurn === 'p1' ? 'p2' : 'p1';
+      badgeP1.classList.toggle('active', currentTurn === 'p1');
+      badgeP2.classList.toggle('active', currentTurn === 'p2');
+      canThrow = true;
+      btnThrow.disabled = false;
+      btnThrowText.textContent = `${currentTurn === 'p1' ? '청팀' : '홍팀'} 던지기! 🎲`;
+      resultOverlay.style.display = 'none';
+      renderQueue();
+    }
+
+    function showWinModal(title) {
+      document.getElementById('win-title').textContent = title;
+      modalWin.classList.add('active');
+      confetti({ particleCount: 150, spread: 80, origin: { y: 0.6 } });
+    }
+
+    function resetGame() {
+      currentTurn = 'p1';
+      moveQueue = [];
+      canThrow = true;
+      btnThrow.disabled = false;
+      btnThrowText.textContent = '윷 던지기! (터치)';
+      resultOverlay.style.display = 'none';
+      pieces = {
+        p1: [ { id: 0, pos: -1, count: 1, finished: false }, { id: 1, pos: -1, count: 1, finished: false }, { id: 2, pos: -1, count: 1, finished: false }, { id: 3, pos: -1, count: 1, finished: false } ],
+        p2: [ { id: 0, pos: -1, count: 1, finished: false }, { id: 1, pos: -1, count: 1, finished: false }, { id: 2, pos: -1, count: 1, finished: false }, { id: 3, pos: -1, count: 1, finished: false } ]
+      };
+      badgeP1.classList.add('active');
+      badgeP2.classList.remove('active');
+      modalWin.classList.remove('active');
+      renderBoard();
+      renderQueue();
+    }
+
+    // --- EVENT LISTENERS ---
+    btnThrow.addEventListener('click', throwYut);
+
+    btnSound.addEventListener('click', () => {
+      soundEnabled = !soundEnabled;
+      btnSound.classList.toggle('muted', !soundEnabled);
+      btnSound.innerHTML = soundEnabled ? '<i data-lucide="volume-2"></i>' : '<i data-lucide="volume-x"></i>';
+      lucide.createIcons();
+    });
+
+    btnRules.addEventListener('click', () => modalRules.classList.add('active'));
+    btnCloseRules.addEventListener('click', () => modalRules.classList.remove('active'));
+    btnReset.addEventListener('click', () => {
+      if (confirm('게임을 처음부터 다시 시작하시겠습니까?')) resetGame();
+    });
+    btnWinRestart.addEventListener('click', () => resetGame());
+
+    // Share Links
+    document.getElementById('btn-share-link').addEventListener('click', () => {
+      navigator.clipboard.writeText(window.location.href);
+      alert('🔗 윷놀이 게임 링크가 복사되었습니다! 카톡이나 단체방에 공유해 보세요!');
+    });
+
+    document.getElementById('btn-insta-share').addEventListener('click', () => {
+      alert('📸 화면을 캡처하여 인스타그램 스토리나 피드에 올리고 가족들을 태그해보세요!');
+    });
+
+    // Init
+    initBoardSVG();
+    renderBoard();
+    lucide.createIcons();
+  </script>
+</body>
+</html>
