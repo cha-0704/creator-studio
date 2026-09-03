@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>로또 6/45 3D 라이브 추첨기 & 역대 회차 빅데이터 분석</title>
-  <meta name="description" content="360도 회전 물리 엔진 로또 6/45 번호 추첨기, 역대 당첨번호 검색, 빅데이터 통계 및 전국 1등 당첨 명당 지도">
+  <title>로또 6/45 3D 라이브 추첨기 & 당첨 자동 채점기 | 사주·별자리 행운 번호</title>
+  <meta name="description" content="360도 회전 물리 엔진 로또 추첨기, 내 번호 자동 채점 및 당첨 확인, 사주 오행 & 별자리 맞춤 번호 추출기">
   
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -15,6 +15,93 @@
   <script src="https://unpkg.com/lucide@latest"></script>
   
   <link rel="stylesheet" href="style.css">
+  <style>
+    /* Premium Saju & Matching Styles */
+    .premium-badge {
+      background: linear-gradient(135deg, #ffd700, #ff8c00);
+      color: #000;
+      font-size: 0.7rem;
+      font-weight: 900;
+      padding: 3px 8px;
+      border-radius: 9999px;
+      margin-left: 6px;
+    }
+    .check-score-card {
+      background: rgba(13, 15, 19, 0.85);
+      border: 1px solid rgba(255, 215, 0, 0.2);
+      border-radius: 14px;
+      padding: 1rem;
+      margin-top: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .match-rank-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 4px 10px;
+      border-radius: 8px;
+      font-weight: 800;
+      font-size: 0.8rem;
+    }
+    .rank-1st { background: #ef4444; color: #fff; box-shadow: 0 0 10px rgba(239,68,68,0.5); }
+    .rank-2nd { background: #3b82f6; color: #fff; }
+    .rank-3rd { background: #10b981; color: #fff; }
+    .rank-4th { background: #f59e0b; color: #fff; }
+    .rank-5th { background: #8b5cf6; color: #fff; }
+    .rank-none { background: #334155; color: #94a3b8; }
+    
+    .saju-modal-card {
+      background: linear-gradient(180deg, #161a22 0%, #0c0e12 100%);
+      border: 1px solid rgba(255, 215, 0, 0.35);
+      box-shadow: 0 15px 40px rgba(0,0,0,0.8);
+      border-radius: 20px;
+      width: 92%;
+      max-width: 440px;
+      padding: 1.5rem;
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+    .saju-form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .saju-label {
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: var(--text-dim);
+    }
+    .saju-input, .saju-select {
+      background: rgba(0,0,0,0.5);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 10px;
+      padding: 10px 12px;
+      color: #fff;
+      font-size: 0.9rem;
+      outline: none;
+    }
+    .btn-pay-gold {
+      background: linear-gradient(135deg, #ffd700, #ff9900);
+      border: none;
+      color: #000;
+      font-weight: 900;
+      font-size: 1rem;
+      padding: 14px;
+      border-radius: 12px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      box-shadow: 0 4px 20px rgba(255, 215, 0, 0.4);
+      transition: all 0.2s;
+    }
+    .btn-pay-gold:hover { transform: translateY(-2px); box-shadow: 0 6px 25px rgba(255, 215, 0, 0.6); }
+  </style>
 </head>
 <body class="theme-studio">
   <div class="app-container">
@@ -25,13 +112,15 @@
         <div class="logo-badge">6/45</div>
         <div class="logo-text-group">
           <h1 class="logo-title">LOTTO <span>LIVE</span></h1>
-          <p class="logo-subtitle">3D 회전 추첨 & 역대 빅데이터 분석</p>
+          <p class="logo-subtitle">3D 회전 추첨 & 자동 채점 • 사주 추출</p>
         </div>
       </div>
       <div class="header-actions">
-        <a href="creator_studio.html" class="icon-btn" title="만능 생성기 가기" style="text-decoration:none; display:flex; align-items:center; justify-content:center;">
+        <button id="btn-open-saju" class="btn-vault-pill" style="background:linear-gradient(135deg,rgba(255,215,0,0.2),rgba(255,140,0,0.2)); border-color:#ffd700;" title="사주·별자리 번호">
           <i data-lucide="sparkles" style="color:#ffd700;"></i>
-        </a>
+          <span>사주·별자리</span>
+          <span class="premium-badge">$1</span>
+        </button>
         <button id="btn-sound-toggle" class="icon-btn" title="사운드 ON/OFF">
           <i data-lucide="volume-2"></i>
         </button>
@@ -82,6 +171,7 @@
               <button id="btn-save-all" class="btn-mini-action" title="보관함 저장"><i data-lucide="bookmark-plus"></i> 보관</button>
               <button id="btn-copy-all" class="btn-mini-action" title="클립보드 복사"><i data-lucide="copy"></i> 복사</button>
               <button id="btn-download-file" class="btn-mini-action" title="텍스트 파일 다운로드"><i data-lucide="file-down"></i> 파일저장</button>
+              <button id="btn-check-now" class="btn-mini-action" style="background:rgba(239,68,68,0.2); border-color:#ef4444; color:#fca5a5;" title="최신 회차 즉시 채점"><i data-lucide="check-circle-2"></i> 당첨채점</button>
             </div>
           </div>
           
@@ -95,21 +185,24 @@
           </div>
 
           <div id="extra-games-list" class="extra-games-list"></div>
+          
+          <!-- Auto Scoring Result Tray -->
+          <div id="tray-scoring-result" class="check-score-card" style="display: none;"></div>
         </div>
       </div>
     </section>
 
-    <!-- SECTION 2: 역대 회차 검색 & 빅데이터 분석 -->
+    <!-- SECTION 2: 역대 회차 검색 & 내 번호 자동 채점기 -->
     <section class="section-card history-stats-section">
       <div class="section-title-wrap">
-        <h2><i data-lucide="database"></i> 역대 회차 검색 & 데이터 분석</h2>
-        <p>1회부터 최신 회차까지 공식 당첨 결과 및 통계</p>
+        <h2><i data-lucide="check-check"></i> 역대 회차 검색 & 보관함 번호 자동 채점</h2>
+        <p>선택한 회차의 공식 당첨번호와 내가 보관한 번호를 즉시 자동 대조</p>
       </div>
 
       <div class="search-round-box">
         <div class="input-with-btn">
           <input type="number" id="input-search-round" placeholder="회차 입력 (예: 1160)" min="1" max="1160" value="1160">
-          <button id="btn-search-round" class="btn-primary-sm"><i data-lucide="search"></i> 조회</button>
+          <button id="btn-search-round" class="btn-primary-sm"><i data-lucide="search"></i> 조회 및 채점</button>
         </div>
         <div class="quick-rounds-chips">
           <span class="chip-label">최근:</span>
@@ -120,7 +213,11 @@
         </div>
       </div>
 
+      <!-- Winning Result Card -->
       <div id="round-result-card" class="round-result-card"></div>
+
+      <!-- Auto Score Results for Vault & Drawn -->
+      <div id="auto-matching-box" class="check-score-card" style="display:none;"></div>
 
       <div class="stats-overview-grid">
         <div class="stat-mini-card">
@@ -201,6 +298,91 @@
         <button id="btn-clear-vault" class="btn-secondary-sm">전체 비우기</button>
         <button id="btn-export-vault" class="btn-primary-sm"><i data-lucide="download"></i> CSV 다운로드</button>
       </div>
+    </div>
+  </div>
+
+  <!-- Saju & Horoscope Modal ($1 Premium) -->
+  <div id="saju-modal" class="modal-overlay" style="display: none;">
+    <div class="saju-modal-card">
+      <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid rgba(255,255,255,0.1); padding-bottom:10px;">
+        <div style="display:flex; align-items:center; gap:8px;">
+          <span style="font-size:1.2rem;">🔮</span>
+          <div>
+            <h3 style="font-size:1rem; font-weight:800; color:#ffd700;">사주 오행 & 별자리 맞춤 번호</h3>
+            <p style="font-size:0.72rem; color:#94a3b8;">나의 태어난 기운을 분석한 1:1 맞춤 대박 조합</p>
+          </div>
+        </div>
+        <button id="btn-close-saju" class="icon-btn-close"><i data-lucide="x"></i></button>
+      </div>
+
+      <div class="saju-form-group">
+        <label class="saju-label">생년월일 (음력/양력)</label>
+        <div style="display:grid; grid-template-columns:1fr 100px; gap:8px;">
+          <input type="date" id="saju-birthdate" class="saju-input" value="1990-01-01">
+          <select id="saju-calendar-type" class="saju-select">
+            <option value="solar">양력</option>
+            <option value="lunar">음력</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="saju-form-group">
+        <label class="saju-label">태어난 시간 & 성별</label>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
+          <select id="saju-birthtime" class="saju-select">
+            <option value="unknown">시간 모름</option>
+            <option value="0">자시 (23:30~01:30)</option>
+            <option value="2">축시 (01:30~03:30)</option>
+            <option value="4">인시 (03:30~05:30)</option>
+            <option value="6">묘시 (05:30~07:30)</option>
+            <option value="8">진시 (07:30~09:30)</option>
+            <option value="10">사시 (09:30~11:30)</option>
+            <option value="12">오시 (11:30~13:30)</option>
+            <option value="14">미시 (13:30~15:30)</option>
+            <option value="16">신시 (15:30~17:30)</option>
+            <option value="18">유시 (17:30~19:30)</option>
+            <option value="20">술시 (19:30~21:30)</option>
+            <option value="22">해시 (21:30~23:30)</option>
+          </select>
+          <select id="saju-gender" class="saju-select">
+            <option value="M">남성</option>
+            <option value="F">여성</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="saju-form-group">
+        <label class="saju-label">별자리 (자동 계산)</label>
+        <select id="saju-zodiac" class="saju-select">
+          <option value="aries">♈ 양자리 (3.21~4.19)</option>
+          <option value="taurus">♉ 황소자리 (4.20~5.20)</option>
+          <option value="gemini">♊ 쌍둥이자리 (5.21~6.21)</option>
+          <option value="cancer">♋ 게자리 (6.22~7.22)</option>
+          <option value="leo">♌ 사자자리 (7.23~8.22)</option>
+          <option value="virgo">♍ 처녀자리 (8.23~9.22)</option>
+          <option value="libra">♎ 천칭자리 (9.23~10.22)</option>
+          <option value="scorpio">♏ 전갈자리 (10.23~11.22)</option>
+          <option value="sagittarius">♐ 사수자리 (11.23~12.21)</option>
+          <option value="capricorn">♑ 염소자리 (12.22~1.19)</option>
+          <option value="aquarius">♒ 물병자리 (1.20~2.18)</option>
+          <option value="pisces">♓ 물고기자리 (2.19~3.20)</option>
+        </select>
+      </div>
+
+      <div id="saju-result-box" style="display:none; background:rgba(0,0,0,0.6); border:1px solid #ffd700; border-radius:12px; padding:12px; text-align:center;">
+        <span style="font-size:0.75rem; color:#ffd700; font-weight:800;">✨ 사주 오행 대박 추천 번호 ✨</span>
+        <div id="saju-balls-row" style="display:flex; justify-content:center; gap:6px; margin:8px 0;"></div>
+        <p id="saju-desc-text" style="font-size:0.75rem; color:#cbd5e1; line-height:1.4;"></p>
+      </div>
+
+      <button id="btn-pay-and-generate" class="btn-pay-gold">
+        <i data-lucide="sparkles"></i>
+        <span>$1 결제하고 사주 번호 받기</span>
+      </button>
+
+      <p style="font-size:0.68rem; color:#64748b; text-align:center;">
+        ※ 사주 명리학의 오행(목·화·토·금·수) 균형과 별자리 수비학을 결합한 프리미엄 분석 알고리즘입니다.
+      </p>
     </div>
   </div>
 
