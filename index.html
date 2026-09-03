@@ -110,41 +110,40 @@
   <div class="app-container">
     
     <!-- Top Global Header -->
-    <header class="app-header">
+    <header class="app-header" style="padding: 0.5rem 0.75rem 0.3rem;">
       <div class="logo-area">
-        <div class="logo-badge">6/45</div>
+        <div class="logo-badge" style="font-size:0.75rem; padding:2px 5px;">6/45</div>
         <div class="logo-text-group">
-          <h1 class="logo-title">LOTTO <span>LIVE</span></h1>
-          <p class="logo-subtitle">3D 회전 추첨 & 자동 채점 • 사주 추출</p>
+          <h1 class="logo-title" style="font-size:1.05rem;">LOTTO <span style="color:#ffd700;">LIVE</span></h1>
         </div>
       </div>
-      <div class="header-actions">
-        <button id="btn-open-saju" class="btn-vault-pill" style="background:linear-gradient(135deg,rgba(255,215,0,0.2),rgba(255,140,0,0.2)); border-color:#ffd700;" title="사주·별자리 번호">
-          <i data-lucide="sparkles" style="color:#ffd700;"></i>
-          <span>사주·별자리</span>
-          <span class="premium-badge">$1</span>
+      <div class="header-actions" style="gap:5px;">
+        <button id="btn-open-saju" class="btn-vault-pill" style="background:linear-gradient(135deg,rgba(255,215,0,0.2),rgba(255,140,0,0.2)); border-color:#ffd700; padding:4px 8px; font-size:0.72rem;" title="사주·별자리 번호">
+          <i data-lucide="sparkles" style="color:#ffd700; width:13px; height:13px;"></i>
+          <span>사주</span>
+          <span class="premium-badge" style="padding:1px 5px; font-size:0.65rem;">$1</span>
         </button>
-        <button id="btn-sound-toggle" class="icon-btn" title="사운드 ON/OFF">
-          <i data-lucide="volume-2"></i>
+        <button id="btn-sound-toggle" class="icon-btn" style="width:30px; height:30px;" title="사운드 ON/OFF">
+          <i data-lucide="volume-2" style="width:14px; height:14px;"></i>
         </button>
-        <button id="btn-open-vault" class="btn-vault-pill">
-          <i data-lucide="folder-heart"></i>
-          <span>보관함</span>
-          <span id="vault-badge-count" class="badge-count">0</span>
+        <button id="btn-open-vault" class="btn-vault-pill" style="padding:4px 8px; font-size:0.72rem;">
+          <i data-lucide="folder-heart" style="width:13px; height:13px;"></i>
+          <span>보관</span>
+          <span id="vault-badge-count" class="badge-count" style="font-size:0.65rem; padding:1px 5px;">0</span>
         </button>
       </div>
     </header>
 
     <!-- SECTION 1: 3D 회전 추첨기 -->
-    <section class="section-card live-draw-section">
-      <div class="section-badge-header">
-        <span class="live-indicator"><span class="pulse-dot"></span> LIVE 3D MACHINE</span>
-        <span class="next-draw-date" id="next-draw-display">제 1161회 추첨 대기</span>
+    <section class="section-card live-draw-section" style="padding:0.75rem 0.5rem; margin-top:0.25rem;">
+      <div class="section-badge-header" style="margin-bottom:4px;">
+        <span class="live-indicator" style="font-size:0.7rem;"><span class="pulse-dot"></span> 3D 추첨기</span>
+        <span class="next-draw-date" id="next-draw-display" style="font-size:0.7rem;">제 1161회 추첨 대기</span>
       </div>
 
-      <!-- 3D Canvas Rotating Drum -->
-      <div class="drum-canvas-wrapper">
-        <canvas id="lotto-drum-canvas" width="400" height="380"></canvas>
+      <!-- 3D Canvas Rotating Drum (Optimized for Mobile) -->
+      <div class="drum-canvas-wrapper" style="display:flex; justify-content:center; margin: 4px 0;">
+        <canvas id="lotto-drum-canvas" width="320" height="300" style="width: 300px; height: 280px; max-width: 100%; border-radius: 50%;"></canvas>
         <div class="drum-reflection-overlay"></div>
       </div>
 
