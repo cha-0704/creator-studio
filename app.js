@@ -14,18 +14,19 @@ const HISTORICAL_DATABASE = {
 };
 
 const FAMOUS_SPOTS = [
-  { rank: 1, name: '스파', region: 'seoul', count: 52, count2nd: 220, address: '서울 노원구 동일로 1493 주공10단지종합상가 111호', tag: '전국 1위 부동의 성지' },
-  { rank: 2, name: '부일카서비스', region: 'busan', count: 50, count2nd: 185, address: '부산 동구 자성로133번길 35', tag: '부산 영남권 최대 명당' },
-  { rank: 3, name: '일등복권편의점', region: 'daegu', count: 32, count2nd: 104, address: '대구 달서구 대명천로 220', tag: '대구 달서구 1등 성지' },
-  { rank: 4, name: '뉴빅마트', region: 'busan', count: 30, count2nd: 88, address: '부산 기장군 정관중앙로 48', tag: '기장군 정관신도시 명소' },
-  { rank: 5, name: '로또휴게실', region: 'gyeonggi', count: 27, count2nd: 92, address: '경기 용인시 기흥구 용구대로 1885', tag: '수도권 고속도로변 최대 명당' },
-  { rank: 6, name: '목화휴게소', region: 'gyeonggi', count: 22, count2nd: 76, address: '경남 사천시 사천대로 912', tag: '사천 국도변 로또 성지' },
-  { rank: 7, name: '세진전자통신', region: 'daegu', count: 22, count2nd: 81, address: '대구 서구 서대구로 156', tag: '대구 서구 대표 명당' },
-  { rank: 8, name: '로또명당인주점', region: 'gyeonggi', count: 21, count2nd: 74, address: '충남 아산시 인주면 서해로 519-2', tag: '충남 서해안 로또 명소' },
-  { rank: 9, name: '오천억복권방', region: 'seoul', count: 20, count2nd: 68, address: '광주 서구 상무대로 1087', tag: '호남권 최고 당첨 배출점' },
-  { rank: 10, name: '잠실매점', region: 'seoul', count: 20, count2nd: 79, address: '서울 송파구 올림픽로 269 잠실역 8번출구', tag: '잠실역 초역세권 명당' },
-  { rank: 11, name: '가판점(종로3가)', region: 'seoul', count: 18, count2nd: 62, address: '서울 종로구 종로 118', tag: '종로 중심가 명당 가판대' },
-  { rank: 12, name: '대박찬스', region: 'gyeonggi', count: 17, count2nd: 55, address: '경기 파주시 금정로 45', tag: '파주 지역 1등 성지' }
+  { rank: 1, name: '인터넷 복권판매사이트 (동행복권)', region: 'online', count: 48, count2nd: 285, address: '인터넷 온라인 구매 (dhlottery.co.kr)', tag: '1239회 2등 4명 잭팟 성지!' },
+  { rank: 2, name: '스파', region: 'seoul', count: 52, count2nd: 220, address: '서울 노원구 동일로 1493 주공10단지종합상가 111호', tag: '전국 1위 부동의 오프라인 성지' },
+  { rank: 3, name: '부일카서비스', region: 'busan', count: 50, count2nd: 185, address: '부산 동구 자성로133번길 35', tag: '부산 영남권 최대 명당' },
+  { rank: 4, name: '일등복권편의점', region: 'daegu', count: 32, count2nd: 104, address: '대구 달서구 대명천로 220', tag: '대구 달서구 1등 성지' },
+  { rank: 5, name: '뉴빅마트', region: 'busan', count: 30, count2nd: 88, address: '부산 기장군 정관중앙로 48', tag: '기장군 정관신도시 명소' },
+  { rank: 6, name: '로또휴게실', region: 'gyeonggi', count: 27, count2nd: 92, address: '경기 용인시 기흥구 용구대로 1885', tag: '수도권 고속도로변 최대 명당' },
+  { rank: 7, name: '목화휴게소', region: 'gyeonggi', count: 22, count2nd: 76, address: '경남 사천시 사천대로 912', tag: '사천 국도변 로또 성지' },
+  { rank: 8, name: '세진전자통신', region: 'daegu', count: 22, count2nd: 81, address: '대구 서구 서대구로 156', tag: '대구 서구 대표 명당' },
+  { rank: 9, name: '로또명당인주점', region: 'gyeonggi', count: 21, count2nd: 74, address: '충남 아산시 인주면 서해로 519-2', tag: '충남 서해안 로또 명소' },
+  { rank: 10, name: '오천억복권방', region: 'seoul', count: 20, count2nd: 68, address: '광주 서구 상무대로 1087', tag: '호남권 최고 당첨 배출점' },
+  { rank: 11, name: '잠실매점', region: 'seoul', count: 20, count2nd: 79, address: '서울 송파구 올림픽로 269 잠실역 8번출구', tag: '잠실역 초역세권 명당' },
+  { rank: 12, name: '가판점(종로3가)', region: 'seoul', count: 18, count2nd: 62, address: '서울 종로구 종로 118', tag: '종로 중심가 명당 가판대' },
+  { rank: 13, name: '대박찬스', region: 'gyeonggi', count: 17, count2nd: 55, address: '경기 파주시 금정로 45', tag: '파주 지역 1등 성지' }
 ];
 
 // ==========================================================================
