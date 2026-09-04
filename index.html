@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html class="dark" lang="ko">
+<html lang="ko">
 <head>
   <meta charset="utf-8"/>
   <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
-  <title>LottoStream Live - 로또 6/45 실시간 라이브 추첨기</title>
-  <meta name="description" content="방송국 스타일 3D 물리엔진 로또 6/45 실시간 추첨기 & 1239회 당첨번호 자동 채점"/>
+  <title>LottoStream Live - 로또 6/45 실시간 라이브 회전 추첨기</title>
+  <meta name="description" content="방송국 스타일 360도 회전 유리원통 3D 물리엔진 로또 6/45 실시간 추첨기"/>
 
   <!-- Tailwind CSS v3 with plugins -->
   <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
@@ -28,57 +28,15 @@
 
   <script id="tailwind-config">
     tailwind.config = {
-      darkMode: "class",
       theme: {
         extend: {
           colors: {
-            "secondary-container": "#2f486a",
-            "surface-bright": "#37393d",
-            "surface": "#111317",
-            "primary-fixed-dim": "#e9c400",
-            "surface-container": "#1e2023",
-            "surface-variant": "#333539",
-            "outline-variant": "#4d4732",
-            "outline": "#999077",
-            "primary": "#fff6df",
-            "tertiary-container": "#ffcfc8",
-            "on-primary-fixed": "#221b00",
-            "on-tertiary-container": "#c2000a",
-            "on-error-container": "#ffdad6",
-            "secondary-fixed-dim": "#afc8f0",
-            "on-error": "#690005",
-            "surface-container-highest": "#333539",
-            "error": "#ffb4ab",
-            "surface-tint": "#e9c400",
-            "surface-dim": "#111317",
-            "on-surface-variant": "#d0c6ab",
-            "primary-fixed": "#ffe16d",
-            "on-secondary-container": "#9eb7de",
-            "surface-container-low": "#1a1c1f",
-            "on-primary": "#3a3000",
-            "tertiary-fixed-dim": "#ffb4aa",
-            "on-tertiary": "#690003",
-            "background": "#111317",
-            "inverse-primary": "#705d00",
-            "secondary-fixed": "#d4e3ff",
-            "on-secondary-fixed-variant": "#2f486a",
-            "secondary": "#afc8f0",
-            "surface-container-lowest": "#0c0e12",
-            "on-primary-fixed-variant": "#544600",
-            "surface-container-high": "#282a2e",
-            "on-surface": "#e2e2e7",
-            "inverse-on-surface": "#2e3034",
-            "on-primary-container": "#705e00",
-            "error-container": "#93000a",
-            "tertiary-fixed": "#ffdad5",
-            "on-tertiary-fixed": "#410001",
-            "inverse-surface": "#e2e2e7",
-            "on-tertiary-fixed-variant": "#930005",
-            "tertiary": "#fff4f2",
-            "on-secondary": "#163152",
-            "primary-container": "#ffd700",
-            "on-secondary-fixed": "#001c3a",
-            "on-background": "#e2e2e7"
+            brand: {
+              navy: '#0B192C',
+              dark: '#1E3E62',
+              gold: '#F59E0B',
+              'gold-light': '#FCD34D'
+            }
           },
           fontFamily: {
             "display-mobile": ["Montserrat", "sans-serif"],
@@ -93,24 +51,50 @@
     };
   </script>
   <style>
-    /* Broadcast Studio Background */
+    /* Luxurious Deep Studio Blue Background (검정색 대신 세련된 스튜디오 네이비 블루 그라데이션) */
     body {
-      background: radial-gradient(circle at 50% -20%, rgba(47, 72, 106, 0.4) 0%, transparent 60%), #111317;
+      background: radial-gradient(circle at 50% 15%, #1e3a8a 0%, #0f2744 45%, #08162b 100%);
       background-attachment: fixed;
       font-family: 'Inter', sans-serif;
       min-height: max(884px, 100dvh);
-      color: #e2e2e7;
+      color: #f1f5f9;
     }
 
-    /* Glass Drum */
+    /* 360-Degree Spinning Glass Drum Outer Structure */
+    .drum-stage-wrapper {
+      perspective: 1000px;
+    }
+
     .glass-drum {
-      background: rgba(255, 255, 255, 0.04);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      border: 1px solid rgba(255, 255, 255, 0.15);
-      box-shadow: inset 0 0 40px rgba(255, 255, 255, 0.05), 0 20px 40px rgba(0, 0, 0, 0.5);
+      background: radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.08) 0%, rgba(15, 39, 68, 0.6) 80%, rgba(8, 22, 43, 0.85) 100%);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 3px solid rgba(253, 224, 71, 0.5);
+      box-shadow: 
+        0 0 35px rgba(245, 158, 11, 0.3),
+        inset 0 0 50px rgba(0, 0, 0, 0.6),
+        inset 0 2px 20px rgba(255, 255, 255, 0.4);
       position: relative;
       overflow: hidden;
+    }
+
+    /* Mechanical Rotating Glass Rings */
+    .rotating-glass-rotor {
+      position: absolute;
+      inset: 8px;
+      border-radius: 50%;
+      border: 2px dashed rgba(253, 224, 71, 0.45);
+      pointer-events: none;
+      z-index: 15;
+      transition: transform 0.05s linear;
+    }
+    .rotating-glass-rotor-inner {
+      position: absolute;
+      inset: 28px;
+      border-radius: 50%;
+      border: 1.5px dotted rgba(255, 255, 255, 0.35);
+      pointer-events: none;
+      z-index: 15;
     }
 
     /* Realistic 3D Lottery Ball in Cylinder */
@@ -125,19 +109,22 @@
       font-family: 'Montserrat', 'Inter', sans-serif;
       font-weight: 900;
       font-size: 19px;
-      color: #111317;
-      box-shadow: inset -8px -8px 16px rgba(0,0,0,0.65), inset 8px 8px 16px rgba(255,255,255,0.85), 0 4px 8px rgba(0,0,0,0.5);
+      color: #0f172a;
+      box-shadow: 
+        inset -8px -8px 16px rgba(0,0,0,0.65), 
+        inset 8px 8px 16px rgba(255,255,255,0.9), 
+        0 6px 12px rgba(0,0,0,0.6);
       user-select: none;
       z-index: 10;
       pointer-events: none;
-      transition: transform 0.05s linear;
+      transition: transform 0.04s linear;
     }
     
-    .ball-yellow { background: radial-gradient(circle at 35% 30%, #fff6df 0%, #FFD700 45%, #b39700 100%); color: #221b00; }
-    .ball-blue { background: radial-gradient(circle at 35% 30%, #a8cfff 0%, #007BFF 45%, #004a99 100%); color: #ffffff; text-shadow: 0 1px 2px rgba(0,0,0,0.6); }
-    .ball-red { background: radial-gradient(circle at 35% 30%, #ffb3ad 0%, #FF4136 45%, #991e14 100%); color: #ffffff; text-shadow: 0 1px 2px rgba(0,0,0,0.6); }
-    .ball-grey { background: radial-gradient(circle at 35% 30%, #e2e2e2 0%, #888888 45%, #444444 100%); color: #ffffff; text-shadow: 0 1px 2px rgba(0,0,0,0.6); }
-    .ball-green { background: radial-gradient(circle at 35% 30%, #a4f5af 0%, #2ECC40 45%, #167a23 100%); color: #ffffff; text-shadow: 0 1px 2px rgba(0,0,0,0.6); }
+    .ball-yellow { background: radial-gradient(circle at 35% 30%, #fffbeb 0%, #F59E0B 50%, #92400e 100%); color: #1c1917; text-shadow: 0 1px 1px rgba(255,255,255,0.8); }
+    .ball-blue { background: radial-gradient(circle at 35% 30%, #bfdbfe 0%, #2563EB 50%, #1e3a8a 100%); color: #ffffff; text-shadow: 0 1px 2px rgba(0,0,0,0.8); }
+    .ball-red { background: radial-gradient(circle at 35% 30%, #fecaca 0%, #EF4444 50%, #7f1d1d 100%); color: #ffffff; text-shadow: 0 1px 2px rgba(0,0,0,0.8); }
+    .ball-grey { background: radial-gradient(circle at 35% 30%, #f1f5f9 0%, #64748b 50%, #1e293b 100%); color: #ffffff; text-shadow: 0 1px 2px rgba(0,0,0,0.8); }
+    .ball-green { background: radial-gradient(circle at 35% 30%, #bbf7d0 0%, #16A34A 50%, #14532d 100%); color: #ffffff; text-shadow: 0 1px 2px rgba(0,0,0,0.8); }
 
     /* Extracted Ball Result */
     .result-ball {
@@ -150,8 +137,8 @@
       font-family: 'Montserrat', 'Inter', sans-serif;
       font-weight: 900;
       font-size: 20px;
-      color: #111317;
-      box-shadow: inset -6px -6px 14px rgba(0,0,0,0.6), inset 6px 6px 14px rgba(255,255,255,0.85), 0 5px 10px rgba(0,0,0,0.5);
+      color: #0f172a;
+      box-shadow: inset -6px -6px 14px rgba(0,0,0,0.6), inset 6px 6px 14px rgba(255,255,255,0.85), 0 5px 12px rgba(0,0,0,0.5);
       animation: dropIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
     }
 
@@ -159,14 +146,15 @@
       width: 52px;
       height: 52px;
       border-radius: 50%;
-      background: rgba(0,0,0,0.4);
-      border: 2px dashed rgba(255,255,255,0.2);
+      background: rgba(15, 39, 68, 0.7);
+      border: 2px dashed rgba(253, 224, 71, 0.4);
       display: flex;
       align-items: center;
       justify-content: center;
-      color: #666;
+      color: #94a3b8;
       font-size: 18px;
       font-weight: bold;
+      box-shadow: inset 0 2px 8px rgba(0,0,0,0.5);
     }
 
     @keyframes dropIn {
@@ -176,19 +164,19 @@
 
     /* Primary Button Bevel */
     .btn-bevel {
-      box-shadow: inset 0 2px 0 rgba(255,255,255,0.35), inset 0 -4px 0 rgba(0,0,0,0.35), 0 8px 18px rgba(0,0,0,0.45);
+      box-shadow: inset 0 2px 0 rgba(255,255,255,0.4), inset 0 -4px 0 rgba(0,0,0,0.35), 0 10px 20px rgba(0,0,0,0.4);
       transition: all 0.15s ease-out;
     }
     .btn-bevel:active {
-      box-shadow: inset 0 2px 0 rgba(0,0,0,0.4), inset 0 -2px 0 rgba(255,255,255,0.1), 0 2px 4px rgba(0,0,0,0.4);
+      box-shadow: inset 0 2px 0 rgba(0,0,0,0.4), inset 0 -2px 0 rgba(255,255,255,0.1), 0 3px 6px rgba(0,0,0,0.4);
       transform: translateY(3px);
     }
     
     /* Live Pulse */
     @keyframes pulse-red {
-      0% { box-shadow: 0 0 0 0 rgba(194, 0, 10, 0.7); }
-      70% { box-shadow: 0 0 0 10px rgba(194, 0, 10, 0); }
-      100% { box-shadow: 0 0 0 0 rgba(194, 0, 10, 0); }
+      0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.8); }
+      70% { box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
     }
     .live-dot {
       animation: pulse-red 2s infinite;
@@ -198,8 +186,8 @@
     .game-modal {
       position: fixed;
       inset: 0;
-      background: rgba(0,0,0,0.85);
-      backdrop-filter: blur(12px);
+      background: rgba(8, 22, 43, 0.88);
+      backdrop-filter: blur(14px);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -215,27 +203,27 @@
     }
   </style>
 </head>
-<body class="text-on-background font-body-md min-h-screen flex flex-col overflow-x-hidden selection:bg-primary-container selection:text-on-primary-container pb-24 md:pb-8">
+<body class="font-body-md min-h-screen flex flex-col overflow-x-hidden selection:bg-amber-400 selection:text-slate-950 pb-24 md:pb-8">
 
-  <!-- TopAppBar (Stitch Exact Header) -->
-  <header class="bg-surface/85 backdrop-blur-xl text-primary-fixed-dim font-headline-md w-full top-0 sticky border-b border-white/10 shadow-sm z-50">
+  <!-- TopAppBar -->
+  <header class="bg-[#0f2744]/80 backdrop-blur-xl text-amber-300 font-headline-md w-full top-0 sticky border-b border-white/10 shadow-lg z-50">
     <div class="flex items-center justify-between px-4 py-3 w-full max-w-5xl mx-auto">
-      <button id="btn-header-menu" class="text-on-surface-variant hover:bg-surface-bright/20 transition-colors active:scale-95 p-2 rounded-full flex items-center justify-center">
+      <button id="btn-header-menu" class="text-slate-300 hover:bg-white/10 transition-colors active:scale-95 p-2 rounded-full flex items-center justify-center">
         <span class="material-symbols-outlined">menu</span>
       </button>
       
       <div class="flex items-center gap-3">
-        <div class="w-2.5 h-2.5 bg-on-tertiary-container rounded-full live-dot"></div>
-        <h1 class="font-display-lg text-xl md:text-2xl font-extrabold tracking-tight text-primary-fixed-dim uppercase">
+        <div class="w-3 h-3 bg-red-500 rounded-full live-dot"></div>
+        <h1 class="font-display-lg text-xl md:text-2xl font-black tracking-tight text-amber-300 uppercase drop-shadow">
           LottoStream Live
         </h1>
       </div>
 
       <div class="flex items-center gap-1.5">
-        <button id="btn-sound-toggle" aria-label="사운드 토글" class="text-on-surface-variant hover:bg-surface-bright/20 transition-colors active:scale-95 p-2 rounded-full flex items-center justify-center">
+        <button id="btn-sound-toggle" aria-label="사운드 토글" class="text-slate-300 hover:bg-white/10 transition-colors active:scale-95 p-2 rounded-full flex items-center justify-center">
           <span class="material-symbols-outlined" id="sound-icon">volume_up</span>
         </button>
-        <button id="btn-header-vault" class="text-on-surface-variant hover:bg-surface-bright/20 transition-colors active:scale-95 p-2 rounded-full flex items-center justify-center relative">
+        <button id="btn-header-vault" class="text-slate-300 hover:bg-white/10 transition-colors active:scale-95 p-2 rounded-full flex items-center justify-center relative">
           <span class="material-symbols-outlined">folder_special</span>
           <span id="vault-badge-count" class="absolute -top-1 -right-1 bg-amber-400 text-slate-950 text-[10px] font-black px-1.5 py-0.2 rounded-full">0</span>
         </button>
@@ -243,44 +231,69 @@
     </div>
   </header>
 
-  <!-- Main Content: Clean & Centered Stitch Live Studio -->
-  <main class="flex-grow flex flex-col items-center justify-center px-4 py-8 w-full max-w-4xl mx-auto gap-8 relative z-10">
+  <!-- Main Content: Clean & Centered Live Studio -->
+  <main class="flex-grow flex flex-col items-center justify-center px-4 py-6 w-full max-w-4xl mx-auto gap-6 relative z-10">
     
     <!-- Live Status Indicator -->
-    <div class="flex items-center gap-2 bg-surface-container/50 backdrop-blur-md px-5 py-2.5 rounded-full border border-white/5">
-      <span class="font-label-caps text-xs text-on-surface-variant tracking-widest uppercase">NEXT DRAW IN:</span>
-      <span class="font-headline-md text-base text-primary-fixed-dim font-bold tabular-nums" id="countdown">토요일 20:35 (제 1240회)</span>
+    <div class="flex items-center gap-2 bg-[#122e54]/70 backdrop-blur-md px-5 py-2.5 rounded-full border border-amber-400/30 shadow-md">
+      <span class="font-label-caps text-xs text-slate-300 tracking-widest uppercase">NEXT DRAW IN:</span>
+      <span class="font-headline-md text-base text-amber-300 font-bold tabular-nums" id="countdown">토요일 20:35 (제 1240회)</span>
     </div>
 
-    <!-- The 3D Drum Container (Stitch Exact Glass Drum) -->
-    <div class="w-full max-w-[380px] md:max-w-[460px] aspect-square rounded-full glass-drum flex items-center justify-center relative shadow-2xl" id="drumContainer">
-      <!-- 45 3D Balls Injected by Engine -->
-      <div class="absolute inset-0 bg-gradient-to-b from-white/10 via-transparent to-black/40 rounded-full pointer-events-none z-20 shadow-[inset_0_0_60px_rgba(0,0,0,0.8)]"></div>
-      <div class="absolute inset-4 rounded-full border border-white/5 pointer-events-none z-20"></div>
+    <!-- The 360-Degree Rotating Glass Drum Container -->
+    <div class="drum-stage-wrapper w-full max-w-[380px] md:max-w-[460px] aspect-square flex items-center justify-center relative">
+      <!-- Glass Drum Frame -->
+      <div class="glass-drum w-full h-full rounded-full flex items-center justify-center relative shadow-2xl" id="drumContainer">
+        <!-- Mechanical Spinning Rotors (유리 원통 회전 시각화 레이어) -->
+        <div class="rotating-glass-rotor" id="rotorOuter"></div>
+        <div class="rotating-glass-rotor-inner" id="rotorInner"></div>
+
+        <!-- 45 3D Balls Injected by Engine -->
+
+        <!-- Glass Highlights & Specular Reflections -->
+        <div class="absolute inset-0 bg-gradient-to-b from-white/20 via-transparent to-black/50 rounded-full pointer-events-none z-20 shadow-[inset_0_0_60px_rgba(0,0,0,0.7)]"></div>
+        <div class="absolute inset-4 rounded-full border border-white/15 pointer-events-none z-20"></div>
+      </div>
     </div>
 
-    <!-- Control Action: Start / Stop Button -->
+    <!-- Controls: Game Count Stepper & Start / Stop Button -->
     <div class="w-full max-w-[380px] flex flex-col items-center gap-4">
-      <button class="w-56 py-4 bg-primary-container text-on-primary-container font-headline-md text-xl font-extrabold uppercase rounded-full btn-bevel tracking-wider transition-colors duration-300 flex items-center justify-center gap-2 cursor-pointer shadow-xl" id="extractBtn">
+      
+      <!-- Stepper for Game Count -->
+      <div class="flex items-center justify-between w-full px-4 py-2 bg-[#122e54]/80 border border-white/15 rounded-2xl shadow-inner">
+        <span class="text-xs font-bold text-slate-200 tracking-wider uppercase">추출 게임 수</span>
+        <div class="flex items-center gap-2">
+          <button id="btn-decrease-games" class="w-8 h-8 rounded-xl bg-slate-700/60 hover:bg-slate-700 text-white font-black flex items-center justify-center active:scale-95 transition-all">
+            −
+          </button>
+          <span id="display-game-count" class="w-8 text-center font-headline-md font-extrabold text-amber-300 text-lg">5</span>
+          <button id="btn-increase-games" class="w-8 h-8 rounded-xl bg-slate-700/60 hover:bg-slate-700 text-white font-black flex items-center justify-center active:scale-95 transition-all">
+            +
+          </button>
+        </div>
+      </div>
+
+      <!-- Main CTA: Start / Stop Button -->
+      <button class="w-full py-4 bg-gradient-to-r from-amber-400 via-amber-500 to-amber-400 text-slate-950 font-headline-md text-xl font-black uppercase rounded-full btn-bevel tracking-wider transition-colors duration-300 flex items-center justify-center gap-2 cursor-pointer shadow-xl" id="extractBtn">
         <span class="material-symbols-outlined">play_arrow</span>
-        <span id="btn-extract-label">START (추첨)</span>
+        <span id="btn-extract-label">START (추첨 시작)</span>
       </button>
-      <p id="spin-hint-text" class="text-xs text-on-surface-variant/70 text-center tracking-wide">
-        버튼을 누르면 공이 부드럽게 회전하며 6개의 행운 번호가 추출됩니다.
+      <p id="spin-hint-text" class="text-xs text-slate-300 text-center tracking-wide">
+        버튼을 누르면 유리원통이 360도 씽씽 회전하며 공이 섞입니다!
       </p>
     </div>
 
     <!-- Results Tray (Live Winning Numbers) -->
-    <div class="w-full max-w-3xl bg-surface-container-low/80 backdrop-blur-xl border border-white/10 rounded-2xl p-6 shadow-xl">
+    <div class="w-full max-w-3xl bg-[#122e54]/80 backdrop-blur-xl border border-white/15 rounded-2xl p-6 shadow-xl">
       <div class="flex flex-col items-center gap-4">
         <div class="flex items-center justify-between w-full px-2">
-          <h2 class="font-label-caps text-xs text-on-surface-variant tracking-widest uppercase font-bold flex items-center gap-1.5">
+          <h2 class="font-label-caps text-xs text-slate-300 tracking-widest uppercase font-bold flex items-center gap-1.5">
             <span class="material-symbols-outlined text-amber-400 text-sm">trophy</span>
             Winning Numbers (당첨 번호)
           </h2>
           <div id="tray-actions-mini" class="flex gap-2" style="display:none;">
             <button id="btn-save-all" class="text-xs px-3 py-1 rounded-lg bg-amber-400/20 text-amber-300 font-bold hover:bg-amber-400/30 border border-amber-400/40">보관함 저장</button>
-            <button id="btn-copy-all" class="text-xs px-3 py-1 rounded-lg bg-surface-bright/50 text-slate-300 hover:text-white">복사</button>
+            <button id="btn-copy-all" class="text-xs px-3 py-1 rounded-lg bg-white/10 text-slate-200 hover:text-white">복사</button>
           </div>
         </div>
 
@@ -298,36 +311,36 @@
       </div>
     </div>
 
-    <!-- Quick Navigation to Details (Subpage Modals / Sections) -->
-    <div class="w-full max-w-3xl flex items-center justify-center gap-4 text-xs">
-      <button id="btn-open-round-modal" class="px-4 py-2.5 rounded-xl bg-surface-container/60 hover:bg-surface-container border border-white/10 text-on-surface-variant hover:text-white flex items-center gap-1.5 transition-all">
+    <!-- Quick Navigation to Details (Subpage Modals) -->
+    <div class="w-full max-w-3xl flex flex-wrap items-center justify-center gap-3 text-xs">
+      <button id="btn-open-round-modal" class="px-4 py-2.5 rounded-xl bg-[#122e54]/60 hover:bg-[#122e54] border border-white/10 text-slate-200 hover:text-white flex items-center gap-1.5 transition-all shadow">
         <span class="material-symbols-outlined text-sm text-amber-400">search</span>
         <span>1239회 역대 결과 및 자동 채점 보기</span>
       </button>
-      <button id="btn-open-spots-modal" class="px-4 py-2.5 rounded-xl bg-surface-container/60 hover:bg-surface-container border border-white/10 text-on-surface-variant hover:text-white flex items-center gap-1.5 transition-all">
+      <button id="btn-open-spots-modal" class="px-4 py-2.5 rounded-xl bg-[#122e54]/60 hover:bg-[#122e54] border border-white/10 text-slate-200 hover:text-white flex items-center gap-1.5 transition-all shadow">
         <span class="material-symbols-outlined text-sm text-rose-400">local_fire_department</span>
-        <span>1등 최다 배출 명당 보기</span>
+        <span>오프라인 1등 최다 배출 명당 보기</span>
       </button>
     </div>
 
   </main>
 
   <!-- BottomNavBar (Mobile Only) -->
-  <nav class="md:hidden bg-surface-container/95 backdrop-blur-2xl text-primary-container font-label-caps text-xs fixed bottom-0 w-full z-50 rounded-t-2xl border-t border-white/10 shadow-[0_-4px_20px_rgba(0,0,0,0.5)]">
+  <nav class="md:hidden bg-[#0f2744]/95 backdrop-blur-2xl text-amber-300 font-label-caps text-xs fixed bottom-0 w-full z-50 rounded-t-2xl border-t border-white/10 shadow-[0_-4px_20px_rgba(0,0,0,0.5)]">
     <div class="flex justify-around items-center h-16 px-4 w-full">
-      <button class="flex flex-col items-center justify-center text-primary-fixed-dim bg-secondary-container/40 rounded-full py-1 px-4 hover:text-primary transition-all active:scale-90" id="nav-btn-draw">
+      <button class="flex flex-col items-center justify-center text-amber-300 bg-white/10 rounded-full py-1 px-4 transition-all active:scale-90" id="nav-btn-draw">
         <span class="material-symbols-outlined text-xl mb-0.5">casino</span>
         <span class="text-[10px] font-bold">추첨</span>
       </button>
-      <button class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-all active:scale-90" id="nav-btn-history">
+      <button class="flex flex-col items-center justify-center text-slate-300 hover:text-amber-300 transition-all active:scale-90" id="nav-btn-history">
         <span class="material-symbols-outlined text-xl mb-0.5">format_list_numbered</span>
         <span class="text-[10px]">회차조회</span>
       </button>
-      <button class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-all active:scale-90" id="nav-btn-saju">
+      <button class="flex flex-col items-center justify-center text-slate-300 hover:text-amber-300 transition-all active:scale-90" id="nav-btn-saju">
         <span class="material-symbols-outlined text-xl mb-0.5">auto_awesome</span>
         <span class="text-[10px]">사주번호</span>
       </button>
-      <button class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-all active:scale-90" id="nav-btn-vault">
+      <button class="flex flex-col items-center justify-center text-slate-300 hover:text-amber-300 transition-all active:scale-90" id="nav-btn-vault">
         <span class="material-symbols-outlined text-xl mb-0.5">folder_special</span>
         <span class="text-[10px]">보관함</span>
       </button>
@@ -336,17 +349,17 @@
 
   <!-- Round History & Scoring Modal (Sub-page) -->
   <div id="modal-round-history" class="game-modal">
-    <div class="bg-surface-container border border-white/15 rounded-3xl p-6 max-w-md w-full text-white shadow-2xl space-y-4 max-h-[85vh] flex flex-col">
+    <div class="bg-[#122e54] border border-white/15 rounded-3xl p-6 max-w-md w-full text-white shadow-2xl space-y-4 max-h-[85vh] flex flex-col">
       <div class="flex justify-between items-center border-b border-white/10 pb-3">
         <h3 class="font-headline-md text-base font-bold text-white flex items-center gap-2">
           <span class="material-symbols-outlined text-amber-400">check_circle</span> 역대 회차 검색 & 자동 채점
         </h3>
-        <button id="btn-close-round-modal" class="text-on-surface-variant hover:text-white"><span class="material-symbols-outlined">close</span></button>
+        <button id="btn-close-round-modal" class="text-slate-300 hover:text-white"><span class="material-symbols-outlined">close</span></button>
       </div>
 
       <div class="flex gap-2">
-        <input id="input-round-search" type="number" value="1239" class="flex-1 bg-surface-container-highest/60 border border-white/10 rounded-xl px-4 py-2 text-sm font-bold text-white outline-none focus:border-amber-400" placeholder="회차 입력 (예: 1239)">
-        <button id="btn-search-round" class="px-4 py-2 bg-secondary-container text-white font-bold text-xs rounded-xl hover:brightness-110 active:scale-95 transition-all">
+        <input id="input-round-search" type="number" value="1239" class="flex-1 bg-[#0f2744] border border-white/15 rounded-xl px-4 py-2 text-sm font-bold text-white outline-none focus:border-amber-400" placeholder="회차 입력 (예: 1239)">
+        <button id="btn-search-round" class="px-4 py-2 bg-amber-500 text-slate-950 font-black text-xs rounded-xl hover:brightness-110 active:scale-95 transition-all">
           조회
         </button>
       </div>
@@ -354,16 +367,16 @@
       <!-- Quick Chips -->
       <div class="flex items-center gap-1.5 overflow-x-auto pb-1 text-xs">
         <button class="chip-round px-2.5 py-1 rounded-lg bg-amber-400/20 border border-amber-400/40 text-amber-300 font-bold shrink-0" data-round="1239">1239회</button>
-        <button class="chip-round px-2.5 py-1 rounded-lg bg-surface-bright/40 border border-white/10 text-slate-300 hover:text-white shrink-0" data-round="1238">1238회</button>
-        <button class="chip-round px-2.5 py-1 rounded-lg bg-surface-bright/40 border border-white/10 text-slate-300 hover:text-white shrink-0" data-round="1237">1237회</button>
-        <button class="chip-round px-2.5 py-1 rounded-lg bg-surface-bright/40 border border-white/10 text-slate-300 hover:text-white shrink-0" data-round="1161">1161회</button>
+        <button class="chip-round px-2.5 py-1 rounded-lg bg-white/10 border border-white/10 text-slate-300 hover:text-white shrink-0" data-round="1238">1238회</button>
+        <button class="chip-round px-2.5 py-1 rounded-lg bg-white/10 border border-white/10 text-slate-300 hover:text-white shrink-0" data-round="1237">1237회</button>
+        <button class="chip-round px-2.5 py-1 rounded-lg bg-white/10 border border-white/10 text-slate-300 hover:text-white shrink-0" data-round="1161">1161회</button>
       </div>
 
       <!-- Official Card -->
-      <div id="official-round-card" class="bg-surface-container-highest/40 border border-white/5 p-4 rounded-xl space-y-3">
+      <div id="official-round-card" class="bg-[#0b1b30] border border-white/10 p-4 rounded-xl space-y-3">
         <div class="flex items-center justify-between">
-          <span id="card-round-title" class="font-headline-md font-bold text-primary-fixed-dim text-sm">제 1239회 당첨번호</span>
-          <span id="card-round-date" class="text-xs text-on-surface-variant">2026.08.29 추첨</span>
+          <span id="card-round-title" class="font-headline-md font-bold text-amber-300 text-sm">제 1239회 당첨번호</span>
+          <span id="card-round-date" class="text-xs text-slate-400">2026.08.29 추첨</span>
         </div>
 
         <div class="flex items-center justify-between flex-wrap gap-2 py-1">
@@ -381,13 +394,13 @@
           </div>
         </div>
 
-        <div class="grid grid-cols-2 gap-2 pt-2 border-t border-white/5 text-xs">
-          <div class="bg-surface-container/60 p-2 rounded-lg">
-            <span class="text-on-surface-variant text-[10px] block">1등 당첨금</span>
+        <div class="grid grid-cols-2 gap-2 pt-2 border-t border-white/10 text-xs">
+          <div class="bg-[#122e54] p-2 rounded-lg">
+            <span class="text-slate-400 text-[10px] block">1등 당첨금</span>
             <span id="card-prize-amount" class="font-bold text-amber-300 text-xs">22억 1,479만 원</span>
           </div>
-          <div class="bg-surface-container/60 p-2 rounded-lg">
-            <span class="text-on-surface-variant text-[10px] block">당첨 인원</span>
+          <div class="bg-[#122e54] p-2 rounded-lg">
+            <span class="text-slate-400 text-[10px] block">당첨 인원</span>
             <span id="card-winners-count" class="font-bold text-white text-xs">13명 (자동10)</span>
           </div>
         </div>
@@ -397,44 +410,44 @@
 
   <!-- Famous Spots Modal (Sub-page) -->
   <div id="modal-famous-spots" class="game-modal">
-    <div class="bg-surface-container border border-white/15 rounded-3xl p-6 max-w-md w-full text-white shadow-2xl space-y-4 max-h-[85vh] flex flex-col">
+    <div class="bg-[#122e54] border border-white/15 rounded-3xl p-6 max-w-md w-full text-white shadow-2xl space-y-4 max-h-[85vh] flex flex-col">
       <div class="flex justify-between items-center border-b border-white/10 pb-3">
         <h3 class="font-headline-md text-base font-bold text-white flex items-center gap-2">
-          <span class="material-symbols-outlined text-rose-400">local_fire_department</span> 전국 1등 최다 배출 명당
+          <span class="material-symbols-outlined text-rose-400">local_fire_department</span> 전국 1등 최다 배출 오프라인 명당
         </h3>
-        <button id="btn-close-spots-modal" class="text-on-surface-variant hover:text-white"><span class="material-symbols-outlined">close</span></button>
+        <button id="btn-close-spots-modal" class="text-slate-300 hover:text-white"><span class="material-symbols-outlined">close</span></button>
       </div>
 
       <div class="space-y-2.5 overflow-y-auto flex-1 py-1">
-        <div class="bg-surface-container/50 border border-white/5 p-3 rounded-xl flex items-center justify-between">
+        <div class="bg-[#0b1b30] border border-white/10 p-3 rounded-xl flex items-center justify-between">
           <div>
             <div class="flex items-center gap-1.5">
               <span class="bg-amber-400 text-slate-950 font-black text-[10px] px-1.5 py-0.5 rounded">TOP 1</span>
               <h4 class="font-bold text-white text-sm">스파</h4>
             </div>
-            <p class="text-xs text-on-surface-variant mt-0.5">서울 노원구 동일로 1493 주공10단지</p>
+            <p class="text-xs text-slate-400 mt-0.5">서울 노원구 동일로 1493 주공10단지</p>
           </div>
           <span class="text-xs font-black text-rose-400 bg-rose-500/10 px-2 py-1 rounded-md">1등 52회</span>
         </div>
 
-        <div class="bg-surface-container/50 border border-white/5 p-3 rounded-xl flex items-center justify-between">
+        <div class="bg-[#0b1b30] border border-white/10 p-3 rounded-xl flex items-center justify-between">
           <div>
             <div class="flex items-center gap-1.5">
               <span class="bg-amber-400 text-slate-950 font-black text-[10px] px-1.5 py-0.5 rounded">TOP 2</span>
               <h4 class="font-bold text-white text-sm">부일카서비스</h4>
             </div>
-            <p class="text-xs text-on-surface-variant mt-0.5">부산 동구 자성로133번길 35</p>
+            <p class="text-xs text-slate-400 mt-0.5">부산 동구 자성로133번길 35</p>
           </div>
           <span class="text-xs font-black text-rose-400 bg-rose-500/10 px-2 py-1 rounded-md">1등 50회</span>
         </div>
 
-        <div class="bg-surface-container/50 border border-white/5 p-3 rounded-xl flex items-center justify-between">
+        <div class="bg-[#0b1b30] border border-white/10 p-3 rounded-xl flex items-center justify-between">
           <div>
             <div class="flex items-center gap-1.5">
-              <span class="bg-surface-bright text-white font-bold text-[10px] px-1.5 py-0.5 rounded">TOP 3</span>
+              <span class="bg-slate-700 text-white font-bold text-[10px] px-1.5 py-0.5 rounded">TOP 3</span>
               <h4 class="font-bold text-white text-sm">일등복권편의점</h4>
             </div>
-            <p class="text-xs text-on-surface-variant mt-0.5">대구 달서구 대명천로 220</p>
+            <p class="text-xs text-slate-400 mt-0.5">대구 달서구 대명천로 220</p>
           </div>
           <span class="text-xs font-black text-rose-400 bg-rose-500/10 px-2 py-1 rounded-md">1등 32회</span>
         </div>
@@ -444,28 +457,28 @@
 
   <!-- Saju Modal -->
   <div id="modal-saju" class="game-modal">
-    <div class="bg-surface-container border border-amber-400/40 rounded-3xl p-6 max-w-sm w-full text-white shadow-2xl space-y-4">
+    <div class="bg-[#122e54] border border-amber-400/40 rounded-3xl p-6 max-w-sm w-full text-white shadow-2xl space-y-4">
       <div class="flex justify-between items-center">
         <h3 class="font-headline-md text-lg font-black text-amber-400 flex items-center gap-1.5">
           <span class="material-symbols-outlined">auto_awesome</span> 사주·별자리 행운 번호
         </h3>
-        <button id="btn-close-saju" class="text-on-surface-variant hover:text-white"><span class="material-symbols-outlined">close</span></button>
+        <button id="btn-close-saju" class="text-slate-300 hover:text-white"><span class="material-symbols-outlined">close</span></button>
       </div>
-      <p class="text-xs text-on-surface-variant">생년월일과 사주 오행을 분석하여 이번 주 나만의 최적 행운 번호를 추출합니다.</p>
+      <p class="text-xs text-slate-300">생년월일과 사주 오행을 분석하여 이번 주 나만의 최적 행운 번호를 추출합니다.</p>
       <div class="space-y-3">
         <div>
-          <label class="text-xs text-on-surface-variant font-bold block mb-1">생년월일</label>
-          <input type="date" value="1990-01-01" class="w-full bg-surface-container-highest border border-white/10 rounded-xl p-2.5 text-sm font-bold text-white outline-none">
+          <label class="text-xs text-slate-300 font-bold block mb-1">생년월일</label>
+          <input type="date" value="1990-01-01" class="w-full bg-[#0f2744] border border-white/10 rounded-xl p-2.5 text-sm font-bold text-white outline-none">
         </div>
         <div>
-          <label class="text-xs text-on-surface-variant font-bold block mb-1">성별</label>
-          <select class="w-full bg-surface-container-highest border border-white/10 rounded-xl p-2.5 text-sm font-bold text-white outline-none">
+          <label class="text-xs text-slate-300 font-bold block mb-1">성별</label>
+          <select class="w-full bg-[#0f2744] border border-white/10 rounded-xl p-2.5 text-sm font-bold text-white outline-none">
             <option>여성</option>
             <option>남성</option>
           </select>
         </div>
       </div>
-      <button id="btn-pay-and-generate" class="w-full py-3.5 rounded-xl bg-gradient-to-r from-amber-500 to-amber-400 text-slate-950 font-black text-sm shadow-lg hover:brightness-110 active:scale-95 transition-all">
+      <button id="btn-pay-and-generate" class="w-full py-3.5 rounded-xl bg-gradient-to-r from-amber-400 to-amber-500 text-slate-950 font-black text-sm shadow-lg hover:brightness-110 active:scale-95 transition-all">
         사주 맞춤 행운번호 추출하기 ✨
       </button>
     </div>
@@ -473,17 +486,17 @@
 
   <!-- Vault Modal -->
   <div id="modal-vault" class="game-modal">
-    <div class="bg-surface-container border border-white/15 rounded-3xl p-6 max-w-sm w-full text-white shadow-2xl space-y-4 max-h-[80vh] flex flex-col">
+    <div class="bg-[#122e54] border border-white/15 rounded-3xl p-6 max-w-sm w-full text-white shadow-2xl space-y-4 max-h-[80vh] flex flex-col">
       <div class="flex justify-between items-center">
         <h3 class="font-headline-md text-lg font-black text-amber-400 flex items-center gap-1.5">
           <span class="material-symbols-outlined">folder_special</span> 번호 보관함
         </h3>
-        <button id="btn-close-vault" class="text-on-surface-variant hover:text-white"><span class="material-symbols-outlined">close</span></button>
+        <button id="btn-close-vault" class="text-slate-300 hover:text-white"><span class="material-symbols-outlined">close</span></button>
       </div>
       <div id="vault-list-container" class="flex-1 overflow-y-auto space-y-2 py-2">
-        <p class="text-xs text-on-surface-variant text-center py-6">보관된 번호가 없습니다.</p>
+        <p class="text-xs text-slate-400 text-center py-6">보관된 번호가 없습니다.</p>
       </div>
-      <button id="btn-clear-vault" class="w-full py-2.5 rounded-xl bg-surface-bright/50 text-xs font-bold text-slate-300 hover:bg-surface-bright">
+      <button id="btn-clear-vault" class="w-full py-2.5 rounded-xl bg-white/10 text-xs font-bold text-slate-200 hover:bg-white/20">
         보관함 비우기
       </button>
     </div>

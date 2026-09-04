@@ -246,10 +246,16 @@ document.addEventListener('DOMContentLoaded', () => {
     const centerX = drumRadius;
     const centerY = drumRadius;
 
-    // Fast, lively spin when running
+    // 360-Degree Fast, lively spin when running
+    const rotorOuter = document.getElementById('rotorOuter');
+    const rotorInner = document.getElementById('rotorInner');
     if (AppState.isRunning) {
-      drumAngle += 0.08 * dt;
+      drumAngle += 4.5 * dt;
+    } else {
+      drumAngle += 0.3 * dt; // gentle idle spin
     }
+    if (rotorOuter) rotorOuter.style.transform = `rotate(${drumAngle}deg)`;
+    if (rotorInner) rotorInner.style.transform = `rotate(${-drumAngle * 0.7}deg)`;
 
     let gravity = AppState.isRunning ? 0.08 : 0.45;
     let friction = AppState.isRunning ? 0.992 : 0.96;
