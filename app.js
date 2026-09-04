@@ -521,12 +521,28 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
+  // Sub-page Modals (Round History & Famous Spots)
+  const modalRound = document.getElementById('modal-round-history');
+  const btnOpenRound = document.getElementById('btn-open-round-modal');
+  const btnCloseRound = document.getElementById('btn-close-round-modal');
+
+  const modalSpots = document.getElementById('modal-famous-spots');
+  const btnOpenSpots = document.getElementById('btn-open-spots-modal');
+  const btnCloseSpots = document.getElementById('btn-close-spots-modal');
+
+  if (btnOpenRound && modalRound) btnOpenRound.addEventListener('click', () => modalRound.classList.add('active'));
+  if (btnCloseRound && modalRound) btnCloseRound.addEventListener('click', () => modalRound.classList.remove('active'));
+
+  if (btnOpenSpots && modalSpots) btnOpenSpots.addEventListener('click', () => modalSpots.classList.add('active'));
+  if (btnCloseSpots && modalSpots) btnCloseSpots.addEventListener('click', () => modalSpots.classList.remove('active'));
+
   // Nav actions
   const navBtnDraw = document.getElementById('nav-btn-draw');
   const navBtnHistory = document.getElementById('nav-btn-history');
   const navBtnVault = document.getElementById('nav-btn-vault');
 
   if (navBtnDraw) navBtnDraw.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
-  if (navBtnHistory) navBtnHistory.addEventListener('click', () => document.getElementById('official-round-card')?.scrollIntoView({ behavior: 'smooth' }));
+  if (navBtnHistory && modalRound) navBtnHistory.addEventListener('click', () => modalRound.classList.add('active'));
   if (navBtnVault && modalVault) navBtnVault.addEventListener('click', () => modalVault.classList.add('active'));
 });
+
