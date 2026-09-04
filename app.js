@@ -1,9 +1,9 @@
 /**
- * LottoStream Live - Exact Stitch Physics & UI Engine
+ * LottoStream Live - Dynamic TV Broadcast Whirlwind Physics & Realistic Sound Engine
  */
 
 // ==========================================================================
-// Historical Database & Famous Spots
+// Historical Database
 // ==========================================================================
 const HISTORICAL_DATABASE = {
   1239: { date: '2026.08.29', numbers: [11, 13, 22, 32, 33, 36], bonus: 8, prize: '22억 1,479만 원', winners: '13명 (자동 10, 수동 2, 반자동 1)' },
@@ -14,17 +14,106 @@ const HISTORICAL_DATABASE = {
 };
 
 // ==========================================================================
-// Sound FX (Web Audio API)
+// Rich Web Audio Sound FX Engine (Drum Air Whirl, Ball Clatter, Pop, Fanfare)
 // ==========================================================================
 class SoundFX {
-  constructor() { this.ctx = null; }
+  constructor() {
+    this.ctx = null;
+    this.whirlNode = null;
+    this.whirlGain = null;
+    this.lastClatter = 0;
+  }
+
   init() {
     if (!this.ctx) {
       const AudioCtx = window.AudioContext || window.webkitAudioContext;
       if (AudioCtx) this.ctx = new AudioCtx();
     }
   }
-  playPop(freq = 440) {
+
+  // Air blower whirl loop sound
+  startDrumWhirl() {
+    if (!AppState.soundEnabled) return;
+    try {
+      this.init();
+      if (!this.ctx) return;
+      if (this.whirlNode) return;
+
+      // Noise buffer for atmospheric air rush
+      const bufferSize = this.ctx.sampleRate * 2;
+      const buffer = this.ctx.createBuffer(1, bufferSize, this.ctx.sampleRate);
+      const data = buffer.getChannelData(0);
+      for (let i = 0; i < bufferSize; i++) {
+        data[i] = (Math.random() * 2 - 1) * 0.18;
+      }
+
+      const noise = this.ctx.createBufferSource();
+      noise.buffer = buffer;
+      noise.loop = true;
+
+      const filter = this.ctx.createBiquadFilter();
+      filter.type = 'bandpass';
+      filter.frequency.setValueAtTime(450, this.ctx.currentTime);
+      filter.Q.setValueAtTime(2.5, this.ctx.currentTime);
+
+      this.whirlGain = this.ctx.createGain();
+      this.whirlGain.gain.setValueAtTime(0.01, this.ctx.currentTime);
+      this.whirlGain.gain.linearRampToValueAtTime(0.12, this.ctx.currentTime + 0.3);
+
+      noise.connect(filter);
+      filter.connect(this.whirlGain);
+      this.whirlGain.connect(this.ctx.destination);
+
+      noise.start();
+      this.whirlNode = noise;
+    } catch (e) {}
+  }
+
+  stopDrumWhirl() {
+    try {
+      if (this.whirlGain && this.ctx) {
+        this.whirlGain.gain.linearRampToValueAtTime(0.001, this.ctx.currentTime + 0.4);
+        setTimeout(() => {
+          if (this.whirlNode) {
+            this.whirlNode.stop();
+            this.whirlNode.disconnect();
+            this.whirlNode = null;
+          }
+        }, 450);
+      }
+    } catch (e) {}
+  }
+
+  // Realistic Ball Collision Clatter sound
+  playBallClatter(intensity = 0.5) {
+    if (!AppState.soundEnabled) return;
+    const now = Date.now();
+    if (now - this.lastClatter < 45) return; // limit density
+    this.lastClatter = now;
+
+    try {
+      this.init();
+      if (!this.ctx) return;
+      const osc = this.ctx.createOscillator();
+      const gain = this.ctx.createGain();
+      
+      osc.type = 'triangle';
+      const freq = 600 + Math.random() * 800;
+      osc.frequency.setValueAtTime(freq, this.ctx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(freq * 0.4, this.ctx.currentTime + 0.035);
+
+      const vol = Math.min(0.08 * intensity, 0.1);
+      gain.gain.setValueAtTime(vol, this.ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.035);
+
+      osc.connect(gain);
+      gain.connect(this.ctx.destination);
+      osc.start();
+      osc.stop(this.ctx.currentTime + 0.04);
+    } catch (e) {}
+  }
+
+  playPop(freq = 480) {
     if (!AppState.soundEnabled) return;
     try {
       this.init();
@@ -33,34 +122,35 @@ class SoundFX {
       const gain = this.ctx.createGain();
       osc.type = 'sine';
       osc.frequency.setValueAtTime(freq, this.ctx.currentTime);
-      osc.frequency.exponentialRampToValueAtTime(freq * 1.4, this.ctx.currentTime + 0.07);
-      gain.gain.setValueAtTime(0.2, this.ctx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + 0.07);
+      osc.frequency.exponentialRampToValueAtTime(freq * 1.5, this.ctx.currentTime + 0.08);
+      gain.gain.setValueAtTime(0.25, this.ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + 0.08);
       osc.connect(gain);
       gain.connect(this.ctx.destination);
       osc.start();
-      osc.stop(this.ctx.currentTime + 0.08);
+      osc.stop(this.ctx.currentTime + 0.09);
     } catch (e) {}
   }
+
   playFanfare() {
     if (!AppState.soundEnabled) return;
     try {
       this.init();
       if (!this.ctx) return;
-      const notes = [523.25, 659.25, 783.99, 1046.50];
+      const notes = [523.25, 659.25, 783.99, 1046.50, 1318.51];
       notes.forEach((freq, i) => {
         setTimeout(() => {
           const osc = this.ctx.createOscillator();
           const gain = this.ctx.createGain();
           osc.type = 'triangle';
           osc.frequency.value = freq;
-          gain.gain.setValueAtTime(0.18, this.ctx.currentTime);
-          gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.35);
+          gain.gain.setValueAtTime(0.22, this.ctx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.4);
           osc.connect(gain);
           gain.connect(this.ctx.destination);
           osc.start();
-          osc.stop(this.ctx.currentTime + 0.36);
-        }, i * 70);
+          osc.stop(this.ctx.currentTime + 0.42);
+        }, i * 75);
       });
     } catch (e) {}
   }
@@ -97,7 +187,7 @@ function generateRandomCombo() {
 }
 
 // ==========================================================================
-// DOM Initializer & Broadcast Physics Engine
+// Dynamic Broadcast Physics Loop (Whirlwind Rotation + Elastic Collision)
 // ==========================================================================
 document.addEventListener('DOMContentLoaded', () => {
   const drum = document.getElementById('drumContainer');
@@ -111,10 +201,11 @@ document.addEventListener('DOMContentLoaded', () => {
   const numBalls = 45;
   const balls = [];
   let lastTime = 0;
+  let drumAngle = 0;
 
-  // Initialize 45 3D Balls in Drum
+  // Initialize 45 Balls in Drum
   if (drum) {
-    const drumWidth = drum.clientWidth || 360;
+    const drumWidth = drum.clientWidth || 380;
     const centerX = drumWidth / 2;
     const centerY = drumWidth / 2;
 
@@ -124,7 +215,7 @@ document.addEventListener('DOMContentLoaded', () => {
       ball.textContent = i;
       
       const angle = Math.random() * Math.PI * 2;
-      const r = Math.random() * (centerX - 35);
+      const r = Math.random() * (centerX - 40);
       const x = centerX + Math.cos(angle) * r;
       const y = centerY + Math.sin(angle) * r;
 
@@ -133,9 +224,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
       ball.x = x - 22;
       ball.y = y - 22;
-      ball.vx = (Math.random() - 0.5) * 4;
-      ball.vy = (Math.random() - 0.5) * 4;
+      ball.vx = (Math.random() - 0.5) * 6;
+      ball.vy = (Math.random() - 0.5) * 6;
       ball.radius = 22;
+      ball.rot = Math.random() * 360;
+      ball.vRot = (Math.random() - 0.5) * 4;
       ball.isExtracted = false;
 
       drum.appendChild(ball);
@@ -143,7 +236,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  // Smooth TV Broadcast Physics Loop
+  // High-Energy Whirlwind Physics Animation Loop
   function animate(time) {
     const dt = lastTime ? Math.min((time - lastTime) / 16, 2) : 1;
     lastTime = time;
@@ -153,39 +246,48 @@ document.addEventListener('DOMContentLoaded', () => {
     const centerX = drumRadius;
     const centerY = drumRadius;
 
-    // Gentle realistic broadcast physics (moderate speed, clear numbers)
-    let gravity = AppState.isRunning ? 0.15 : 0.35;
-    let friction = 0.985;
-    let mixingForce = AppState.isRunning ? 1.6 : 0;
+    // Fast, lively spin when running
+    if (AppState.isRunning) {
+      drumAngle += 0.08 * dt;
+    }
+
+    let gravity = AppState.isRunning ? 0.08 : 0.45;
+    let friction = AppState.isRunning ? 0.992 : 0.96;
+    let vortexPower = AppState.isRunning ? 1.85 : 0; // Strong centripetal whirlwind
 
     balls.forEach((ball, i) => {
       if (ball.isExtracted) return;
 
       ball.vy += gravity * dt;
 
-      // Swirl rotation in drum
       if (AppState.isRunning) {
         const dx = (ball.x + ball.radius) - centerX;
         const dy = (ball.y + ball.radius) - centerY;
         const dist = Math.sqrt(dx * dx + dy * dy) || 1;
         
-        // Gentle rotational swirl
-        ball.vx += (-dy / dist) * 0.45;
-        ball.vy += (dx / dist) * 0.45;
+        // Circular vortex force (tangential + upward air blast)
+        const tangentX = -dy / dist;
+        const tangentY = dx / dist;
+        ball.vx += tangentX * vortexPower * dt;
+        ball.vy += tangentY * vortexPower * dt;
 
-        if (Math.random() < 0.08) {
-          ball.vx += (Math.random() - 0.5) * mixingForce;
-          ball.vy -= Math.random() * mixingForce * 1.5;
+        // Bottom air jet turbulence
+        if (ball.y > centerY + 20) {
+          ball.vy -= (0.8 + Math.random() * 1.6) * dt;
+          ball.vx += (Math.random() - 0.5) * 1.5 * dt;
         }
+
+        // Spin ball around its own axis
+        ball.rot += ball.vRot * 2;
       }
 
       ball.x += ball.vx * dt;
       ball.y += ball.vy * dt;
       
-      ball.vx *= friction;
-      ball.vy *= friction;
+      ball.vx *= Math.pow(friction, dt);
+      ball.vy *= Math.pow(friction, dt);
 
-      // Circular collision detection with drum edge
+      // Drum boundary bouncing (elastic rebound)
       const dx = ball.x + ball.radius - centerX;
       const dy = ball.y + ball.radius - centerY;
       const distance = Math.sqrt(dx * dx + dy * dy);
@@ -195,14 +297,18 @@ document.addEventListener('DOMContentLoaded', () => {
         const ny = dy / distance;
 
         const dot = ball.vx * nx + ball.vy * ny;
-        ball.vx -= 1.7 * dot * nx;
-        ball.vy -= 1.7 * dot * ny;
+        ball.vx -= 1.85 * dot * nx;
+        ball.vy -= 1.85 * dot * ny;
 
         ball.x = centerX + nx * (drumRadius - ball.radius) - ball.radius;
         ball.y = centerY + ny * (drumRadius - ball.radius) - ball.radius;
+
+        if (AppState.isRunning && Math.abs(dot) > 2) {
+          sound.playBallClatter(Math.min(Math.abs(dot) / 10, 1));
+        }
       }
 
-      // Ball to Ball collision
+      // Ball to Ball elastic collisions
       for (let j = i + 1; j < balls.length; j++) {
         const ball2 = balls[j];
         if (ball2.isExtracted) continue;
@@ -225,22 +331,26 @@ document.addEventListener('DOMContentLoaded', () => {
           const dot1 = ball.vx * bnx + ball.vy * bny;
           const dot2 = ball2.vx * bnx + ball2.vy * bny;
 
-          ball.vx -= dot1 * bnx * 0.8;
-          ball.vy -= dot1 * bny * 0.8;
-          ball2.vx += dot2 * bnx * 0.8;
-          ball2.vy += dot2 * bny * 0.8;
+          ball.vx -= dot1 * bnx * 0.9;
+          ball.vy -= dot1 * bny * 0.9;
+          ball2.vx += dot2 * bnx * 0.9;
+          ball2.vy += dot2 * bny * 0.9;
+
+          if (AppState.isRunning && Math.random() < 0.25) {
+            sound.playBallClatter(0.6);
+          }
         }
       }
 
-      // Speed limits for clear visual visibility
-      const maxSpeed = AppState.isRunning ? 14 : 8;
+      // Dynamic Speed limit
+      const maxSpeed = AppState.isRunning ? 26 : 10;
       const speed = Math.sqrt(ball.vx * ball.vx + ball.vy * ball.vy);
       if (speed > maxSpeed) {
         ball.vx = (ball.vx / speed) * maxSpeed;
         ball.vy = (ball.vy / speed) * maxSpeed;
       }
 
-      ball.style.transform = `translate3d(${ball.x}px, ${ball.y}px, 0)`;
+      ball.style.transform = `translate3d(${ball.x}px, ${ball.y}px, 0) rotate(${ball.rot}deg)`;
     });
 
     requestAnimationFrame(animate);
@@ -268,36 +378,42 @@ document.addEventListener('DOMContentLoaded', () => {
         balls.forEach(b => {
           b.isExtracted = false;
           b.style.display = 'flex';
-          b.vx = (Math.random() - 0.5) * 6;
-          b.vy = (Math.random() - 0.5) * 6;
+          b.vx = (Math.random() - 0.5) * 10;
+          b.vy = (Math.random() - 0.5) * 10;
         });
 
         btnLabel.textContent = 'START (추첨 시작)';
         extractBtn.classList.remove('bg-on-tertiary-container', 'text-white');
         extractBtn.classList.add('bg-primary-container', 'text-on-primary-container');
-        if (spinHint) spinHint.textContent = '버튼을 누르면 실제 방송국 추첨기처럼 회전하며 번호가 추출됩니다.';
+        if (spinHint) spinHint.textContent = '버튼을 누르면 강력한 바람과 함께 공이 생생하게 회전합니다!';
         return;
       }
 
       if (!AppState.isRunning) {
-        // Start Spinning
+        // Start Spinning with High Energy Burst & Sound
         AppState.isRunning = true;
         btnLabel.textContent = 'STOP (번호 추출하기)';
         extractBtn.classList.remove('bg-primary-container', 'text-on-primary-container');
         extractBtn.classList.add('bg-on-tertiary-container', 'text-white');
-        if (spinHint) spinHint.textContent = '원통이 회전 중입니다! 원하는 타이밍에 [STOP]을 눌러주세요.';
+        if (spinHint) spinHint.textContent = '공이 씽씽 회전 중입니다! 원하는 타이밍에 [STOP]을 눌러주세요!';
         
+        sound.startDrumWhirl();
+
+        // Initial burst of kinetic energy
         balls.forEach(b => {
           if (!b.isExtracted) {
-            b.vx += (Math.random() - 0.5) * 12;
-            b.vy -= Math.random() * 12;
+            b.vx += (Math.random() - 0.5) * 28;
+            b.vy -= 12 + Math.random() * 20;
+            b.vRot = (Math.random() - 0.5) * 14;
           }
         });
-        sound.playPop(520);
+        sound.playPop(580);
 
       } else {
-        // Stop and Extract all 6 balls with broadcast sequence
+        // Stop Whirlwind and Extract all 6 balls sequentially
         AppState.isRunning = false;
+        sound.stopDrumWhirl();
+
         btnLabel.textContent = 'EXTRACTING... (추출 중)';
         extractBtn.disabled = true;
 
@@ -308,7 +424,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         AppState.drawnGames = fullGames;
 
-        // Sequentially reveal 6 balls
+        // Sequentially reveal 6 balls with dramatic sound effects
         mainCombo.forEach((num, idx) => {
           setTimeout(() => {
             const ballObj = balls.find(b => parseInt(b.textContent) === num && !b.isExtracted) || balls.find(b => !b.isExtracted);
@@ -324,13 +440,13 @@ document.addEventListener('DOMContentLoaded', () => {
               resBall.textContent = num;
               resultsTray.replaceChild(resBall, slot);
             }
-            sound.playPop(440 + idx * 60);
+            sound.playPop(480 + idx * 70);
 
             if (idx === 5) {
               AppState.extractedCount = 6;
               extractBtn.disabled = false;
               btnLabel.textContent = 'RESET DRAW (다시 추첨)';
-              if (spinHint) spinHint.textContent = '추첨이 완료되었습니다! 번호를 보관하거나 복사할 수 있습니다.';
+              if (spinHint) spinHint.textContent = '🎉 6개 번호 추출 완료! 번호를 보관하거나 복사할 수 있습니다.';
               if (trayActions) trayActions.style.display = 'flex';
               
               // Render Multi-game list if > 1 game
@@ -351,10 +467,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
               sound.playFanfare();
               if (window.confetti) {
-                confetti({ particleCount: 60, spread: 60, origin: { y: 0.6 } });
+                confetti({ particleCount: 70, spread: 70, origin: { y: 0.6 } });
               }
             }
-          }, (idx + 1) * 450);
+          }, (idx + 1) * 420);
         });
       }
     });
@@ -389,6 +505,7 @@ document.addEventListener('DOMContentLoaded', () => {
     btnSound.addEventListener('click', () => {
       AppState.soundEnabled = !AppState.soundEnabled;
       soundIcon.textContent = AppState.soundEnabled ? 'volume_up' : 'volume_off';
+      if (!AppState.soundEnabled) sound.stopDrumWhirl();
     });
   }
 
@@ -496,11 +613,11 @@ document.addEventListener('DOMContentLoaded', () => {
     
     const ballsBox = document.getElementById('card-round-balls');
     if (ballsBox) {
-      ballsBox.innerHTML = data.numbers.map(n => `<div class="result-ball ${getColorClass(n)} !w-9 !h-9 !text-sm">${n}</div>`).join('');
+      ballsBox.innerHTML = data.numbers.map(n => `<div class="result-ball ${getColorClass(n)} !w-8 !h-8 !text-xs">${n}</div>`).join('');
     }
     const bonusBox = document.getElementById('card-bonus-ball');
     if (bonusBox) {
-      bonusBox.className = `result-ball ${getColorClass(data.bonus)} !w-9 !h-9 !text-sm`;
+      bonusBox.className = `result-ball ${getColorClass(data.bonus)} !w-8 !h-8 !text-xs`;
       bonusBox.textContent = data.bonus;
     }
   }
@@ -545,4 +662,3 @@ document.addEventListener('DOMContentLoaded', () => {
   if (navBtnHistory && modalRound) navBtnHistory.addEventListener('click', () => modalRound.classList.add('active'));
   if (navBtnVault && modalVault) navBtnVault.addEventListener('click', () => modalVault.classList.add('active'));
 });
-
