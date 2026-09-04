@@ -200,13 +200,13 @@ class RotatingDrumEngine {
   }
 
   startSpin() {
-    this.rotationSpeed = 0.15;
+    this.rotationSpeed = 0.045; // Smooth broadcast TV spin speed
     this.balls.forEach(b => {
       const dx = b.x - this.centerX;
       const dy = b.y - this.centerY;
       const dist = Math.sqrt(dx * dx + dy * dy) || 1;
-      b.vx = (-dy / dist) * 18 + (Math.random() - 0.5) * 10;
-      b.vy = (dx / dist) * 18 + (Math.random() - 0.5) * 10;
+      b.vx = (-dy / dist) * 7.5 + (Math.random() - 0.5) * 3.5;
+      b.vy = (dx / dist) * 7.5 + (Math.random() - 0.5) * 3.5;
     });
   }
 
@@ -218,7 +218,7 @@ class RotatingDrumEngine {
 
       if (AppState.machineState === 'SPINNING') {
         tickCount++;
-        if (tickCount % 6 === 0) sound.playTick();
+        if (tickCount % 10 === 0) sound.playTick();
       }
 
       requestAnimationFrame(loop);
@@ -230,15 +230,15 @@ class RotatingDrumEngine {
     const isSpinning = (AppState.machineState === 'SPINNING');
     
     if (isSpinning) {
-      this.rotationSpeed = 0.15;
+      this.rotationSpeed = 0.045; // Elegant broadcast speed (no motion blur)
     } else {
-      this.rotationSpeed *= 0.94;
+      this.rotationSpeed *= 0.95;
       if (this.rotationSpeed < 0.001) this.rotationSpeed = 0;
     }
 
     this.drumAngle += this.rotationSpeed;
-    const gravity = isSpinning ? 0.08 : 0.45;
-    const friction = isSpinning ? 0.992 : 0.96;
+    const gravity = isSpinning ? 0.12 : 0.42;
+    const friction = isSpinning ? 0.985 : 0.95;
     const maxBoundary = this.radius - 17;
 
     this.balls.forEach((b) => {
@@ -252,9 +252,9 @@ class RotatingDrumEngine {
         const dx = b.x - this.centerX;
         const dy = b.y - this.centerY;
         const dist = Math.sqrt(dx * dx + dy * dy) || 1;
-        const swirl = 1.35;
-        b.vx += (-dy / dist) * swirl + (Math.random() - 0.5) * 0.9;
-        b.vy += (dx / dist) * swirl + (Math.random() - 0.5) * 0.9;
+        const swirl = 0.65; // Balanced broadcast swirl
+        b.vx += (-dy / dist) * swirl + (Math.random() - 0.5) * 0.4;
+        b.vy += (dx / dist) * swirl + (Math.random() - 0.5) * 0.4;
       }
 
       b.x += b.vx;
