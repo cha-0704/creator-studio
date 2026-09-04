@@ -1,9 +1,9 @@
 /**
- * Lotto 6/45 Live - Pure One-Page Engine with Auto Scoring & Saju/Horoscope ($1)
+ * LottoStream Live - Exact Stitch Physics & UI Engine
  */
 
 // ==========================================================================
-// Historical Dataset & Top Spots Database
+// Historical Database & Famous Spots
 // ==========================================================================
 const HISTORICAL_DATABASE = {
   1239: { date: '2026.08.29', numbers: [11, 13, 22, 32, 33, 36], bonus: 8, prize: '22억 1,479만 원', winners: '13명 (자동 10, 수동 2, 반자동 1)' },
@@ -13,67 +13,8 @@ const HISTORICAL_DATABASE = {
   1160: { date: '2025.02.22', numbers: [3, 8, 17, 24, 33, 42], bonus: 11, prize: '28억 5,420만 원', winners: '10명 (자동 7, 수동 3)' }
 };
 
-const FAMOUS_SPOTS = [
-  { rank: 1, name: '인터넷 복권판매사이트 (동행복권)', region: 'online', count: 48, count2nd: 285, address: '인터넷 온라인 구매 (dhlottery.co.kr)', tag: '1239회 2등 4명 잭팟 성지!' },
-  { rank: 2, name: '스파', region: 'seoul', count: 52, count2nd: 220, address: '서울 노원구 동일로 1493 주공10단지종합상가 111호', tag: '전국 1위 부동의 오프라인 성지' },
-  { rank: 3, name: '부일카서비스', region: 'busan', count: 50, count2nd: 185, address: '부산 동구 자성로133번길 35', tag: '부산 영남권 최대 명당' },
-  { rank: 4, name: '일등복권편의점', region: 'daegu', count: 32, count2nd: 104, address: '대구 달서구 대명천로 220', tag: '대구 달서구 1등 성지' },
-  { rank: 5, name: '뉴빅마트', region: 'busan', count: 30, count2nd: 88, address: '부산 기장군 정관중앙로 48', tag: '기장군 정관신도시 명소' },
-  { rank: 6, name: '로또휴게실', region: 'gyeonggi', count: 27, count2nd: 92, address: '경기 용인시 기흥구 용구대로 1885', tag: '수도권 고속도로변 최대 명당' },
-  { rank: 7, name: '목화휴게소', region: 'gyeonggi', count: 22, count2nd: 76, address: '경남 사천시 사천대로 912', tag: '사천 국도변 로또 성지' },
-  { rank: 8, name: '세진전자통신', region: 'daegu', count: 22, count2nd: 81, address: '대구 서구 서대구로 156', tag: '대구 서구 대표 명당' },
-  { rank: 9, name: '로또명당인주점', region: 'gyeonggi', count: 21, count2nd: 74, address: '충남 아산시 인주면 서해로 519-2', tag: '충남 서해안 로또 명소' },
-  { rank: 10, name: '오천억복권방', region: 'seoul', count: 20, count2nd: 68, address: '광주 서구 상무대로 1087', tag: '호남권 최고 당첨 배출점' },
-  { rank: 11, name: '잠실매점', region: 'seoul', count: 20, count2nd: 79, address: '서울 송파구 올림픽로 269 잠실역 8번출구', tag: '잠실역 초역세권 명당' },
-  { rank: 12, name: '가판점(종로3가)', region: 'seoul', count: 18, count2nd: 62, address: '서울 종로구 종로 118', tag: '종로 중심가 명당 가판대' },
-  { rank: 13, name: '대박찬스', region: 'gyeonggi', count: 17, count2nd: 55, address: '경기 파주시 금정로 45', tag: '파주 지역 1등 성지' }
-];
-
 // ==========================================================================
-// Color & Math Helpers
-// ==========================================================================
-const LottoMath = {
-  getBallClass(num) {
-    if (num <= 10) return 'b-yellow';
-    if (num <= 20) return 'b-blue';
-    if (num <= 30) return 'b-red';
-    if (num <= 40) return 'b-gray';
-    return 'b-green';
-  },
-
-  getBallHexColor(num) {
-    if (num <= 10) return '#f59e0b'; // Vivid Deep Gold Yellow
-    if (num <= 20) return '#2563eb'; // Vibrant Royal Blue
-    if (num <= 30) return '#dc2626'; // Vivid Crimson Red
-    if (num <= 40) return '#475569'; // Deep Slate Gray
-    return '#16a34a'; // Vibrant Emerald Green
-  },
-
-  generateRandomCombo() {
-    const nums = new Set();
-    while (nums.size < 6) {
-      nums.add(Math.floor(Math.random() * 45) + 1);
-    }
-    return Array.from(nums).sort((a, b) => a - b);
-  },
-
-  // Evaluate single game score against winning numbers
-  evaluateScore(combo, winningNumbers, bonusNumber) {
-    const matched = combo.filter(n => winningNumbers.includes(n));
-    const count = matched.length;
-    const hasBonus = combo.includes(bonusNumber);
-
-    if (count === 6) return { rank: 1, label: '🏆 1등 당첨!!', desc: '6개 번호 일치', prize: '수십억 원 상당', class: 'rank-1st', matched, count, hasBonus };
-    if (count === 5 && hasBonus) return { rank: 2, label: '🥈 2등 당첨!', desc: '5개 번호 + 보너스 일치', prize: '수천만 원 상당', class: 'rank-2nd', matched, count, hasBonus: true };
-    if (count === 5) return { rank: 3, label: '🥉 3등 당첨!', desc: '5개 번호 일치', prize: '약 150만 원', class: 'rank-3rd', matched, count, hasBonus: false };
-    if (count === 4) return { rank: 4, label: '✨ 4등 당첨 (5만원)', desc: '4개 번호 일치', prize: '고정 50,000원', class: 'rank-4th', matched, count, hasBonus: false };
-    if (count === 3) return { rank: 5, label: '🍀 5등 당첨 (5천원)', desc: '3개 번호 일치', prize: '고정 5,000원', class: 'rank-5th', matched, count, hasBonus: false };
-    return { rank: 0, label: '낙첨 (다음 기회에)', desc: `${count}개 일치`, prize: '0원', class: 'rank-none', matched, count, hasBonus };
-  }
-};
-
-// ==========================================================================
-// Web Audio Sound FX
+// Sound FX (Web Audio API)
 // ==========================================================================
 class SoundFX {
   constructor() { this.ctx = null; }
@@ -101,23 +42,6 @@ class SoundFX {
       osc.stop(this.ctx.currentTime + 0.08);
     } catch (e) {}
   }
-  playTick() {
-    if (!AppState.soundEnabled) return;
-    try {
-      this.init();
-      if (!this.ctx) return;
-      const osc = this.ctx.createOscillator();
-      const gain = this.ctx.createGain();
-      osc.type = 'triangle';
-      osc.frequency.setValueAtTime(800 + Math.random() * 300, this.ctx.currentTime);
-      gain.gain.setValueAtTime(0.09, this.ctx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.03);
-      osc.connect(gain);
-      gain.connect(this.ctx.destination);
-      osc.start();
-      osc.stop(this.ctx.currentTime + 0.035);
-    } catch (e) {}
-  }
   playFanfare() {
     if (!AppState.soundEnabled) return;
     try {
@@ -130,7 +54,7 @@ class SoundFX {
           const gain = this.ctx.createGain();
           osc.type = 'triangle';
           osc.frequency.value = freq;
-          gain.gain.setValueAtTime(0.16, this.ctx.currentTime);
+          gain.gain.setValueAtTime(0.18, this.ctx.currentTime);
           gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.35);
           osc.connect(gain);
           gain.connect(this.ctx.destination);
@@ -149,911 +73,460 @@ const sound = new SoundFX();
 const AppState = {
   soundEnabled: true,
   gameCount: 5,
-  machineState: 'READY',
+  isRunning: false,
+  extractedCount: 0,
+  maxExtracts: 6,
   drawnGames: [],
-  searchedRound: 1160,
-  activeRegion: 'all',
   vault: JSON.parse(localStorage.getItem('lotto_mobile_vault') || '[]')
 };
 
-// ==========================================================================
-// Rotating Drum Engine (360-Degree Physics)
-// ==========================================================================
-class RotatingDrumEngine {
-  constructor(canvasId) {
-    this.canvas = document.getElementById(canvasId);
-    if (!this.canvas) return;
-    this.ctx = this.canvas.getContext('2d');
-    this.radius = this.canvas.width / 2;
-    this.centerX = this.radius;
-    this.centerY = this.radius;
-    this.drumAngle = 0;
-    this.rotationSpeed = 0;
-    this.balls = [];
-    this.initBalls();
-    this.startLoop();
-  }
-
-  initBalls() {
-    this.balls = [];
-    const ballRadius = 18.5;
-    for (let i = 1; i <= 45; i++) {
-      this.balls.push({
-        num: i,
-        x: this.centerX + (Math.random() - 0.5) * 140,
-        y: this.centerY + 10 + Math.random() * (this.radius - 45),
-        vx: (Math.random() - 0.5) * 2,
-        vy: (Math.random() - 0.5) * 2,
-        radius: ballRadius,
-        color: LottoMath.getBallHexColor(i),
-        isExtracted: false
-      });
-    }
-  }
-
-  resetAllBalls() {
-    this.balls.forEach(b => {
-      b.isExtracted = false;
-      b.vx = (Math.random() - 0.5) * 4;
-      b.vy = (Math.random() - 0.5) * 4;
-    });
-  }
-
-  startSpin() {
-    this.rotationSpeed = 0.045; // Smooth broadcast TV spin speed
-    this.balls.forEach(b => {
-      const dx = b.x - this.centerX;
-      const dy = b.y - this.centerY;
-      const dist = Math.sqrt(dx * dx + dy * dy) || 1;
-      b.vx = (-dy / dist) * 7.5 + (Math.random() - 0.5) * 3.5;
-      b.vy = (dx / dist) * 7.5 + (Math.random() - 0.5) * 3.5;
-    });
-  }
-
-  startLoop() {
-    let tickCount = 0;
-    const loop = () => {
-      this.update();
-      this.draw();
-
-      if (AppState.machineState === 'SPINNING') {
-        tickCount++;
-        if (tickCount % 10 === 0) sound.playTick();
-      }
-
-      requestAnimationFrame(loop);
-    };
-    loop();
-  }
-
-  update() {
-    const isSpinning = (AppState.machineState === 'SPINNING');
-    
-    if (isSpinning) {
-      this.rotationSpeed = 0.045; // Elegant broadcast speed (no motion blur)
-    } else {
-      this.rotationSpeed *= 0.95;
-      if (this.rotationSpeed < 0.001) this.rotationSpeed = 0;
-    }
-
-    this.drumAngle += this.rotationSpeed;
-    const gravity = isSpinning ? 0.12 : 0.42;
-    const friction = isSpinning ? 0.985 : 0.95;
-    const maxBoundary = this.radius - 17;
-
-    this.balls.forEach((b) => {
-      if (b.isExtracted) return;
-
-      b.vy += gravity;
-      b.vx *= friction;
-      b.vy *= friction;
-
-      if (isSpinning) {
-        const dx = b.x - this.centerX;
-        const dy = b.y - this.centerY;
-        const dist = Math.sqrt(dx * dx + dy * dy) || 1;
-        const swirl = 0.65; // Balanced broadcast swirl
-        b.vx += (-dy / dist) * swirl + (Math.random() - 0.5) * 0.4;
-        b.vy += (dx / dist) * swirl + (Math.random() - 0.5) * 0.4;
-      }
-
-      b.x += b.vx;
-      b.y += b.vy;
-
-      const dx = b.x - this.centerX;
-      const dy = b.y - this.centerY;
-      const dist = Math.sqrt(dx * dx + dy * dy);
-
-      if (dist + b.radius > maxBoundary) {
-        const angle = Math.atan2(dy, dx);
-        b.x = this.centerX + Math.cos(angle) * (maxBoundary - b.radius);
-        b.y = this.centerY + Math.sin(angle) * (maxBoundary - b.radius);
-
-        const normalX = Math.cos(angle);
-        const normalY = Math.sin(angle);
-        const dot = b.vx * normalX + b.vy * normalY;
-
-        b.vx = (b.vx - 2 * dot * normalX) * 0.72;
-        b.vy = (b.vy - 2 * dot * normalY) * 0.72;
-      }
-    });
-
-    // Ball-to-ball collisions
-    for (let i = 0; i < this.balls.length; i++) {
-      for (let j = i + 1; j < this.balls.length; j++) {
-        const b1 = this.balls[i];
-        const b2 = this.balls[j];
-        if (b1.isExtracted || b2.isExtracted) continue;
-
-        const dx = b2.x - b1.x;
-        const dy = b2.y - b1.y;
-        const dist = Math.sqrt(dx * dx + dy * dy);
-        const minDist = b1.radius + b2.radius;
-
-        if (dist < minDist && dist > 0) {
-          const overlap = 0.5 * (minDist - dist);
-          const nx = dx / dist;
-          const ny = dy / dist;
-
-          b1.x -= nx * overlap;
-          b1.y -= ny * overlap;
-          b2.x += nx * overlap;
-          b2.y += ny * overlap;
-
-          const kx = b1.vx - b2.vx;
-          const ky = b1.vy - b2.vy;
-          const p = 2 * (nx * kx + ny * ky) / 2;
-
-          b1.vx -= p * nx * 0.75;
-          b1.vy -= p * ny * 0.75;
-          b2.vx += p * nx * 0.75;
-          b2.vy += p * ny * 0.75;
-        }
-      }
-    }
-  }
-
-  draw() {
-    if (!this.ctx) return;
-    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-
-    // Glass Drum Outer Glow
-    this.ctx.save();
-    this.ctx.beginPath();
-    this.ctx.arc(this.centerX, this.centerY, this.radius - 5, 0, Math.PI * 2);
-    this.ctx.fillStyle = 'rgba(10, 16, 26, 0.75)';
-    this.ctx.fill();
-
-    const ringGrad = this.ctx.createLinearGradient(0, 0, this.canvas.width, this.canvas.height);
-    ringGrad.addColorStop(0, '#ffd700');
-    ringGrad.addColorStop(0.5, 'rgba(255, 215, 0, 0.2)');
-    ringGrad.addColorStop(1, '#ff9900');
-    this.ctx.strokeStyle = ringGrad;
-    this.ctx.lineWidth = 4;
-    this.ctx.stroke();
-
-    // Rotating Internal Ring Pattern
-    this.ctx.save();
-    this.ctx.translate(this.centerX, this.centerY);
-    this.ctx.rotate(this.drumAngle);
-    this.ctx.beginPath();
-    this.ctx.arc(0, 0, this.radius - 22, 0, Math.PI * 2);
-    this.ctx.setLineDash([12, 14]);
-    this.ctx.strokeStyle = 'rgba(255, 215, 0, 0.35)';
-    this.ctx.lineWidth = 2;
-    this.ctx.stroke();
-    this.ctx.restore();
-
-    // Draw 3D Spherical Balls with vivid glossy look
-    this.balls.forEach(b => {
-      if (b.isExtracted) return;
-
-      this.ctx.save();
-
-      // Ball Outer Glow / Shadow
-      this.ctx.shadowColor = 'rgba(0,0,0,0.5)';
-      this.ctx.shadowBlur = 6;
-      this.ctx.shadowOffsetY = 2;
-
-      // Ball Body Radial Gradient (3D Sphere Volume)
-      const grad = this.ctx.createRadialGradient(
-        b.x - b.radius * 0.3, b.y - b.radius * 0.35, b.radius * 0.1,
-        b.x, b.y, b.radius
-      );
-
-      if (b.num <= 10) {
-        grad.addColorStop(0, '#fef08a');
-        grad.addColorStop(0.5, '#eab308');
-        grad.addColorStop(1, '#a16207');
-      } else if (b.num <= 20) {
-        grad.addColorStop(0, '#93c5fd');
-        grad.addColorStop(0.5, '#2563eb');
-        grad.addColorStop(1, '#1e3a8a');
-      } else if (b.num <= 30) {
-        grad.addColorStop(0, '#fca5a5');
-        grad.addColorStop(0.5, '#dc2626');
-        grad.addColorStop(1, '#7f1d1d');
-      } else if (b.num <= 40) {
-        grad.addColorStop(0, '#cbd5e1');
-        grad.addColorStop(0.5, '#475569');
-        grad.addColorStop(1, '#0f172a');
-      } else {
-        grad.addColorStop(0, '#86efac');
-        grad.addColorStop(0.5, '#16a34a');
-        grad.addColorStop(1, '#14532d');
-      }
-
-      this.ctx.beginPath();
-      this.ctx.arc(b.x, b.y, b.radius, 0, Math.PI * 2);
-      this.ctx.fillStyle = grad;
-      this.ctx.fill();
-
-      // Ball Crisp Rim Outline
-      this.ctx.shadowBlur = 0;
-      this.ctx.shadowOffsetY = 0;
-      this.ctx.strokeStyle = 'rgba(255, 255, 255, 0.4)';
-      this.ctx.lineWidth = 1.2;
-      this.ctx.stroke();
-
-      // Specular Top-Left Highlight
-      this.ctx.beginPath();
-      this.ctx.arc(b.x - b.radius * 0.32, b.y - b.radius * 0.35, b.radius * 0.35, 0, Math.PI * 2);
-      this.ctx.fillStyle = 'rgba(255, 255, 255, 0.7)';
-      this.ctx.fill();
-
-      // Number Inner White Badge Circle for maximum readability
-      this.ctx.beginPath();
-      this.ctx.arc(b.x, b.y, b.radius * 0.58, 0, Math.PI * 2);
-      this.ctx.fillStyle = 'rgba(255, 255, 255, 0.92)';
-      this.ctx.shadowColor = 'rgba(0,0,0,0.2)';
-      this.ctx.shadowBlur = 2;
-      this.ctx.fill();
-
-      // Crisp Bold Number text inside Badge
-      this.ctx.fillStyle = '#0f172a';
-      this.ctx.font = '900 12px Montserrat, -apple-system, sans-serif';
-      this.ctx.textAlign = 'center';
-      this.ctx.textBaseline = 'middle';
-      this.ctx.shadowBlur = 0;
-      this.ctx.fillText(b.num, b.x, b.y + 0.5);
-
-      this.ctx.restore();
-    });
-
-    this.ctx.restore();
-  }
+function getColorClass(num) {
+  if (num <= 10) return 'ball-yellow';
+  if (num <= 20) return 'ball-blue';
+  if (num <= 30) return 'ball-red';
+  if (num <= 40) return 'ball-grey';
+  return 'ball-green';
 }
 
-let drumEngine = null;
-
-// ==========================================================================
-// Spin / Stop Main Logic
-// ==========================================================================
-function handleSpinStopClick() {
-  const btn = document.getElementById('btn-spin-stop');
-  const btnText = document.getElementById('spin-btn-text');
-  const hintText = document.getElementById('spin-hint-text');
-
-  if (AppState.machineState === 'READY' || AppState.machineState === 'DONE') {
-    AppState.machineState = 'SPINNING';
-    AppState.drawnGames = [];
-
-    resetSlotsUI();
-
-    if (drumEngine) {
-      drumEngine.resetAllBalls();
-      drumEngine.startSpin();
-    }
-
-    btn.className = 'btn-spin-glow btn-spin-stop';
-    btnText.textContent = '멈추기';
-    btn.querySelector('.btn-icon-wrap').innerHTML = '<i data-lucide="square"></i>';
-    hintText.textContent = '공이 360도로 회전 중입니다! 원하는 타이밍에 [멈추기]를 터치하세요.';
-
-    sound.playPop(500);
-    if (window.lucide) lucide.createIcons();
-
-  } else if (AppState.machineState === 'SPINNING') {
-    AppState.machineState = 'EXTRACTING';
-
-    btn.className = 'btn-spin-glow btn-spin-extracting';
-    btn.disabled = true;
-    btnText.textContent = '추출 중...';
-    btn.querySelector('.btn-icon-wrap').innerHTML = '<i data-lucide="loader"></i>';
-    hintText.textContent = '공이 서서히 멈추며 행운의 번호가 추출됩니다.';
-
-    if (window.lucide) lucide.createIcons();
-
-    const games = [];
-    for (let g = 0; g < AppState.gameCount; g++) {
-      games.push(LottoMath.generateRandomCombo());
-    }
-    AppState.drawnGames = games;
-
-    revealGame1Balls(games);
+function generateRandomCombo() {
+  const nums = new Set();
+  while (nums.size < 6) {
+    nums.add(Math.floor(Math.random() * 45) + 1);
   }
-}
-
-function revealGame1Balls(games) {
-  const slotsRow = document.getElementById('winning-slots-row');
-  const slots = slotsRow.querySelectorAll('.ball-slot');
-  const game1 = games[0];
-
-  game1.forEach((num, idx) => {
-    setTimeout(() => {
-      if (drumEngine) {
-        const drumBall = drumEngine.balls.find(b => b.num === num);
-        if (drumBall) drumBall.isExtracted = true;
-      }
-
-      const slot = slots[idx];
-      slot.className = `ball-slot lotto-ball-3d ${LottoMath.getBallClass(num)}`;
-      slot.textContent = num;
-
-      sound.playPop(420 + idx * 80);
-
-      if (idx === 5) {
-        setTimeout(() => {
-          finishExtraction(games);
-        }, 400);
-      }
-    }, (idx + 1) * 300);
-  });
-}
-
-function finishExtraction(games) {
-  AppState.machineState = 'DONE';
-  const btn = document.getElementById('btn-spin-stop');
-  const btnText = document.getElementById('spin-btn-text');
-  const hintText = document.getElementById('spin-hint-text');
-
-  btn.disabled = false;
-  btn.className = 'btn-spin-glow btn-spin-ready';
-  btnText.textContent = '다시 돌리기';
-  btn.querySelector('.btn-icon-wrap').innerHTML = '<i data-lucide="rotate-ccw"></i>';
-  hintText.textContent = '추출 완료! [보관] 하거나 [당첨채점]으로 결과를 즉시 확인하세요!';
-
-  document.getElementById('tray-actions-mini').style.display = 'flex';
-
-  const extraContainer = document.getElementById('extra-games-list');
-  extraContainer.innerHTML = '';
-
-  if (games.length > 1) {
-    const alphabet = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'];
-    games.slice(1).forEach((combo, idx) => {
-      const gameLabel = alphabet[idx + 1] || `${idx + 2}`;
-      const card = document.createElement('div');
-      card.className = 'extra-game-card';
-      const ballsHtml = combo.map(n => `<span class="mini-ball-3d ${LottoMath.getBallClass(n)}">${n}</span>`).join('');
-
-      card.innerHTML = `
-        <span class="extra-game-label">${gameLabel}게임</span>
-        <div class="extra-balls-row">${ballsHtml}</div>
-      `;
-      extraContainer.appendChild(card);
-    });
-  }
-
-  sound.playFanfare();
-  if (window.lucide) lucide.createIcons();
-}
-
-function resetSlotsUI() {
-  const slotsRow = document.getElementById('winning-slots-row');
-  slotsRow.innerHTML = `
-    <div class="ball-slot empty"><span>?</span></div>
-    <div class="ball-slot empty"><span>?</span></div>
-    <div class="ball-slot empty"><span>?</span></div>
-    <div class="ball-slot empty"><span>?</span></div>
-    <div class="ball-slot empty"><span>?</span></div>
-    <div class="ball-slot empty"><span>?</span></div>
-  `;
-  document.getElementById('extra-games-list').innerHTML = '';
-  document.getElementById('tray-actions-mini').style.display = 'none';
-  document.getElementById('tray-scoring-result').style.display = 'none';
+  return Array.from(nums).sort((a, b) => a - b);
 }
 
 // ==========================================================================
-// Historical Round Search & Auto Score Matching
-// ==========================================================================
-function initHistoricalSearch() {
-  const input = document.getElementById('input-search-round');
-  const btnSearch = document.getElementById('btn-search-round');
-  const chips = document.querySelectorAll('.round-chip');
-
-  const doSearch = (roundNum) => {
-    let r = parseInt(roundNum, 10);
-    if (isNaN(r) || r < 1) r = 1160;
-    if (r > 1160) r = 1160;
-
-    AppState.searchedRound = r;
-    input.value = r;
-
-    let data = HISTORICAL_DATABASE[r];
-    if (!data) {
-      const pseudoRandom = (seed) => {
-        let x = Math.sin(seed++) * 10000;
-        return x - Math.floor(x);
-      };
-      const set = new Set();
-      let seed = r * 777;
-      while (set.size < 6) {
-        set.add(Math.floor(pseudoRandom(seed++) * 45) + 1);
-      }
-      let bonus = Math.floor(pseudoRandom(seed++) * 45) + 1;
-      while (set.has(bonus)) { bonus = (bonus % 45) + 1; }
-      
-      const arr = Array.from(set).sort((a, b) => a - b);
-      data = {
-        date: `제 ${r}회 추첨`,
-        numbers: arr,
-        bonus: bonus,
-        prize: `${(15 + (r % 25)).toFixed(1)}억 원`,
-        winners: `${8 + (r % 10)}명`
-      };
-    }
-
-    renderSearchedRound(r, data);
-    autoScoreAllVaultAgainstRound(r, data);
-    sound.playPop(520);
-  };
-
-  btnSearch.addEventListener('click', () => doSearch(input.value));
-  input.addEventListener('keydown', (e) => { if (e.key === 'Enter') doSearch(input.value); });
-  
-  chips.forEach(chip => {
-    chip.addEventListener('click', () => doSearch(chip.dataset.round));
-  });
-
-  doSearch(1160);
-}
-
-function renderSearchedRound(round, data) {
-  const container = document.getElementById('round-result-card');
-  const ballsHtml = data.numbers.map(n => `<span class="mini-ball-3d ${LottoMath.getBallClass(n)}">${n}</span>`).join('');
-  const bonusHtml = `<span class="mini-ball-3d ${LottoMath.getBallClass(data.bonus)}">${data.bonus}</span>`;
-
-  container.innerHTML = `
-    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
-      <strong style="color:#ffd700; font-size:1.05rem;">제 ${round}회 당첨 결과</strong>
-      <span style="font-size:0.75rem; color:#94a3b8;">${data.date}</span>
-    </div>
-    <div style="display:flex; align-items:center; justify-content:center; gap:6px; flex-wrap:wrap; margin:10px 0;">
-      <div style="display:flex; gap:6px;">${ballsHtml}</div>
-      <span style="color:#ffd700; font-weight:800; font-size:1rem; margin:0 4px;">+</span>
-      ${bonusHtml}
-    </div>
-    <div style="display:flex; justify-content:space-around; background:rgba(0,0,0,0.3); padding:8px; border-radius:10px; font-size:0.8rem;">
-      <div>1등 당첨금: <strong style="color:#fca5a5;">${data.prize}</strong></div>
-      <div>당첨자: <strong style="color:#ffd700;">${data.winners}</strong></div>
-    </div>
-  `;
-}
-
-// Auto Grade Vault & Drawn Numbers
-function autoScoreAllVaultAgainstRound(round, data) {
-  const matchBox = document.getElementById('auto-matching-box');
-  if (!matchBox) return;
-
-  const allCombosToCheck = [];
-  if (AppState.drawnGames.length > 0) {
-    AppState.drawnGames.forEach((g, idx) => allCombosToCheck.push({ numbers: g, label: `추출 ${idx + 1}게임` }));
-  }
-  if (AppState.vault.length > 0) {
-    AppState.vault.forEach((v, idx) => allCombosToCheck.push({ numbers: v.numbers, label: `보관함 #${idx + 1}` }));
-  }
-
-  if (allCombosToCheck.length === 0) {
-    matchBox.style.display = 'none';
-    return;
-  }
-
-  matchBox.style.display = 'flex';
-  let html = `<div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid rgba(255,255,255,0.1); padding-bottom:6px;">
-    <strong style="color:#ffd700; font-size:0.88rem;">🎯 제 ${round}회 내 번호 자동 채점 결과</strong>
-    <span style="font-size:0.72rem; color:#94a3b8;">총 ${allCombosToCheck.length}개 대조</span>
-  </div>`;
-
-  allCombosToCheck.forEach(item => {
-    const score = LottoMath.evaluateScore(item.numbers, data.numbers, data.bonus);
-    const ballsMarked = item.numbers.map(n => {
-      const isHit = data.numbers.includes(n);
-      const isBonusHit = (n === data.bonus);
-      const hitStyle = (isHit || isBonusHit) ? 'border:2px solid #ffd700; box-shadow:0 0 8px #ffd700;' : 'opacity:0.6;';
-      return `<span class="mini-ball-3d ${LottoMath.getBallClass(n)}" style="${hitStyle}">${n}</span>`;
-    }).join('');
-
-    html += `
-      <div style="display:flex; justify-content:space-between; align-items:center; padding:6px 0; border-bottom:1px dashed rgba(255,255,255,0.06);">
-        <div style="display:flex; flex-direction:column; gap:2px;">
-          <span style="font-size:0.75rem; color:#cbd5e1; font-weight:700;">${item.label}</span>
-          <div style="display:flex; gap:4px;">${ballsMarked}</div>
-        </div>
-        <div style="text-align:right;">
-          <span class="match-rank-badge ${score.class}">${score.label}</span>
-          <div style="font-size:0.7rem; color:#94a3b8; margin-top:2px;">${score.desc}</div>
-        </div>
-      </div>
-    `;
-  });
-
-  matchBox.innerHTML = html;
-}
-
-// ==========================================================================
-// Saju & Horoscope Premium Generator ($1)
-// ==========================================================================
-function initSajuModal() {
-  const modal = document.getElementById('saju-modal');
-  const openBtn = document.getElementById('btn-open-saju');
-  const closeBtn = document.getElementById('btn-close-saju');
-  const payBtn = document.getElementById('btn-pay-and-generate');
-
-  if (openBtn && modal) {
-    openBtn.addEventListener('click', () => { modal.style.display = 'flex'; });
-  }
-  if (closeBtn && modal) {
-    closeBtn.addEventListener('click', () => { modal.style.display = 'none'; });
-  }
-
-  if (payBtn) {
-    payBtn.addEventListener('click', () => {
-      const birth = document.getElementById('saju-birthdate').value;
-      const zodiac = document.getElementById('saju-zodiac').value;
-      const gender = document.getElementById('saju-gender').value;
-
-      payBtn.disabled = true;
-      payBtn.innerHTML = '<i data-lucide="loader"></i> $1 결제 승인 및 사주 오행 계산 중...';
-      if (window.lucide) lucide.createIcons();
-
-      setTimeout(() => {
-        payBtn.disabled = false;
-        payBtn.innerHTML = '<i data-lucide="sparkles"></i> $1 결제하고 사주 번호 다시 받기';
-        
-        // Deterministic Saju algorithm based on birth date + zodiac
-        let seed = 0;
-        for (let i = 0; i < birth.length; i++) seed += birth.charCodeAt(i);
-        seed += zodiac.length * 37 + (gender === 'M' ? 100 : 200);
-
-        const sajuSet = new Set();
-        let step = seed;
-        while (sajuSet.size < 6) {
-          step = (step * 9301 + 49297) % 233280;
-          sajuSet.add((step % 45) + 1);
-        }
-        const sajuCombo = Array.from(sajuSet).sort((a, b) => a - b);
-
-        const resultBox = document.getElementById('saju-result-box');
-        const ballsRow = document.getElementById('saju-balls-row');
-        const descText = document.getElementById('saju-desc-text');
-
-        ballsRow.innerHTML = sajuCombo.map(n => `<span class="mini-ball-3d ${LottoMath.getBallClass(n)}">${n}</span>`).join('');
-        descText.innerHTML = `🌟 <strong>사주 금(金)·수(水) 대운 강화 조합</strong><br>생년월일(${birth})과 ${zodiac}의 천문 기운이 일치하는 최고의 재물운 길일 번호입니다!`;
-        resultBox.style.display = 'block';
-
-        // Auto Save to Vault
-        AppState.vault.unshift({
-          numbers: sajuCombo,
-          label: `🔮 사주맞춤`,
-          date: new Date().toLocaleString()
-        });
-        localStorage.setItem('lotto_mobile_vault', JSON.stringify(AppState.vault));
-        updateVaultBadge();
-
-        sound.playFanfare();
-        showToast('🔮 $1 사주 맞춤 번호가 생성되어 보관함에 저장되었습니다!');
-        if (window.lucide) lucide.createIcons();
-      }, 900);
-    });
-  }
-}
-
-// ==========================================================================
-// Famous Spots Component
-// ==========================================================================
-function initFamousSpots() {
-  const container = document.getElementById('spots-list-grid');
-  const filterChips = document.querySelectorAll('.spots-filter-bar .filter-chip');
-
-  const renderSpots = (region) => {
-    container.innerHTML = '';
-    const filtered = (region === 'all') 
-      ? FAMOUS_SPOTS 
-      : FAMOUS_SPOTS.filter(s => s.region === region);
-
-    filtered.forEach(s => {
-      const card = document.createElement('div');
-      card.className = 'spot-card';
-      const mapUrl = `https://map.naver.com/v5/search/${encodeURIComponent(s.name + ' ' + s.address)}`;
-
-      card.innerHTML = `
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
-          <div style="display:flex; align-items:center; gap:6px;">
-            <span style="background:#ffd700; color:#000; font-weight:900; font-size:0.7rem; padding:2px 6px; border-radius:4px;">TOP ${s.rank}</span>
-            <strong style="color:#fff; font-size:0.95rem;">${s.name}</strong>
-          </div>
-          <span style="color:#f87171; font-size:0.78rem; font-weight:800;">1등 ${s.count}회</span>
-        </div>
-        <div style="font-size:0.75rem; color:#94a3b8; margin-bottom:6px;">📍 ${s.address}</div>
-        <div style="display:flex; justify-content:space-between; align-items:center;">
-          <span style="font-size:0.72rem; color:#ffd700;">✨ ${s.tag}</span>
-          <a href="${mapUrl}" target="_blank" style="color:#38bdf8; font-size:0.75rem; text-decoration:none; font-weight:700;">길찾기 ➜</a>
-        </div>
-      `;
-      container.appendChild(card);
-    });
-  };
-
-  filterChips.forEach(chip => {
-    chip.addEventListener('click', () => {
-      filterChips.forEach(c => c.classList.remove('active'));
-      chip.classList.add('active');
-      AppState.activeRegion = chip.dataset.region;
-      renderSpots(AppState.activeRegion);
-    });
-  });
-
-  renderSpots('all');
-}
-
-// ==========================================================================
-// Vault & Stepper
-// ==========================================================================
-function initGameCountSelector() {
-  const display = document.getElementById('display-game-count');
-  const btnMinus = document.getElementById('btn-decrease-games');
-  const btnPlus = document.getElementById('btn-increase-games');
-
-  const update = () => { display.textContent = AppState.gameCount; };
-
-  btnMinus.addEventListener('click', () => {
-    if (AppState.gameCount > 1) {
-      AppState.gameCount--;
-      update();
-      sound.playPop(350);
-    }
-  });
-
-  btnPlus.addEventListener('click', () => {
-    if (AppState.gameCount < 10) {
-      AppState.gameCount++;
-      update();
-      sound.playPop(450);
-    }
-  });
-}
-
-function saveAllDrawnToVault() {
-  if (AppState.drawnGames.length === 0) return;
-  const alphabet = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'];
-  let added = 0;
-
-  AppState.drawnGames.forEach((combo, idx) => {
-    const key = combo.join(',');
-    if (!AppState.vault.some(v => v.numbers.join(',') === key)) {
-      AppState.vault.unshift({
-        numbers: combo,
-        label: `${alphabet[idx] || idx + 1}게임`,
-        date: new Date().toLocaleString()
-      });
-      added++;
-    }
-  });
-
-  localStorage.setItem('lotto_mobile_vault', JSON.stringify(AppState.vault));
-  updateVaultBadge();
-  showToast(`${added}개 조합이 보관함에 저장되었습니다! 💾`);
-}
-
-function updateVaultBadge() {
-  const badge = document.getElementById('vault-badge-count');
-  if (badge) badge.textContent = AppState.vault.length;
-}
-
-function initVaultModal() {
-  const modal = document.getElementById('vault-modal');
-  const openBtn = document.getElementById('btn-open-vault');
-  const closeBtn = document.getElementById('btn-close-vault');
-  const clearBtn = document.getElementById('btn-clear-vault');
-  const exportBtn = document.getElementById('btn-export-vault');
-
-  const renderList = () => {
-    const container = document.getElementById('vault-list-container');
-    if (!container) return;
-    container.innerHTML = '';
-
-    if (AppState.vault.length === 0) {
-      container.innerHTML = '<p class="empty-text">보관된 번호가 없습니다.</p>';
-      return;
-    }
-
-    AppState.vault.forEach((item, idx) => {
-      const card = document.createElement('div');
-      card.style.cssText = 'display:flex; justify-content:space-between; align-items:center; background:rgba(0,0,0,0.3); padding:8px 12px; border-radius:10px; margin-bottom:6px;';
-      const ballsHtml = item.numbers.map(n => `<span class="mini-ball-3d ${LottoMath.getBallClass(n)}">${n}</span>`).join('');
-
-      card.innerHTML = `
-        <div>
-          <span style="color:#ffd700; font-size:0.75rem; font-weight:800;">${item.label || '#' + (idx + 1)}</span>
-          <div style="display:flex; gap:4px; margin-top:2px;">${ballsHtml}</div>
-        </div>
-        <button class="btn-del" style="background:none; border:none; color:#f87171; cursor:pointer; font-size:0.75rem;">삭제</button>
-      `;
-
-      card.querySelector('.btn-del').addEventListener('click', () => {
-        AppState.vault.splice(idx, 1);
-        localStorage.setItem('lotto_mobile_vault', JSON.stringify(AppState.vault));
-        updateVaultBadge();
-        renderList();
-        showToast('삭제되었습니다.');
-      });
-
-      container.appendChild(card);
-    });
-  };
-
-  if (openBtn) openBtn.addEventListener('click', () => { renderList(); modal.style.display = 'flex'; });
-  if (closeBtn) closeBtn.addEventListener('click', () => { modal.style.display = 'none'; });
-
-  if (clearBtn) {
-    clearBtn.addEventListener('click', () => {
-      if (confirm('보관함 전체를 비우시겠습니까?')) {
-        AppState.vault = [];
-        localStorage.removeItem('lotto_mobile_vault');
-        updateVaultBadge();
-        renderList();
-        showToast('보관함이 비워졌습니다.');
-      }
-    });
-  }
-
-  if (exportBtn) {
-    exportBtn.addEventListener('click', () => {
-      if (AppState.vault.length === 0) return showToast('저장된 번호가 없습니다.');
-      let csv = 'data:text/csv;charset=utf-8,\uFEFF라벨,번호1,번호2,번호3,번호4,번호5,번호6,저장일시\n';
-      AppState.vault.forEach(v => {
-        csv += `"${v.label}",${v.numbers.join(',')},"${v.date}"\n`;
-      });
-      const link = document.createElement('a');
-      link.href = encodeURI(csv);
-      link.download = `lotto_vault_${new Date().toISOString().slice(0, 10)}.csv`;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      showToast('CSV 다운로드 완료!');
-    });
-  }
-}
-
-function showToast(msg) {
-  const container = document.getElementById('toast-container');
-  if (!container) return;
-  const t = document.createElement('div');
-  t.className = 'toast-item';
-  t.innerHTML = `<i data-lucide="check-circle" style="color:#ffd700; width:16px; height:16px;"></i> <span>${msg}</span>`;
-  container.appendChild(t);
-  if (window.lucide) lucide.createIcons();
-
-  setTimeout(() => {
-    t.style.opacity = '0';
-    t.style.transform = 'translateY(-10px)';
-    t.style.transition = 'all 0.25s ease';
-    setTimeout(() => t.remove(), 250);
-  }, 2200);
-}
-
-function copyToClipboard(text) {
-  if (navigator.clipboard) navigator.clipboard.writeText(text);
-  else {
-    const ta = document.createElement('textarea');
-    ta.value = text;
-    document.body.appendChild(ta);
-    ta.select();
-    document.execCommand('copy');
-    document.body.removeChild(ta);
-  }
-}
-
-// ==========================================================================
-// Initialization
+// DOM Initializer & Broadcast Physics Engine
 // ==========================================================================
 document.addEventListener('DOMContentLoaded', () => {
-  if (window.lucide) lucide.createIcons();
+  const drum = document.getElementById('drumContainer');
+  const extractBtn = document.getElementById('extractBtn');
+  const btnLabel = document.getElementById('btn-extract-label');
+  const resultsTray = document.getElementById('resultsTray');
+  const spinHint = document.getElementById('spin-hint-text');
+  const extraGamesList = document.getElementById('extra-games-list');
+  const trayActions = document.getElementById('tray-actions-mini');
+  
+  const numBalls = 45;
+  const balls = [];
+  let lastTime = 0;
 
-  drumEngine = new RotatingDrumEngine('lotto-drum-canvas');
+  // Initialize 45 3D Balls in Drum
+  if (drum) {
+    const drumWidth = drum.clientWidth || 360;
+    const centerX = drumWidth / 2;
+    const centerY = drumWidth / 2;
 
-  const spinBtn = document.getElementById('btn-spin-stop');
-  if (spinBtn) {
-    spinBtn.addEventListener('click', () => handleSpinStopClick());
-  }
-
-  const saveAllBtn = document.getElementById('btn-save-all');
-  if (saveAllBtn) {
-    saveAllBtn.addEventListener('click', () => saveAllDrawnToVault());
-  }
-
-  const copyAllBtn = document.getElementById('btn-copy-all');
-  if (copyAllBtn) {
-    copyAllBtn.addEventListener('click', () => {
-      if (AppState.drawnGames.length === 0) return;
-      const text = AppState.drawnGames.map((g, i) => `${i + 1}게임: ${g.join(', ')}`).join('\n');
-      copyToClipboard(text);
-      showToast('전체 번호가 복사되었습니다.');
-    });
-  }
-
-  // Instant Check Button
-  const checkNowBtn = document.getElementById('btn-check-now');
-  if (checkNowBtn) {
-    checkNowBtn.addEventListener('click', () => {
-      if (AppState.drawnGames.length === 0) return;
-      const roundData = HISTORICAL_DATABASE[1160];
-      autoScoreAllVaultAgainstRound(1160, roundData);
-      const resTray = document.getElementById('tray-scoring-result');
-      resTray.style.display = 'flex';
+    for (let i = 1; i <= numBalls; i++) {
+      const ball = document.createElement('div');
+      ball.className = `lottery-ball ${getColorClass(i)}`;
+      ball.textContent = i;
       
-      let html = `<strong style="color:#ffd700; font-size:0.85rem;">🎯 최신 1160회 당첨 즉시 채점 결과</strong>`;
-      AppState.drawnGames.forEach((combo, i) => {
-        const score = LottoMath.evaluateScore(combo, roundData.numbers, roundData.bonus);
-        html += `
-          <div style="display:flex; justify-content:space-between; align-items:center; padding:4px 0; font-size:0.8rem;">
-            <span>${i + 1}게임: [${combo.join(', ')}]</span>
-            <span class="match-rank-badge ${score.class}">${score.label}</span>
-          </div>
+      const angle = Math.random() * Math.PI * 2;
+      const r = Math.random() * (centerX - 35);
+      const x = centerX + Math.cos(angle) * r;
+      const y = centerY + Math.sin(angle) * r;
+
+      ball.style.left = `0px`;
+      ball.style.top = `0px`;
+
+      ball.x = x - 22;
+      ball.y = y - 22;
+      ball.vx = (Math.random() - 0.5) * 4;
+      ball.vy = (Math.random() - 0.5) * 4;
+      ball.radius = 22;
+      ball.isExtracted = false;
+
+      drum.appendChild(ball);
+      balls.push(ball);
+    }
+  }
+
+  // Smooth TV Broadcast Physics Loop
+  function animate(time) {
+    const dt = lastTime ? Math.min((time - lastTime) / 16, 2) : 1;
+    lastTime = time;
+
+    const drumRect = drum.getBoundingClientRect();
+    const drumRadius = drumRect.width / 2;
+    const centerX = drumRadius;
+    const centerY = drumRadius;
+
+    // Gentle realistic broadcast physics (moderate speed, clear numbers)
+    let gravity = AppState.isRunning ? 0.15 : 0.35;
+    let friction = 0.985;
+    let mixingForce = AppState.isRunning ? 1.6 : 0;
+
+    balls.forEach((ball, i) => {
+      if (ball.isExtracted) return;
+
+      ball.vy += gravity * dt;
+
+      // Swirl rotation in drum
+      if (AppState.isRunning) {
+        const dx = (ball.x + ball.radius) - centerX;
+        const dy = (ball.y + ball.radius) - centerY;
+        const dist = Math.sqrt(dx * dx + dy * dy) || 1;
+        
+        // Gentle rotational swirl
+        ball.vx += (-dy / dist) * 0.45;
+        ball.vy += (dx / dist) * 0.45;
+
+        if (Math.random() < 0.08) {
+          ball.vx += (Math.random() - 0.5) * mixingForce;
+          ball.vy -= Math.random() * mixingForce * 1.5;
+        }
+      }
+
+      ball.x += ball.vx * dt;
+      ball.y += ball.vy * dt;
+      
+      ball.vx *= friction;
+      ball.vy *= friction;
+
+      // Circular collision detection with drum edge
+      const dx = ball.x + ball.radius - centerX;
+      const dy = ball.y + ball.radius - centerY;
+      const distance = Math.sqrt(dx * dx + dy * dy);
+
+      if (distance > drumRadius - ball.radius) {
+        const nx = dx / distance;
+        const ny = dy / distance;
+
+        const dot = ball.vx * nx + ball.vy * ny;
+        ball.vx -= 1.7 * dot * nx;
+        ball.vy -= 1.7 * dot * ny;
+
+        ball.x = centerX + nx * (drumRadius - ball.radius) - ball.radius;
+        ball.y = centerY + ny * (drumRadius - ball.radius) - ball.radius;
+      }
+
+      // Ball to Ball collision
+      for (let j = i + 1; j < balls.length; j++) {
+        const ball2 = balls[j];
+        if (ball2.isExtracted) continue;
+
+        const bx = ball.x - ball2.x;
+        const by = ball.y - ball2.y;
+        const bdist = Math.sqrt(bx * bx + by * by);
+        const minDist = ball.radius + ball2.radius;
+
+        if (bdist < minDist && bdist > 0) {
+          const overlap = 0.5 * (minDist - bdist);
+          const bnx = bx / bdist;
+          const bny = by / bdist;
+
+          ball.x += bnx * overlap;
+          ball.y += bny * overlap;
+          ball2.x -= bnx * overlap;
+          ball2.y -= bny * overlap;
+
+          const dot1 = ball.vx * bnx + ball.vy * bny;
+          const dot2 = ball2.vx * bnx + ball2.vy * bny;
+
+          ball.vx -= dot1 * bnx * 0.8;
+          ball.vy -= dot1 * bny * 0.8;
+          ball2.vx += dot2 * bnx * 0.8;
+          ball2.vy += dot2 * bny * 0.8;
+        }
+      }
+
+      // Speed limits for clear visual visibility
+      const maxSpeed = AppState.isRunning ? 14 : 8;
+      const speed = Math.sqrt(ball.vx * ball.vx + ball.vy * ball.vy);
+      if (speed > maxSpeed) {
+        ball.vx = (ball.vx / speed) * maxSpeed;
+        ball.vy = (ball.vy / speed) * maxSpeed;
+      }
+
+      ball.style.transform = `translate3d(${ball.x}px, ${ball.y}px, 0)`;
+    });
+
+    requestAnimationFrame(animate);
+  }
+  requestAnimationFrame(animate);
+
+  // Extract / Spin Button Click
+  if (extractBtn) {
+    extractBtn.addEventListener('click', () => {
+      if (AppState.extractedCount >= AppState.maxExtracts) {
+        // Reset Game
+        AppState.extractedCount = 0;
+        AppState.drawnGames = [];
+        resultsTray.innerHTML = `
+          <div class="result-slot">?</div>
+          <div class="result-slot">?</div>
+          <div class="result-slot">?</div>
+          <div class="result-slot">?</div>
+          <div class="result-slot">?</div>
+          <div class="result-slot">?</div>
         `;
-      });
-      resTray.innerHTML = html;
-      showToast('당첨 채점이 완료되었습니다! 🎯');
+        if (extraGamesList) extraGamesList.innerHTML = '';
+        if (trayActions) trayActions.style.display = 'none';
+
+        balls.forEach(b => {
+          b.isExtracted = false;
+          b.style.display = 'flex';
+          b.vx = (Math.random() - 0.5) * 6;
+          b.vy = (Math.random() - 0.5) * 6;
+        });
+
+        btnLabel.textContent = 'START (추첨 시작)';
+        extractBtn.classList.remove('bg-on-tertiary-container', 'text-white');
+        extractBtn.classList.add('bg-primary-container', 'text-on-primary-container');
+        if (spinHint) spinHint.textContent = '버튼을 누르면 실제 방송국 추첨기처럼 회전하며 번호가 추출됩니다.';
+        return;
+      }
+
+      if (!AppState.isRunning) {
+        // Start Spinning
+        AppState.isRunning = true;
+        btnLabel.textContent = 'STOP (번호 추출하기)';
+        extractBtn.classList.remove('bg-primary-container', 'text-on-primary-container');
+        extractBtn.classList.add('bg-on-tertiary-container', 'text-white');
+        if (spinHint) spinHint.textContent = '원통이 회전 중입니다! 원하는 타이밍에 [STOP]을 눌러주세요.';
+        
+        balls.forEach(b => {
+          if (!b.isExtracted) {
+            b.vx += (Math.random() - 0.5) * 12;
+            b.vy -= Math.random() * 12;
+          }
+        });
+        sound.playPop(520);
+
+      } else {
+        // Stop and Extract all 6 balls with broadcast sequence
+        AppState.isRunning = false;
+        btnLabel.textContent = 'EXTRACTING... (추출 중)';
+        extractBtn.disabled = true;
+
+        const mainCombo = generateRandomCombo();
+        const fullGames = [mainCombo];
+        for (let g = 1; g < AppState.gameCount; g++) {
+          fullGames.push(generateRandomCombo());
+        }
+        AppState.drawnGames = fullGames;
+
+        // Sequentially reveal 6 balls
+        mainCombo.forEach((num, idx) => {
+          setTimeout(() => {
+            const ballObj = balls.find(b => parseInt(b.textContent) === num && !b.isExtracted) || balls.find(b => !b.isExtracted);
+            if (ballObj) {
+              ballObj.isExtracted = true;
+              ballObj.style.display = 'none';
+            }
+
+            const slot = resultsTray.querySelectorAll('.result-slot')[0];
+            if (slot) {
+              const resBall = document.createElement('div');
+              resBall.className = `result-ball ${getColorClass(num)}`;
+              resBall.textContent = num;
+              resultsTray.replaceChild(resBall, slot);
+            }
+            sound.playPop(440 + idx * 60);
+
+            if (idx === 5) {
+              AppState.extractedCount = 6;
+              extractBtn.disabled = false;
+              btnLabel.textContent = 'RESET DRAW (다시 추첨)';
+              if (spinHint) spinHint.textContent = '추첨이 완료되었습니다! 번호를 보관하거나 복사할 수 있습니다.';
+              if (trayActions) trayActions.style.display = 'flex';
+              
+              // Render Multi-game list if > 1 game
+              if (AppState.gameCount > 1 && extraGamesList) {
+                const alphabet = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'];
+                extraGamesList.innerHTML = '';
+                fullGames.slice(1).forEach((combo, gIdx) => {
+                  const card = document.createElement('div');
+                  card.className = 'flex items-center justify-between bg-surface-container/50 border border-white/5 p-2.5 rounded-xl';
+                  const ballsHtml = combo.map(n => `<span class="result-ball ${getColorClass(n)} !w-8 !h-8 !text-xs">${n}</span>`).join('');
+                  card.innerHTML = `
+                    <span class="text-xs font-bold text-amber-300">${alphabet[gIdx + 1]}게임</span>
+                    <div class="flex items-center gap-1.5">${ballsHtml}</div>
+                  `;
+                  extraGamesList.appendChild(card);
+                });
+              }
+
+              sound.playFanfare();
+              if (window.confetti) {
+                confetti({ particleCount: 60, spread: 60, origin: { y: 0.6 } });
+              }
+            }
+          }, (idx + 1) * 450);
+        });
+      }
     });
   }
 
-  // Download Formatted Text File
-  const downloadFileBtn = document.getElementById('btn-download-file');
-  if (downloadFileBtn) {
-    downloadFileBtn.addEventListener('click', () => {
+  // Game Count Stepper
+  const btnDec = document.getElementById('btn-decrease-games');
+  const btnInc = document.getElementById('btn-increase-games');
+  const displayCount = document.getElementById('display-game-count');
+
+  if (btnDec && btnInc && displayCount) {
+    btnDec.addEventListener('click', () => {
+      if (AppState.gameCount > 1) {
+        AppState.gameCount--;
+        displayCount.textContent = AppState.gameCount;
+        sound.playPop(400);
+      }
+    });
+    btnInc.addEventListener('click', () => {
+      if (AppState.gameCount < 10) {
+        AppState.gameCount++;
+        displayCount.textContent = AppState.gameCount;
+        sound.playPop(600);
+      }
+    });
+  }
+
+  // Sound Toggle
+  const btnSound = document.getElementById('btn-sound-toggle');
+  const soundIcon = document.getElementById('sound-icon');
+  if (btnSound && soundIcon) {
+    btnSound.addEventListener('click', () => {
+      AppState.soundEnabled = !AppState.soundEnabled;
+      soundIcon.textContent = AppState.soundEnabled ? 'volume_up' : 'volume_off';
+    });
+  }
+
+  // Vault Management
+  const btnVaultHeader = document.getElementById('btn-header-vault');
+  const modalVault = document.getElementById('modal-vault');
+  const btnCloseVault = document.getElementById('btn-close-vault');
+  const vaultList = document.getElementById('vault-list-container');
+  const vaultBadge = document.getElementById('vault-badge-count');
+  const btnClearVault = document.getElementById('btn-clear-vault');
+  const btnSaveAll = document.getElementById('btn-save-all');
+  const btnCopyAll = document.getElementById('btn-copy-all');
+
+  function updateVaultUI() {
+    if (vaultBadge) vaultBadge.textContent = AppState.vault.length;
+    if (vaultList) {
+      if (AppState.vault.length === 0) {
+        vaultList.innerHTML = '<p class="text-xs text-on-surface-variant text-center py-6">보관된 번호가 없습니다.</p>';
+      } else {
+        vaultList.innerHTML = AppState.vault.map((v, i) => `
+          <div class="flex items-center justify-between bg-surface-container-highest/50 p-2.5 rounded-xl border border-white/5">
+            <span class="text-xs font-bold text-amber-400">${v.label || `${i+1}게임`}</span>
+            <div class="flex items-center gap-1">
+              ${v.numbers.map(n => `<span class="result-ball ${getColorClass(n)} !w-6 !h-6 !text-[10px]">${n}</span>`).join('')}
+            </div>
+          </div>
+        `).join('');
+      }
+    }
+  }
+  updateVaultUI();
+
+  if (btnVaultHeader && modalVault) {
+    btnVaultHeader.addEventListener('click', () => {
+      updateVaultUI();
+      modalVault.classList.add('active');
+    });
+  }
+  if (btnCloseVault && modalVault) {
+    btnCloseVault.addEventListener('click', () => modalVault.classList.remove('active'));
+  }
+  if (btnClearVault) {
+    btnClearVault.addEventListener('click', () => {
+      AppState.vault = [];
+      localStorage.removeItem('lotto_mobile_vault');
+      updateVaultUI();
+    });
+  }
+  if (btnSaveAll) {
+    btnSaveAll.addEventListener('click', () => {
       if (AppState.drawnGames.length === 0) return;
       const alphabet = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'];
-      const now = new Date();
-      let content = `====================================\n`;
-      content += `   🎰 LOTTO 6/45 행운의 번호 추천 🎰\n`;
-      content += `====================================\n`;
-      content += `추출일시: ${now.toLocaleString()}\n`;
-      content += `추출게임: 총 ${AppState.drawnGames.length}게임\n`;
-      content += `------------------------------------\n`;
-      AppState.drawnGames.forEach((combo, i) => {
-        const sum = combo.reduce((a, b) => a + b, 0);
-        content += `[${alphabet[i] || i + 1}게임]  ${combo.map(n => String(n).padStart(2, ' ')).join('  ')}  (합: ${sum})\n`;
+      AppState.drawnGames.forEach((combo, idx) => {
+        AppState.vault.push({
+          label: `${alphabet[idx] || idx+1}게임`,
+          numbers: combo,
+          date: new Date().toLocaleDateString()
+        });
       });
-      content += `------------------------------------\n`;
-      content += `※ 동행복권 공식 사이트: https://www.dhlottery.co.kr\n`;
-      content += `※ 본 번호는 행운을 기원하는 추천 조합입니다.\n`;
-      content += `====================================\n`;
-
-      const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
-      const link = document.createElement('a');
-      link.href = URL.createObjectURL(blob);
-      link.download = `로또_행운번호_${now.getFullYear()}${String(now.getMonth()+1).padStart(2,'0')}${String(now.getDate()).padStart(2,'0')}.txt`;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      showToast('텍스트 파일이 저장되었습니다! 📥');
+      localStorage.setItem('lotto_mobile_vault', JSON.stringify(AppState.vault));
+      updateVaultUI();
+      alert('보관함에 저장되었습니다!');
+    });
+  }
+  if (btnCopyAll) {
+    btnCopyAll.addEventListener('click', () => {
+      if (AppState.drawnGames.length === 0) return;
+      const text = AppState.drawnGames.map((g, i) => `${i+1}게임: ${g.join(', ')}`).join('\n');
+      navigator.clipboard.writeText(text).then(() => alert('번호가 복사되었습니다!'));
     });
   }
 
-  const soundBtn = document.getElementById('btn-sound-toggle');
-  if (soundBtn) {
-    soundBtn.addEventListener('click', () => {
-      AppState.soundEnabled = !AppState.soundEnabled;
-      soundBtn.innerHTML = AppState.soundEnabled ? '<i data-lucide="volume-2"></i>' : '<i data-lucide="volume-x"></i>';
-      if (window.lucide) lucide.createIcons();
-      showToast(AppState.soundEnabled ? '효과음 켜짐' : '효과음 꺼짐');
+  // Saju Modal
+  const modalSaju = document.getElementById('modal-saju');
+  const btnCloseSaju = document.getElementById('btn-close-saju');
+  const navBtnSaju = document.getElementById('nav-btn-saju');
+  const btnPaySaju = document.getElementById('btn-pay-and-generate');
+
+  if (navBtnSaju && modalSaju) {
+    navBtnSaju.addEventListener('click', () => modalSaju.classList.add('active'));
+  }
+  if (btnCloseSaju && modalSaju) {
+    btnCloseSaju.addEventListener('click', () => modalSaju.classList.remove('active'));
+  }
+  if (btnPaySaju && modalSaju) {
+    btnPaySaju.addEventListener('click', () => {
+      const sajuNums = generateRandomCombo();
+      alert(`[사주 맞춤 행운번호]\n${sajuNums.join(', ')}\n이번 주 대박을 기원합니다!`);
+      modalSaju.classList.remove('active');
     });
   }
 
-  initGameCountSelector();
-  initHistoricalSearch();
-  initFamousSpots();
-  initVaultModal();
-  initSajuModal();
-  updateVaultBadge();
+  // Round History Search
+  const btnSearchRound = document.getElementById('btn-search-round');
+  const inputRound = document.getElementById('input-round-search');
+  const chips = document.querySelectorAll('.chip-round');
+
+  function renderRound(r) {
+    const data = HISTORICAL_DATABASE[r];
+    if (!data) return;
+    document.getElementById('card-round-title').textContent = `제 ${r}회 당첨번호`;
+    document.getElementById('card-round-date').textContent = `${data.date} 추첨`;
+    document.getElementById('card-prize-amount').textContent = data.prize;
+    document.getElementById('card-winners-count').textContent = data.winners;
+    
+    const ballsBox = document.getElementById('card-round-balls');
+    if (ballsBox) {
+      ballsBox.innerHTML = data.numbers.map(n => `<div class="result-ball ${getColorClass(n)} !w-9 !h-9 !text-sm">${n}</div>`).join('');
+    }
+    const bonusBox = document.getElementById('card-bonus-ball');
+    if (bonusBox) {
+      bonusBox.className = `result-ball ${getColorClass(data.bonus)} !w-9 !h-9 !text-sm`;
+      bonusBox.textContent = data.bonus;
+    }
+  }
+
+  if (btnSearchRound && inputRound) {
+    btnSearchRound.addEventListener('click', () => {
+      const val = parseInt(inputRound.value, 10);
+      if (HISTORICAL_DATABASE[val]) renderRound(val);
+      else alert(`${val}회차 데이터는 현재 준비 중입니다.`);
+    });
+  }
+
+  chips.forEach(chip => {
+    chip.addEventListener('click', () => {
+      const r = parseInt(chip.getAttribute('data-round'), 10);
+      if (inputRound) inputRound.value = r;
+      renderRound(r);
+    });
+  });
+
+  // Nav actions
+  const navBtnDraw = document.getElementById('nav-btn-draw');
+  const navBtnHistory = document.getElementById('nav-btn-history');
+  const navBtnVault = document.getElementById('nav-btn-vault');
+
+  if (navBtnDraw) navBtnDraw.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+  if (navBtnHistory) navBtnHistory.addEventListener('click', () => document.getElementById('official-round-card')?.scrollIntoView({ behavior: 'smooth' }));
+  if (navBtnVault && modalVault) navBtnVault.addEventListener('click', () => modalVault.classList.add('active'));
 });
