@@ -45,11 +45,11 @@ const LottoMath = {
   },
 
   getBallHexColor(num) {
-    if (num <= 10) return '#ffd700';
-    if (num <= 20) return '#2196f3';
-    if (num <= 30) return '#f44336';
-    if (num <= 40) return '#9e9e9e';
-    return '#4caf50';
+    if (num <= 10) return '#f59e0b'; // Vivid Deep Gold Yellow
+    if (num <= 20) return '#2563eb'; // Vibrant Royal Blue
+    if (num <= 30) return '#dc2626'; // Vivid Crimson Red
+    if (num <= 40) return '#475569'; // Deep Slate Gray
+    return '#16a34a'; // Vibrant Emerald Green
   },
 
   generateRandomCombo() {
@@ -347,32 +347,79 @@ class RotatingDrumEngine {
     this.ctx.stroke();
     this.ctx.restore();
 
-    // Draw 3D Spherical Balls
+    // Draw 3D Spherical Balls with vivid glossy look
     this.balls.forEach(b => {
       if (b.isExtracted) return;
 
       this.ctx.save();
+
+      // Ball Outer Glow / Shadow
+      this.ctx.shadowColor = 'rgba(0,0,0,0.5)';
+      this.ctx.shadowBlur = 6;
+      this.ctx.shadowOffsetY = 2;
+
+      // Ball Body Radial Gradient (3D Sphere Volume)
+      const grad = this.ctx.createRadialGradient(
+        b.x - b.radius * 0.3, b.y - b.radius * 0.35, b.radius * 0.1,
+        b.x, b.y, b.radius
+      );
+
+      if (b.num <= 10) {
+        grad.addColorStop(0, '#fef08a');
+        grad.addColorStop(0.5, '#eab308');
+        grad.addColorStop(1, '#a16207');
+      } else if (b.num <= 20) {
+        grad.addColorStop(0, '#93c5fd');
+        grad.addColorStop(0.5, '#2563eb');
+        grad.addColorStop(1, '#1e3a8a');
+      } else if (b.num <= 30) {
+        grad.addColorStop(0, '#fca5a5');
+        grad.addColorStop(0.5, '#dc2626');
+        grad.addColorStop(1, '#7f1d1d');
+      } else if (b.num <= 40) {
+        grad.addColorStop(0, '#cbd5e1');
+        grad.addColorStop(0.5, '#475569');
+        grad.addColorStop(1, '#0f172a');
+      } else {
+        grad.addColorStop(0, '#86efac');
+        grad.addColorStop(0.5, '#16a34a');
+        grad.addColorStop(1, '#14532d');
+      }
+
       this.ctx.beginPath();
       this.ctx.arc(b.x, b.y, b.radius, 0, Math.PI * 2);
-      this.ctx.fillStyle = b.color;
-      this.ctx.shadowColor = b.color;
-      this.ctx.shadowBlur = 8;
+      this.ctx.fillStyle = grad;
       this.ctx.fill();
 
-      // Specular highlight
-      this.ctx.beginPath();
-      this.ctx.arc(b.x - b.radius * 0.35, b.y - b.radius * 0.35, b.radius * 0.4, 0, Math.PI * 2);
-      this.ctx.fillStyle = 'rgba(255, 255, 255, 0.65)';
+      // Ball Crisp Rim Outline
       this.ctx.shadowBlur = 0;
+      this.ctx.shadowOffsetY = 0;
+      this.ctx.strokeStyle = 'rgba(255, 255, 255, 0.4)';
+      this.ctx.lineWidth = 1.2;
+      this.ctx.stroke();
+
+      // Specular Top-Left Highlight
+      this.ctx.beginPath();
+      this.ctx.arc(b.x - b.radius * 0.32, b.y - b.radius * 0.35, b.radius * 0.35, 0, Math.PI * 2);
+      this.ctx.fillStyle = 'rgba(255, 255, 255, 0.7)';
       this.ctx.fill();
 
-      // Number text
-      this.ctx.fillStyle = (b.num <= 10) ? '#221b00' : '#ffffff';
-      this.ctx.font = 'bold 14px Montserrat, sans-serif';
+      // Number Inner White Badge Circle for maximum readability
+      this.ctx.beginPath();
+      this.ctx.arc(b.x, b.y, b.radius * 0.58, 0, Math.PI * 2);
+      this.ctx.fillStyle = 'rgba(255, 255, 255, 0.92)';
+      this.ctx.shadowColor = 'rgba(0,0,0,0.2)';
+      this.ctx.shadowBlur = 2;
+      this.ctx.fill();
+
+      // Crisp Bold Number text inside Badge
+      this.ctx.fillStyle = '#0f172a';
+      this.ctx.font = '900 12px Montserrat, -apple-system, sans-serif';
       this.ctx.textAlign = 'center';
       this.ctx.textBaseline = 'middle';
       this.ctx.shadowBlur = 0;
       this.ctx.fillText(b.num, b.x, b.y + 0.5);
+
       this.ctx.restore();
     });
 
