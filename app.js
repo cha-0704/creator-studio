@@ -388,7 +388,7 @@ document.addEventListener('DOMContentLoaded', () => {
           b.vy = (Math.random() - 0.5) * 10;
         });
 
-        btnLabel.textContent = 'START (추첨 시작)';
+        btnLabel.textContent = '행운의 번호 추첨';
         extractBtn.classList.remove('bg-on-tertiary-container', 'text-white');
         extractBtn.classList.add('bg-primary-container', 'text-on-primary-container');
         if (spinHint) spinHint.textContent = '버튼을 누르면 강력한 바람과 함께 공이 생생하게 회전합니다!';
@@ -398,10 +398,10 @@ document.addEventListener('DOMContentLoaded', () => {
       if (!AppState.isRunning) {
         // Start Spinning with High Energy Burst & Sound
         AppState.isRunning = true;
-        btnLabel.textContent = 'STOP (번호 추출하기)';
+        btnLabel.textContent = '멈추기 (번호 추출)';
         extractBtn.classList.remove('bg-primary-container', 'text-on-primary-container');
         extractBtn.classList.add('bg-on-tertiary-container', 'text-white');
-        if (spinHint) spinHint.textContent = '공이 씽씽 회전 중입니다! 원하는 타이밍에 [STOP]을 눌러주세요!';
+        if (spinHint) spinHint.textContent = '공이 씽씽 회전 중입니다! 원하는 타이밍에 [멈추기]를 눌러주세요!';
         
         sound.startDrumWhirl();
 
@@ -420,7 +420,7 @@ document.addEventListener('DOMContentLoaded', () => {
         AppState.isRunning = false;
         sound.stopDrumWhirl();
 
-        btnLabel.textContent = 'EXTRACTING... (추출 중)';
+        btnLabel.textContent = '번호 추출 중...';
         extractBtn.disabled = true;
 
         const mainCombo = generateRandomCombo();
@@ -451,7 +451,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (idx === 5) {
               AppState.extractedCount = 6;
               extractBtn.disabled = false;
-              btnLabel.textContent = 'RESET DRAW (다시 추첨)';
+              btnLabel.textContent = '다시 추첨하기';
               if (spinHint) spinHint.textContent = '🎉 6개 번호 추출 완료! 번호를 보관하거나 복사할 수 있습니다.';
               if (trayActions) trayActions.style.display = 'flex';
               

@@ -3,15 +3,13 @@
 <head>
   <meta charset="utf-8"/>
   <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
-  <title>로또 6/45 행운의 추첨 - Three.js 3D 럭셔리 골드 글로브 시뮬레이터</title>
+  <title>로또 6/45 행운의 추첨 - 럭셔리 골드 크리스탈 시뮬레이터</title>
   
   <!-- Tailwind CSS v3 -->
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800;900&family=Pretendard:wght@500;700;900&display=swap" rel="stylesheet"/>
 
-  <!-- Three.js CDN -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
   <!-- Confetti -->
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
@@ -35,61 +33,117 @@
     }
     body {
       overflow-x: hidden;
-      /* 럭셔리 골드 리본 & 스튜디오 다크 네이비 배경 */
-      background: radial-gradient(circle at 50% 25%, #16243b 0%, #0c1524 55%, #050a12 100%);
+      background: radial-gradient(circle at 50% 25%, #182848 0%, #0d1829 60%, #050a14 100%);
       font-family: 'Pretendard', sans-serif;
       color: #f1f5f9;
       user-select: none;
       min-height: 100vh;
     }
 
-    #webgl-canvas-container {
-      width: 100%;
-      height: 480px;
+    /* 럭셔리 머신 스테이지 컨테이너 */
+    .lotto-stage {
       position: relative;
-      cursor: grab;
-    }
-    #webgl-canvas-container:active {
-      cursor: grabbing;
-    }
-
-    /* 3D 볼 배지 스타일 */
-    .lotto-ball-pill {
-      display: inline-flex;
+      width: 100%;
+      max-width: 580px;
+      margin: 0 auto;
+      aspect-ratio: 16 / 10;
+      display: flex;
       align-items: center;
       justify-content: center;
-      width: 44px;
-      height: 44px;
+    }
+
+    .lotto-bg-img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      filter: drop-shadow(0 15px 35px rgba(0, 0, 0, 0.7));
+    }
+
+    /* 회전 유리구 오버레이 레이어 (원형 회오리 스월) */
+    .glass-whirl-overlay {
+      position: absolute;
+      top: 15%;
+      left: 31%;
+      width: 38%;
+      aspect-ratio: 1 / 1;
+      border-radius: 50%;
+      pointer-events: none;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .whirl-core {
+      position: absolute;
+      inset: -20%;
+      background: radial-gradient(circle at center, rgba(254, 240, 138, 0.45) 0%, rgba(245, 158, 11, 0.25) 40%, transparent 70%);
+      filter: blur(8px);
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    .whirl-core.active {
+      opacity: 1;
+      animation: spinVortex 0.8s linear infinite;
+    }
+
+    @keyframes spinVortex {
+      0% { transform: rotate(0deg) scale(0.9); }
+      50% { transform: rotate(180deg) scale(1.1); }
+      100% { transform: rotate(360deg) scale(0.9); }
+    }
+
+    /* 유리구 안에서 씽씽 돌아가는 3D 볼들 */
+    .floating-ball {
+      position: absolute;
+      width: 28px;
+      height: 28px;
       border-radius: 50%;
       font-family: 'Montserrat', sans-serif;
       font-weight: 900;
-      font-size: 18px;
-      color: #0f172a;
-      box-shadow: 
-        inset -6px -6px 12px rgba(0,0,0,0.65), 
-        inset 6px 6px 12px rgba(255,255,255,0.9), 
-        0 6px 15px rgba(0,0,0,0.5);
-      animation: dropIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+      font-size: 11px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: inset -3px -3px 6px rgba(0,0,0,0.6), inset 3px 3px 6px rgba(255,255,255,0.9), 0 4px 8px rgba(0,0,0,0.6);
+      transition: transform 0.05s linear;
     }
 
-    .ball-yellow { background: radial-gradient(circle at 35% 30%, #fffbeb 0%, #F59E0B 50%, #92400e 100%); color: #1c1917; text-shadow: 0 1px 1px rgba(255,255,255,0.8); }
-    .ball-blue { background: radial-gradient(circle at 35% 30%, #bfdbfe 0%, #2563EB 50%, #1e3a8a 100%); color: #ffffff; text-shadow: 0 1px 2px rgba(0,0,0,0.8); }
-    .ball-red { background: radial-gradient(circle at 35% 30%, #fecaca 0%, #EF4444 50%, #7f1d1d 100%); color: #ffffff; text-shadow: 0 1px 2px rgba(0,0,0,0.8); }
-    .ball-grey { background: radial-gradient(circle at 35% 30%, #f1f5f9 0%, #64748b 50%, #1e293b 100%); color: #ffffff; text-shadow: 0 1px 2px rgba(0,0,0,0.8); }
-    .ball-green { background: radial-gradient(circle at 35% 30%, #bbf7d0 0%, #16A34A 50%, #14532d 100%); color: #ffffff; text-shadow: 0 1px 2px rgba(0,0,0,0.8); }
+    /* 3D 볼 색상 */
+    .b-yellow { background: radial-gradient(circle at 35% 30%, #fffbeb 0%, #F59E0B 55%, #92400e 100%); color: #1c1917; text-shadow: 0 1px 1px rgba(255,255,255,0.7); }
+    .b-blue { background: radial-gradient(circle at 35% 30%, #bfdbfe 0%, #2563EB 55%, #1e3a8a 100%); color: #ffffff; text-shadow: 0 1px 2px rgba(0,0,0,0.8); }
+    .b-red { background: radial-gradient(circle at 35% 30%, #fecaca 0%, #EF4444 55%, #7f1d1d 100%); color: #ffffff; text-shadow: 0 1px 2px rgba(0,0,0,0.8); }
+    .b-grey { background: radial-gradient(circle at 35% 30%, #f1f5f9 0%, #64748b 55%, #1e293b 100%); color: #ffffff; text-shadow: 0 1px 2px rgba(0,0,0,0.8); }
+    .b-green { background: radial-gradient(circle at 35% 30%, #bbf7d0 0%, #16A34A 55%, #14532d 100%); color: #ffffff; text-shadow: 0 1px 2px rgba(0,0,0,0.8); }
 
-    .result-slot {
+    /* 추출 결과 트레이 볼 */
+    .result-ball-pill {
       width: 48px;
       height: 48px;
       border-radius: 50%;
-      background: rgba(15, 39, 68, 0.6);
-      border: 2px dashed rgba(253, 224, 71, 0.4);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 900;
+      font-size: 19px;
+      box-shadow: inset -6px -6px 12px rgba(0,0,0,0.65), inset 6px 6px 12px rgba(255,255,255,0.9), 0 6px 15px rgba(0,0,0,0.6);
+      animation: dropIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+    }
+
+    .result-slot {
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      background: rgba(13, 24, 41, 0.8);
+      border: 2px dashed rgba(253, 224, 71, 0.45);
       display: flex;
       align-items: center;
       justify-content: center;
       color: #94a3b8;
-      font-size: 16px;
+      font-size: 18px;
       font-weight: bold;
+      box-shadow: inset 0 2px 8px rgba(0,0,0,0.6);
     }
 
     @keyframes dropIn {
@@ -97,10 +151,10 @@
       100% { opacity: 1; transform: scale(1) translateY(0); }
     }
 
-    /* Primary Gold Bevel Button */
+    /* 럭셔리 골드 3D 버튼 */
     .btn-gold-3d {
       background: linear-gradient(135deg, #fef08a 0%, #f59e0b 50%, #d97706 100%);
-      box-shadow: inset 0 2px 0 rgba(255,255,255,0.6), inset 0 -3px 0 rgba(0,0,0,0.3), 0 10px 25px rgba(245, 158, 11, 0.45);
+      box-shadow: inset 0 2px 0 rgba(255,255,255,0.7), inset 0 -4px 0 rgba(0,0,0,0.35), 0 10px 25px rgba(245, 158, 11, 0.45);
       transition: all 0.15s ease-out;
     }
     .btn-gold-3d:active {
@@ -112,7 +166,7 @@
     .game-modal {
       position: fixed;
       inset: 0;
-      background: rgba(5, 10, 18, 0.88);
+      background: rgba(5, 10, 20, 0.9);
       backdrop-filter: blur(14px);
       display: flex;
       align-items: center;
@@ -132,15 +186,15 @@
 <body class="flex flex-col items-center pb-24 md:pb-12">
 
   <!-- Top Header Navigation -->
-  <header class="w-full bg-[#0c1524]/90 backdrop-blur-xl border-b border-amber-400/20 py-3.5 px-4 sticky top-0 z-50 shadow-md">
+  <header class="w-full bg-[#0d1829]/90 backdrop-blur-xl border-b border-amber-400/25 py-3.5 px-4 sticky top-0 z-50 shadow-lg">
     <div class="max-w-4xl mx-auto flex items-center justify-between">
       <div class="flex items-center gap-2.5">
-        <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-amber-500 to-amber-300 flex items-center justify-center font-black text-slate-950 text-xs shadow-md shadow-amber-500/30">
+        <div class="w-9 h-9 rounded-full bg-gradient-to-tr from-amber-500 to-amber-300 flex items-center justify-center font-black text-slate-950 text-xs shadow-lg shadow-amber-500/30">
           6/45
         </div>
         <div>
           <h1 class="font-black text-lg md:text-xl text-amber-300 tracking-tight flex items-center gap-1.5">
-            로또 6/45 <span class="text-xs font-bold text-white/80 bg-amber-500/20 px-2 py-0.5 rounded-full border border-amber-400/30">행운의 추첨</span>
+            로또 6/45 <span class="text-xs font-bold text-white/90 bg-amber-500/20 px-2 py-0.5 rounded-full border border-amber-400/30">행운의 추첨</span>
           </h1>
         </div>
       </div>
@@ -160,27 +214,29 @@
   <!-- Main Container -->
   <main class="w-full max-w-4xl flex flex-col items-center px-4 py-4 gap-5">
     
-    <!-- Subtitle Notice -->
-    <div class="flex items-center gap-2 bg-[#16243b]/80 border border-amber-400/30 px-4 py-1.5 rounded-full text-xs font-bold text-amber-300 shadow-sm">
-      <span class="w-2 h-2 rounded-full bg-red-500 animate-ping"></span>
-      <span>제 1240회 실시간 3D 물리엔진 유리구 추첨 시뮬레이터</span>
+    <!-- Live Subtitle Notice -->
+    <div class="flex items-center gap-2 bg-[#182848]/80 border border-amber-400/30 px-3.5 py-1.5 rounded-full text-xs font-bold text-amber-300 shadow-md max-w-full truncate">
+      <span class="w-2 h-2 rounded-full bg-red-500 animate-ping shrink-0"></span>
+      <span class="truncate">제 1240회 3D 골드볼 실시간 추첨기</span>
     </div>
 
-    <!-- 3D WebGL Studio Globe Container (황금 받침대 & 유리 글로브 & 궤도 트레이) -->
-    <div class="w-full relative flex flex-col items-center justify-center">
-      <div id="webgl-canvas-container"></div>
-      
-      <!-- Interactive 3D Hint -->
-      <p class="text-[11px] text-slate-400 font-medium -mt-4 text-center">
-        💡 마우스나 손가락으로 드래그하면 3D 유리구와 골드 트랙을 360도 자유롭게 감상할 수 있습니다.
-      </p>
+    <!-- 🌟 Luxury Gold & Crystal Globe Machine Stage (이미지 컨셉 완벽 일체형) -->
+    <div class="lotto-stage">
+      <!-- 배경 럭셔리 골드 머신 그래픽 -->
+      <img src="lotto_machine_concept.png" alt="로또 6/45 행운의 추첨 골드 머신" class="lotto-bg-img" />
+
+      <!-- 유리구 내부 물리 회오리 & 3D 볼 오버레이 -->
+      <div class="glass-whirl-overlay" id="drumGlassBox">
+        <div class="whirl-core" id="whirlCore"></div>
+        <!-- 45개 볼 스크립트로 생성 -->
+      </div>
     </div>
 
     <!-- Controls: Stepper & Spin/Stop Button -->
-    <div class="w-full max-w-sm flex flex-col items-center gap-3">
+    <div class="w-full max-w-sm flex flex-col items-center gap-3.5 -mt-2">
       
       <!-- Game Count Selector -->
-      <div class="flex items-center justify-between w-full px-4 py-2 bg-[#122036]/90 border border-white/10 rounded-2xl shadow-inner">
+      <div class="flex items-center justify-between w-full px-4 py-2 bg-[#122036]/90 border border-white/15 rounded-2xl shadow-inner">
         <span class="text-xs font-bold text-slate-300">추출 게임 수</span>
         <div class="flex items-center gap-2">
           <button id="btn-decrease-games" class="w-8 h-8 rounded-xl bg-slate-700/60 hover:bg-slate-700 text-white font-black text-sm flex items-center justify-center active:scale-95 transition-all">−</button>
@@ -190,9 +246,9 @@
       </div>
 
       <!-- Main CTA Button -->
-      <button id="extractBtn" class="btn-gold-3d w-full py-4 rounded-full text-slate-950 font-black text-xl tracking-wider uppercase flex items-center justify-center gap-2 cursor-pointer shadow-xl">
-        <span class="material-symbols-outlined text-2xl font-black">play_arrow</span>
-        <span id="btn-extract-label">START (행운의 번호 추첨)</span>
+      <button id="extractBtn" class="btn-gold-3d w-full py-3.5 sm:py-4 px-3 rounded-full text-slate-950 font-black text-lg sm:text-xl tracking-wide flex items-center justify-center gap-2 cursor-pointer shadow-xl whitespace-nowrap">
+        <span class="material-symbols-outlined text-2xl font-black shrink-0">play_arrow</span>
+        <span id="btn-extract-label">행운의 번호 추첨</span>
       </button>
       <p id="spin-hint-text" class="text-xs text-slate-300 text-center">
         버튼을 누르면 유리구 속 볼들이 회전하며 6개의 행운 번호가 배출됩니다!
@@ -200,11 +256,11 @@
     </div>
 
     <!-- Results Tray (Live Winning Numbers) -->
-    <div class="w-full max-w-2xl bg-[#122036]/80 backdrop-blur-xl border border-white/15 rounded-2xl p-5 shadow-2xl">
-      <div class="flex flex-col items-center gap-3.5">
+    <div class="w-full max-w-2xl bg-[#122036]/85 backdrop-blur-xl border border-white/15 rounded-2xl p-5 shadow-2xl mt-2">
+      <div class="flex flex-col items-center gap-4">
         <div class="flex items-center justify-between w-full px-2">
           <h2 class="text-xs font-black text-amber-300 tracking-wider uppercase flex items-center gap-1.5">
-            <span class="material-symbols-outlined text-sm">trophy</span> 당첨 번호 결과
+            <span class="material-symbols-outlined text-sm">trophy</span> 배출된 당첨 번호 결과
           </h2>
           <div id="tray-actions-mini" class="flex gap-2" style="display:none;">
             <button id="btn-save-all" class="text-xs px-3 py-1 rounded-lg bg-amber-400/20 text-amber-300 font-bold hover:bg-amber-400/30 border border-amber-400/40">보관함 저장</button>
@@ -227,7 +283,7 @@
     </div>
 
     <!-- Quick Navigation Modal Buttons -->
-    <div class="w-full max-w-2xl flex flex-wrap items-center justify-center gap-3 text-xs">
+    <div class="w-full max-w-2xl flex flex-wrap items-center justify-center gap-3 text-xs mt-2">
       <button id="btn-open-round-modal" class="px-4 py-2.5 rounded-xl bg-[#122036]/70 hover:bg-[#122036] border border-white/15 text-slate-200 hover:text-white flex items-center gap-1.5 transition-all shadow">
         <span class="material-symbols-outlined text-sm text-amber-400">search</span>
         <span>1239회 역대 결과 및 자동 채점 보기</span>
@@ -268,16 +324,16 @@
         </div>
         <div class="flex items-center justify-between flex-wrap gap-2 py-1">
           <div id="card-round-balls" class="flex items-center gap-1.5 flex-wrap">
-            <div class="lotto-ball-pill ball-blue !w-8 !h-8 !text-xs">11</div>
-            <div class="lotto-ball-pill ball-blue !w-8 !h-8 !text-xs">13</div>
-            <div class="lotto-ball-pill ball-red !w-8 !h-8 !text-xs">22</div>
-            <div class="lotto-ball-pill ball-grey !w-8 !h-8 !text-xs">32</div>
-            <div class="lotto-ball-pill ball-grey !w-8 !h-8 !text-xs">33</div>
-            <div class="lotto-ball-pill ball-grey !w-8 !h-8 !text-xs">36</div>
+            <div class="result-ball-pill b-blue !w-8 !h-8 !text-xs">11</div>
+            <div class="result-ball-pill b-blue !w-8 !h-8 !text-xs">13</div>
+            <div class="result-ball-pill b-red !w-8 !h-8 !text-xs">22</div>
+            <div class="result-ball-pill b-grey !w-8 !h-8 !text-xs">32</div>
+            <div class="result-ball-pill b-grey !w-8 !h-8 !text-xs">33</div>
+            <div class="result-ball-pill b-grey !w-8 !h-8 !text-xs">36</div>
           </div>
           <div class="flex items-center gap-1">
             <span class="text-white/40 font-bold">+</span>
-            <div id="card-bonus-ball" class="lotto-ball-pill ball-yellow !w-8 !h-8 !text-xs">8</div>
+            <div id="card-bonus-ball" class="result-ball-pill b-yellow !w-8 !h-8 !text-xs">8</div>
           </div>
         </div>
       </div>
@@ -346,9 +402,7 @@
     </div>
   </div>
 
-  <!-- ========================================================================== -->
-  <!-- Three.js 3D Luxury Globe Studio Engine -->
-  <!-- ========================================================================== -->
+  <!-- Interactive Whirlwind Script -->
   <script>
     const HISTORICAL_DATABASE = {
       1239: { date: '2026.08.29', numbers: [11, 13, 22, 32, 33, 36], bonus: 8 },
@@ -365,20 +419,12 @@
       vault: JSON.parse(localStorage.getItem('lotto_mobile_vault') || '[]')
     };
 
-    function getColorHex(num) {
-      if (num <= 10) return 0xf59e0b; // Gold Yellow
-      if (num <= 20) return 0x2563eb; // Royal Blue
-      if (num <= 30) return 0xdc2626; // Crimson Red
-      if (num <= 40) return 0x475569; // Slate Grey
-      return 0x16a34a; // Emerald Green
-    }
-
     function getColorClass(num) {
-      if (num <= 10) return 'ball-yellow';
-      if (num <= 20) return 'ball-blue';
-      if (num <= 30) return 'ball-red';
-      if (num <= 40) return 'ball-grey';
-      return 'ball-green';
+      if (num <= 10) return 'b-yellow';
+      if (num <= 20) return 'b-blue';
+      if (num <= 30) return 'b-red';
+      if (num <= 40) return 'b-grey';
+      return 'b-green';
     }
 
     function generateRandomCombo() {
@@ -387,219 +433,88 @@
       return Array.from(nums).sort((a, b) => a - b);
     }
 
-    // Three.js Scene Setup
-    const container = document.getElementById('webgl-canvas-container');
-    const width = container.clientWidth || 400;
-    const height = 480;
+    // Initialize 45 Floating Balls in Crystal Globe
+    const drumBox = document.getElementById('drumGlassBox');
+    const whirlCore = document.getElementById('whirlCore');
+    const balls = [];
+    const numBalls = 25; // 쾌적한 비주얼 밀도
 
-    const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 100);
-    camera.position.set(0, 0.8, 5.2);
+    if (drumBox) {
+      const size = drumBox.clientWidth || 180;
+      const center = size / 2;
 
-    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-    renderer.setSize(width, height);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
-    renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1.4;
-    container.appendChild(renderer.domElement);
+      for (let i = 1; i <= numBalls; i++) {
+        const ball = document.createElement('div');
+        const num = ((i * 7) % 45) + 1;
+        ball.className = `floating-ball ${getColorClass(num)}`;
+        ball.textContent = num;
 
-    // Studio 3-Point Lighting
-    const keyLight = new THREE.DirectionalLight(0xffffff, 2.8);
-    keyLight.position.set(4, 6, 4);
-    scene.add(keyLight);
+        const angle = Math.random() * Math.PI * 2;
+        const r = Math.random() * (center - 25);
+        ball.x = center + Math.cos(angle) * r - 14;
+        ball.y = center + Math.sin(angle) * r - 14;
+        ball.vx = (Math.random() - 0.5) * 3;
+        ball.vy = (Math.random() - 0.5) * 3;
+        ball.num = num;
 
-    const fillLight = new THREE.DirectionalLight(0x93c5fd, 1.4);
-    fillLight.position.set(-5, -2, 3);
-    scene.add(fillLight);
-
-    const rimLight = new THREE.DirectionalLight(0xfef08a, 3.5);
-    rimLight.position.set(0, 4, -4.5);
-    scene.add(rimLight);
-
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
-    scene.add(ambientLight);
-
-    // Central Globe Group
-    const studioGroup = new THREE.Group();
-    scene.add(studioGroup);
-
-    // 1. Luxury Gold Pedestal Base
-    const baseMat = new THREE.MeshStandardMaterial({
-      color: 0xd4af37,
-      metalness: 0.9,
-      roughness: 0.2
-    });
-    const pedestalGeo = new THREE.CylinderGeometry(1.6, 2.0, 0.35, 48);
-    const pedestal = new THREE.Mesh(pedestalGeo, baseMat);
-    pedestal.position.y = -1.45;
-    studioGroup.add(pedestal);
-
-    const pedestalRimGeo = new THREE.TorusGeometry(1.65, 0.08, 16, 64);
-    const pedestalRim = new THREE.Mesh(pedestalRimGeo, baseMat);
-    pedestalRim.rotation.x = Math.PI / 2;
-    pedestalRim.position.y = -1.28;
-    studioGroup.add(pedestalRim);
-
-    // Gold Support Brackets
-    const bracketGeo = new THREE.CylinderGeometry(0.08, 0.12, 1.8, 16);
-    const bracketL = new THREE.Mesh(bracketGeo, baseMat);
-    bracketL.position.set(-1.45, -0.45, 0);
-    bracketL.rotation.z = -0.25;
-    studioGroup.add(bracketL);
-
-    const bracketR = new THREE.Mesh(bracketGeo, baseMat);
-    bracketR.position.set(1.45, -0.45, 0);
-    bracketR.rotation.z = 0.25;
-    studioGroup.add(bracketR);
-
-    // Spiral Gold Exit Chute Track (하단 배출 궤도 트랙)
-    const curvePoints = [];
-    for (let t = 0; t <= Math.PI * 1.5; t += 0.1) {
-      const r = 1.35 + t * 0.45;
-      curvePoints.push(new THREE.Vector3(Math.cos(t) * r, -1.35 + t * 0.15, Math.sin(t) * r));
-    }
-    const trackCurve = new THREE.CatmullRomCurve3(curvePoints);
-    const trackGeo = new THREE.TubeGeometry(trackCurve, 40, 0.07, 12, false);
-    const trackMesh = new THREE.Mesh(trackGeo, baseMat);
-    studioGroup.add(trackMesh);
-
-    // 2. Crystal Physical Glass Globe Sphere (transmission: 0.9, roughness: 0.1, ior: 1.5)
-    const globeGeo = new THREE.SphereGeometry(1.35, 48, 48);
-    const globeMat = new THREE.MeshPhysicalMaterial({
-      color: 0xffffff,
-      transmission: 0.92,
-      roughness: 0.08,
-      ior: 1.5,
-      metalness: 0.05,
-      clearcoat: 1.0,
-      clearcoatRoughness: 0.05,
-      transparent: true,
-      opacity: 1.0,
-      depthWrite: false
-    });
-    const globeMesh = new THREE.Mesh(globeGeo, globeMat);
-    globeMesh.position.y = 0.15;
-    studioGroup.add(globeMesh);
-
-    // 3. 45 3D Balls inside the Globe
-    const balls3D = [];
-    const ballRadius = 0.18;
-
-    function createBallTexture(num, hexColor) {
-      const cvs = document.createElement('canvas');
-      cvs.width = 256;
-      cvs.height = 256;
-      const ctx = cvs.getContext('2d');
-      ctx.fillStyle = `#${hexColor.toString(16).padStart(6, '0')}`;
-      ctx.fillRect(0, 0, 256, 256);
-
-      // White Badge
-      ctx.beginPath();
-      ctx.arc(128, 128, 70, 0, Math.PI * 2);
-      ctx.fillStyle = '#ffffff';
-      ctx.shadowColor = 'rgba(0,0,0,0.5)';
-      ctx.shadowBlur = 8;
-      ctx.fill();
-
-      // Number
-      ctx.fillStyle = '#0f172a';
-      ctx.font = '900 85px Montserrat, sans-serif';
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'middle';
-      ctx.fillText(num, 128, 132);
-
-      const tex = new THREE.CanvasTexture(cvs);
-      tex.needsUpdate = true;
-      return tex;
-    }
-
-    const ballMatPool = {};
-    for (let i = 1; i <= 45; i++) {
-      const hex = getColorHex(i);
-      const tex = createBallTexture(i, hex);
-      const mat = new THREE.MeshStandardMaterial({
-        map: tex,
-        metalness: 0.75,
-        roughness: 0.25
-      });
-      ballMatPool[i] = mat;
-
-      const ballGeo = new THREE.SphereGeometry(ballRadius, 24, 24);
-      const ballMesh = new THREE.Mesh(ballGeo, mat);
-
-      const angle = Math.random() * Math.PI * 2;
-      const r = Math.random() * 0.9;
-      ballMesh.position.set(
-        Math.cos(angle) * r,
-        0.15 + (Math.random() - 0.5) * 0.9,
-        Math.sin(angle) * r
-      );
-
-      ballMesh.vx = (Math.random() - 0.5) * 0.04;
-      ballMesh.vy = (Math.random() - 0.5) * 0.04;
-      ballMesh.vz = (Math.random() - 0.5) * 0.04;
-      ballMesh.num = i;
-      ballMesh.isExtracted = false;
-
-      studioGroup.add(ballMesh);
-      balls3D.push(ballMesh);
-    }
-
-    // Glowing Golden Swirl Particle Center
-    const particleGeo = new THREE.BufferGeometry();
-    const particleCount = 180;
-    const particlePositions = new Float32Array(particleCount * 3);
-    for (let i = 0; i < particleCount * 3; i += 3) {
-      const pAngle = Math.random() * Math.PI * 2;
-      const pDist = Math.random() * 1.1;
-      particlePositions[i] = Math.cos(pAngle) * pDist;
-      particlePositions[i+1] = 0.15 + (Math.random() - 0.5) * 0.8;
-      particlePositions[i+2] = Math.sin(pAngle) * pDist;
-    }
-    particleGeo.setAttribute('position', new THREE.BufferAttribute(particlePositions, 3));
-    const particleMat = new THREE.PointsMaterial({
-      color: 0xfef08a,
-      size: 0.05,
-      transparent: true,
-      opacity: 0.85
-    });
-    const particles = new THREE.Points(particleGeo, particleMat);
-    studioGroup.add(particles);
-
-    // Mouse Drag Rotation
-    let isDragging = false;
-    let prevMouse = { x: 0, y: 0 };
-
-    container.addEventListener('mousedown', (e) => {
-      isDragging = true;
-      prevMouse = { x: e.clientX, y: e.clientY };
-    });
-    window.addEventListener('mousemove', (e) => {
-      if (!isDragging) return;
-      const dx = e.clientX - prevMouse.x;
-      const dy = e.clientY - prevMouse.y;
-      studioGroup.rotation.y += dx * 0.008;
-      studioGroup.rotation.x += dy * 0.005;
-      prevMouse = { x: e.clientX, y: e.clientY };
-    });
-    window.addEventListener('mouseup', () => { isDragging = false; });
-
-    // Touch support
-    container.addEventListener('touchstart', (e) => {
-      if (e.touches.length === 1) {
-        isDragging = true;
-        prevMouse = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+        drumBox.appendChild(ball);
+        balls.push(ball);
       }
-    });
-    window.addEventListener('touchmove', (e) => {
-      if (!isDragging || e.touches.length !== 1) return;
-      const dx = e.touches[0].clientX - prevMouse.x;
-      const dy = e.touches[0].clientY - prevMouse.y;
-      studioGroup.rotation.y += dx * 0.008;
-      studioGroup.rotation.x += dy * 0.005;
-      prevMouse = { x: e.touches[0].clientX, y: e.touches[0].clientY };
-    });
-    window.addEventListener('touchend', () => { isDragging = false; });
+    }
+
+    // Animation Loop
+    let lastTime = 0;
+    function animate(time) {
+      const dt = lastTime ? Math.min((time - lastTime) / 16, 2) : 1;
+      lastTime = time;
+
+      const size = drumBox.clientWidth || 180;
+      const center = size / 2;
+      const radius = center - 14;
+
+      balls.forEach(b => {
+        if (AppState.isRunning) {
+          // Strong Centripetal Vortex Swirl
+          const dx = (b.x + 14) - center;
+          const dy = (b.y + 14) - center;
+          const dist = Math.sqrt(dx*dx + dy*dy) || 1;
+          
+          b.vx += (-dy / dist) * 1.6 * dt;
+          b.vy += (dx / dist) * 1.6 * dt;
+
+          if (Math.random() < 0.1) {
+            b.vx += (Math.random() - 0.5) * 4;
+            b.vy += (Math.random() - 0.5) * 4;
+          }
+        }
+
+        b.x += b.vx * dt;
+        b.y += b.vy * dt;
+
+        b.vx *= 0.985;
+        b.vy *= 0.985;
+
+        // Circular Boundary Bounce
+        const dx = (b.x + 14) - center;
+        const dy = (b.y + 14) - center;
+        const dist = Math.sqrt(dx*dx + dy*dy);
+
+        if (dist > radius) {
+          const nx = dx / dist;
+          const ny = dy / dist;
+          const dot = b.vx * nx + b.vy * ny;
+          b.vx -= 1.8 * dot * nx;
+          b.vy -= 1.8 * dot * ny;
+          b.x = center + nx * radius - 14;
+          b.y = center + ny * radius - 14;
+        }
+
+        b.style.transform = `translate3d(${b.x}px, ${b.y}px, 0)`;
+      });
+
+      requestAnimationFrame(animate);
+    }
+    requestAnimationFrame(animate);
 
     // Sound FX Web Audio
     const AudioCtx = window.AudioContext || window.webkitAudioContext;
@@ -612,7 +527,7 @@
         const gain = audioCtx.createGain();
         osc.type = 'triangle';
         osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
-        gain.gain.setValueAtTime(0.18, audioCtx.currentTime);
+        gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
         gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.08);
         osc.connect(gain);
         gain.connect(audioCtx.destination);
@@ -621,66 +536,7 @@
       } catch (e) {}
     }
 
-    // Animation Loop
-    let clock = 0;
-    function animate() {
-      requestAnimationFrame(animate);
-      clock += 0.015;
-
-      if (!isDragging) {
-        studioGroup.rotation.y += 0.003;
-      }
-      particles.rotation.y -= 0.015;
-
-      const globeCenter = new THREE.Vector3(0, 0.15, 0);
-      const maxDist = 1.15;
-
-      balls3D.forEach(ball => {
-        if (ball.isExtracted) return;
-
-        if (AppState.isRunning) {
-          // Whirlwind vortex
-          const dx = ball.position.x;
-          const dz = ball.position.z;
-          const dist = Math.sqrt(dx*dx + dz*dz) || 0.1;
-          ball.vx += (-dz / dist) * 0.018;
-          ball.vz += (dx / dist) * 0.018;
-          ball.vy += (Math.random() - 0.5) * 0.02;
-
-          // Upward center jet
-          if (ball.position.y < 0.1) ball.vy += 0.02;
-        }
-
-        ball.position.x += ball.vx;
-        ball.position.y += ball.vy;
-        ball.position.z += ball.vz;
-
-        ball.vx *= 0.985;
-        ball.vy *= 0.985;
-        ball.vz *= 0.985;
-
-        // Spherical boundary bounce
-        const offset = ball.position.clone().sub(globeCenter);
-        const len = offset.length();
-        if (len > maxDist) {
-          offset.normalize();
-          ball.position.copy(globeCenter.clone().add(offset.multiplyScalar(maxDist)));
-          const v = new THREE.Vector3(ball.vx, ball.vy, ball.vz);
-          const dot = v.dot(offset);
-          v.sub(offset.multiplyScalar(2 * dot)).multiplyScalar(0.85);
-          ball.vx = v.x;
-          ball.vy = v.y;
-          ball.vz = v.z;
-        }
-      });
-
-      renderer.render(scene, camera);
-    }
-    animate();
-
-    // ==========================================================================
-    // UI Logic & Extraction
-    // ==========================================================================
+    // UI Buttons & Extraction
     const extractBtn = document.getElementById('extractBtn');
     const btnLabel = document.getElementById('btn-extract-label');
     const resultsTray = document.getElementById('resultsTray');
@@ -690,7 +546,6 @@
 
     extractBtn.addEventListener('click', () => {
       if (AppState.extractedCount >= 6) {
-        // Reset
         AppState.extractedCount = 0;
         AppState.drawnGames = [];
         resultsTray.innerHTML = `
@@ -704,34 +559,27 @@
         if (extraGamesList) extraGamesList.innerHTML = '';
         if (trayActions) trayActions.style.display = 'none';
 
-        balls3D.forEach(b => {
-          b.isExtracted = false;
-          b.visible = true;
-          b.position.set((Math.random()-0.5)*0.8, 0.15+(Math.random()-0.5)*0.6, (Math.random()-0.5)*0.8);
-        });
-
-        btnLabel.textContent = 'START (행운의 번호 추첨)';
+        btnLabel.textContent = '행운의 번호 추첨';
         spinHint.textContent = '버튼을 누르면 유리구 속 볼들이 회전하며 6개의 행운 번호가 배출됩니다!';
         return;
       }
 
       if (!AppState.isRunning) {
-        // Spin start
         AppState.isRunning = true;
-        btnLabel.textContent = 'STOP (번호 추출하기)';
-        spinHint.textContent = '공이 360도로 힘차게 회전 중입니다! 원하는 타이밍에 [STOP]을 눌러주세요!';
+        whirlCore.classList.add('active');
+        btnLabel.textContent = '멈추기 (번호 추출)';
+        spinHint.textContent = '공이 360도로 힘차게 회전 중입니다! 원하는 타이밍에 [멈추기]를 눌러주세요!';
         
-        balls3D.forEach(b => {
-          b.vx += (Math.random() - 0.5) * 0.15;
-          b.vy += (Math.random() - 0.5) * 0.15;
-          b.vz += (Math.random() - 0.5) * 0.15;
+        balls.forEach(b => {
+          b.vx += (Math.random() - 0.5) * 15;
+          b.vy += (Math.random() - 0.5) * 15;
         });
         playPop(600);
 
       } else {
-        // Stop & extract
         AppState.isRunning = false;
-        btnLabel.textContent = 'EXTRACTING... (추출 중)';
+        whirlCore.classList.remove('active');
+        btnLabel.textContent = '번호 추출 중...';
         extractBtn.disabled = true;
 
         const mainCombo = generateRandomCombo();
@@ -743,16 +591,10 @@
 
         mainCombo.forEach((num, idx) => {
           setTimeout(() => {
-            const ballObj = balls3D.find(b => b.num === num && !b.isExtracted) || balls3D.find(b => !b.isExtracted);
-            if (ballObj) {
-              ballObj.isExtracted = true;
-              ballObj.visible = false;
-            }
-
             const slot = resultsTray.querySelectorAll('.result-slot')[0];
             if (slot) {
               const resBall = document.createElement('div');
-              resBall.className = `lotto-ball-pill ${getColorClass(num)}`;
+              resBall.className = `result-ball-pill ${getColorClass(num)}`;
               resBall.textContent = num;
               resultsTray.replaceChild(resBall, slot);
             }
@@ -761,7 +603,7 @@
             if (idx === 5) {
               AppState.extractedCount = 6;
               extractBtn.disabled = false;
-              btnLabel.textContent = 'RESET DRAW (다시 추첨)';
+              btnLabel.textContent = '다시 추첨하기';
               spinHint.textContent = '🎉 6개 번호 추출 완료! 번호를 보관하거나 복사할 수 있습니다.';
               if (trayActions) trayActions.style.display = 'flex';
 
@@ -771,7 +613,7 @@
                 fullGames.slice(1).forEach((combo, gIdx) => {
                   const card = document.createElement('div');
                   card.className = 'flex items-center justify-between bg-[#0c1524] border border-white/10 p-2.5 rounded-xl';
-                  const ballsHtml = combo.map(n => `<span class="lotto-ball-pill ${getColorClass(n)} !w-8 !h-8 !text-xs">${n}</span>`).join('');
+                  const ballsHtml = combo.map(n => `<span class="result-ball-pill ${getColorClass(n)} !w-8 !h-8 !text-xs">${n}</span>`).join('');
                   card.innerHTML = `
                     <span class="text-xs font-bold text-amber-300">${alphabet[gIdx + 1]}게임</span>
                     <div class="flex items-center gap-1.5">${ballsHtml}</div>
@@ -803,12 +645,10 @@
       }
     });
 
-    // Sound Toggle
-    const btnSound = document.getElementById('btn-sound-toggle');
-    const soundIcon = document.getElementById('sound-icon');
-    btnSound.addEventListener('click', () => {
+    // Sound
+    document.getElementById('btn-sound-toggle').addEventListener('click', () => {
       AppState.soundEnabled = !AppState.soundEnabled;
-      soundIcon.textContent = AppState.soundEnabled ? 'volume_up' : 'volume_off';
+      document.getElementById('sound-icon').textContent = AppState.soundEnabled ? 'volume_up' : 'volume_off';
     });
 
     // Vault
@@ -826,7 +666,7 @@
             <div class="flex items-center justify-between bg-[#0c1524] p-2.5 rounded-xl border border-white/5">
               <span class="text-xs font-bold text-amber-300">${v.label || `${i+1}게임`}</span>
               <div class="flex items-center gap-1">
-                ${v.numbers.map(n => `<span class="lotto-ball-pill ${getColorClass(n)} !w-6 !h-6 !text-[10px]">${n}</span>`).join('')}
+                ${v.numbers.map(n => `<span class="result-ball-pill ${getColorClass(n)} !w-6 !h-6 !text-[10px]">${n}</span>`).join('')}
               </div>
             </div>
           `).join('');
@@ -875,14 +715,6 @@
     const modalSpots = document.getElementById('modal-famous-spots');
     document.getElementById('btn-open-spots-modal').addEventListener('click', () => modalSpots.classList.add('active'));
     document.getElementById('btn-close-spots-modal').addEventListener('click', () => modalSpots.classList.remove('active'));
-
-    // Resize
-    window.addEventListener('resize', () => {
-      const w = container.clientWidth;
-      camera.aspect = w / height;
-      camera.updateProjectionMatrix();
-      renderer.setSize(w, height);
-    });
   </script>
 </body>
 </html>
