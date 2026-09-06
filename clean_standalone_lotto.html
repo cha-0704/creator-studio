@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html class="dark" lang="ko">
+<html lang="ko">
 <head>
   <meta charset="utf-8"/>
   <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
-  <title>로또스트림 라이브 - 럭셔리 추첨기</title>
+  <title>로또 6/45 행운의 추첨 - 럭셔리 골드 크리스탈 시뮬레이터</title>
 
   <!-- Tailwind CSS -->
-  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
   
   <!-- Fonts & Icons -->
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
@@ -27,43 +27,6 @@
     gtag('config', 'G-JRDZ1P2M3J');
   </script>
 
-  <!-- Stitch Color Tokens -->
-  <script id="tailwind-config">
-    tailwind.config = {
-      darkMode: "class",
-      theme: {
-        extend: {
-          colors: {
-            "surface": "#111317",
-            "surface-bright": "#37393d",
-            "surface-container-lowest": "#0c0e12",
-            "surface-container-low": "#1a1c1f",
-            "surface-container": "#1e2023",
-            "surface-container-high": "#282a2e",
-            "surface-container-highest": "#333539",
-            "on-surface": "#e2e2e7",
-            "on-surface-variant": "#d0c6ab",
-            "primary": "#fff6df",
-            "primary-container": "#ffd700",
-            "primary-fixed": "#ffe16d",
-            "primary-fixed-dim": "#e9c400",
-            "secondary-container": "#2f486a",
-            "secondary-fixed-dim": "#afc8f0",
-            "background": "#111317",
-            "on-background": "#e2e2e7"
-          },
-          fontFamily: {
-            "display-mobile": ["Montserrat", "Noto Sans KR", "sans-serif"],
-            "display-lg": ["Montserrat", "Noto Sans KR", "sans-serif"],
-            "headline-md": ["Montserrat", "Noto Sans KR", "sans-serif"],
-            "body-md": ["Noto Sans KR", "Inter", "sans-serif"],
-            "label-caps": ["Noto Sans KR", "Inter", "sans-serif"]
-          }
-        }
-      }
-    };
-  </script>
-
   <style>
     * {
       margin: 0;
@@ -73,55 +36,80 @@
     }
 
     body {
-      background: #111317;
+      background: radial-gradient(circle at 50% 20%, #15223c 0%, #0a101f 55%, #04070d 100%);
+      background-attachment: fixed;
       min-height: 100vh;
       min-height: 100dvh;
       font-family: 'Noto Sans KR', sans-serif;
       user-select: none;
       overflow-x: hidden;
-      color: #e2e2e7;
+      color: #f1f5f9;
     }
 
-    /* 스티치 원본 다크 크리스탈 글래스 챔버 */
-    .glass-drum {
-      background: radial-gradient(circle at 50% 35%, rgba(255, 255, 255, 0.08) 0%, rgba(20, 26, 36, 0.45) 75%, rgba(10, 13, 18, 0.85) 100%);
-      backdrop-filter: blur(28px);
-      -webkit-backdrop-filter: blur(28px);
-      border: 2px solid rgba(255, 255, 255, 0.22);
-      box-shadow: 
-        inset 0 0 60px rgba(255, 255, 255, 0.12),
-        inset 0 10px 30px rgba(255, 255, 255, 0.2),
-        inset 0 -25px 50px rgba(0, 0, 0, 0.85),
-        0 25px 60px rgba(0, 0, 0, 0.7),
-        0 0 30px rgba(100, 160, 255, 0.12);
+    /* 럭셔리 골드 머신 스테이지 */
+    .lotto-stage {
       position: relative;
+      width: 100%;
+      max-width: 380px;
+      margin: 0 auto;
+      aspect-ratio: 1 / 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 32px;
       overflow: hidden;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.8), 0 0 30px rgba(255, 215, 0, 0.15);
+      border: 1.5px solid rgba(255, 215, 0, 0.3);
+      background: #080c14;
     }
 
-    .glass-chamber-glare {
+    .lotto-bg-img {
       position: absolute;
-      top: 4%;
-      left: 15%;
-      width: 70%;
-      height: 38%;
-      background: radial-gradient(ellipse at 50% 0%, rgba(255, 255, 255, 0.35) 0%, rgba(255, 255, 255, 0.08) 55%, transparent 80%);
-      border-radius: 50%;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
       pointer-events: none;
-      z-index: 25;
-      transform: rotate(-5deg);
+      z-index: 1;
     }
 
-    .glass-chamber-rim {
+    /* 유리구 중앙 에어 물리 볼 오버레이 레이어 (이미지 속 크리스탈 구체와 100% 일치) */
+    .glass-whirl-overlay {
       position: absolute;
-      inset: 4px;
+      top: 6.5%;
+      left: 17.5%;
+      width: 65%;
+      aspect-ratio: 1 / 1;
       border-radius: 50%;
-      border: 1px solid rgba(255, 255, 255, 0.12);
-      box-shadow: inset 0 0 25px rgba(255, 255, 255, 0.08);
-      pointer-events: none;
-      z-index: 24;
+      pointer-events: auto;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 10;
     }
 
-    /* 결과 볼 스타일 */
+    .whirl-core {
+      position: absolute;
+      inset: -15%;
+      background: radial-gradient(circle at center, rgba(254, 240, 138, 0.4) 0%, rgba(245, 158, 11, 0.2) 40%, transparent 70%);
+      opacity: 0;
+      transition: opacity 0.4s ease;
+      filter: blur(4px);
+    }
+
+    .whirl-spinning .whirl-core {
+      opacity: 1;
+      animation: vortexSpin 1.4s linear infinite;
+    }
+
+    @keyframes vortexSpin {
+      0% { transform: rotate(0deg) scale(0.95); }
+      50% { transform: rotate(180deg) scale(1.1); }
+      100% { transform: rotate(360deg) scale(0.95); }
+    }
+
+    /* 3D 럭셔리 로또 볼 스타일 */
     .result-ball {
       width: 44px;
       height: 44px;
@@ -133,7 +121,7 @@
       font-family: 'Montserrat', sans-serif;
       font-weight: 900;
       position: relative;
-      animation: circleDropIn 0.5s cubic-bezier(0.18, 0.89, 0.32, 1.15) forwards;
+      animation: dropIn 0.5s cubic-bezier(0.18, 0.89, 0.32, 1.15) forwards;
       box-shadow: inset 0 3px 5px rgba(255,255,255,0.8), inset 0 -4px 8px rgba(0,0,0,0.6), 0 8px 16px rgba(0,0,0,0.55);
       flex-shrink: 0;
     }
@@ -183,13 +171,15 @@
       height: 44px;
       border-radius: 50%;
       aspect-ratio: 1 / 1;
-      background: radial-gradient(circle, rgba(0,0,0,0.6) 0%, rgba(20,25,35,0.85) 100%);
-      border: 2px dashed rgba(255, 255, 255, 0.22);
-      box-shadow: inset 0 4px 12px rgba(0,0,0,0.8);
+      background: radial-gradient(circle, rgba(10,16,30,0.7) 0%, rgba(18,26,45,0.9) 100%);
+      border: 2px dashed rgba(255, 215, 0, 0.4);
+      box-shadow: inset 0 4px 10px rgba(0,0,0,0.8);
       display: flex;
       align-items: center;
       justify-content: center;
       position: relative;
+      color: #94a3b8;
+      font-weight: bold;
     }
 
     @media (min-width: 400px) {
@@ -199,222 +189,109 @@
       }
     }
 
-    @keyframes circleDropIn {
-      0% { opacity: 0; transform: translateY(-40px); }
-      70% { opacity: 1; transform: translateY(4px); }
-      100% { opacity: 1; transform: translateY(0); }
+    @keyframes dropIn {
+      0% { opacity: 0; transform: translateY(-40px) scale(0.6); }
+      70% { opacity: 1; transform: translateY(4px) scale(1.05); }
+      100% { opacity: 1; transform: translateY(0) scale(1); }
     }
 
-    .btn-bevel {
+    /* 골든 오렌지 CTA 버튼 */
+    .btn-start-gold {
+      background: linear-gradient(180deg, #ffc837 0%, #ff8008 100%);
       box-shadow: 
-        inset 0 2px 0 rgba(255,255,255,0.45), 
-        inset 0 -4px 0 rgba(0,0,0,0.35), 
-        0 10px 24px rgba(255, 215, 0, 0.25),
-        0 6px 16px rgba(0,0,0,0.5);
+        inset 0 2px 0 rgba(255,255,255,0.6), 
+        inset 0 -3px 0 rgba(0,0,0,0.3), 
+        0 10px 25px rgba(255, 140, 0, 0.45);
       transition: all 0.15s ease-out;
     }
-    .btn-bevel:active {
-      box-shadow: 
-        inset 0 2px 0 rgba(0,0,0,0.4), 
-        inset 0 -2px 0 rgba(255,255,255,0.2), 
-        0 3px 8px rgba(0,0,0,0.6);
+    .btn-start-gold:active {
       transform: translateY(3px);
-    }
-    
-    @keyframes pulse-red {
-      0% { box-shadow: 0 0 0 0 rgba(255, 51, 51, 0.8); }
-      70% { box-shadow: 0 0 0 8px rgba(255, 51, 51, 0); }
-      100% { box-shadow: 0 0 0 0 rgba(255, 51, 51, 0); }
-    }
-    .live-dot {
-      animation: pulse-red 1.8s infinite;
-    }
-
-    .chamber-blower-glow {
-      position: absolute;
-      bottom: 8px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 140px;
-      height: 22px;
-      background: radial-gradient(ellipse at 50% 50%, rgba(255, 215, 0, 0.35), rgba(37, 99, 235, 0.25) 60%, transparent 85%);
-      border-radius: 50%;
-      filter: blur(6px);
-      pointer-events: none;
-      z-index: 22;
-      transition: opacity 0.3s;
+      box-shadow: inset 0 2px 0 rgba(0,0,0,0.4), inset 0 -1px 0 rgba(255,255,255,0.2), 0 4px 10px rgba(0,0,0,0.6);
     }
   </style>
 </head>
-<body class="min-h-screen flex flex-col overflow-x-hidden pb-20 md:pb-6">
+<body class="min-h-screen flex flex-col overflow-x-hidden pb-12">
 
-  <!-- Top Header -->
-  <header class="bg-surface/85 backdrop-blur-xl text-primary-fixed-dim font-headline-md w-full top-0 sticky border-b border-white/10 shadow-sm z-50">
-    <div class="flex items-center justify-between px-4 py-2 w-full max-w-lg mx-auto">
-      <button id="menuBtn" aria-label="메뉴" class="text-on-surface-variant hover:bg-surface-bright/20 p-2 rounded-full flex items-center justify-center active:scale-95 transition-transform">
-        <span class="material-symbols-outlined">menu</span>
-      </button>
-      <div class="flex items-center gap-2.5">
-        <div class="w-2.5 h-2.5 bg-[#FF3333] rounded-full live-dot"></div>
-        <h1 class="font-display-lg text-lg sm:text-xl font-extrabold tracking-tight text-[#FFD700] uppercase drop-shadow-[0_2px_8px_rgba(255,215,0,0.3)]">로또스트림 라이브</h1>
-      </div>
-      <button id="historyBtn" aria-label="기록" class="text-on-surface-variant hover:bg-surface-bright/20 p-2 rounded-full flex items-center justify-center active:scale-95 transition-transform">
-        <span class="material-symbols-outlined">history</span>
-      </button>
-    </div>
-  </header>
-
-  <!-- Main Section -->
+  <!-- Main Container -->
   <main class="flex-grow flex flex-col items-center justify-center px-3 w-full max-w-md mx-auto gap-3.5 relative z-10 py-3">
-    
-    <!-- Live Status Indicator -->
-    <div class="flex items-center gap-2.5 bg-[#1a1c22] px-4 py-1.5 rounded-full border border-white/10 shadow-md">
-      <span class="w-2.5 h-2.5 rounded-full bg-[#ffd700]"></span>
-      <span class="font-label-caps text-xs text-slate-300 font-semibold">다음 추첨까지:</span>
-      <span class="font-headline-md text-base text-[#ffd700] font-extrabold tabular-nums tracking-wider" id="countdown">01:44</span>
-    </div>
 
-    <!-- AI 운세 추천 Banner Card -->
-    <div id="horoscopeCard" class="w-full bg-[#181a20] border border-[#ffd700]/30 rounded-2xl p-2.5 px-3.5 shadow-lg flex items-center justify-between gap-2 group cursor-pointer active:scale-95 transition-all">
-      <div class="flex items-center gap-2">
-        <div class="w-7 h-7 rounded-full bg-[#ffd700]/15 flex items-center justify-center text-[#ffd700] text-sm">
-          <span class="material-symbols-outlined text-[16px]">auto_awesome</span>
-        </div>
-        <div class="flex flex-col text-left">
-          <div class="flex items-center gap-1">
-            <span class="text-[10px] font-bold text-[#ffd700] uppercase tracking-wider">AI 운세 추천</span>
-            <span class="text-[9px] px-1.5 py-0.2 rounded-full bg-[#ffd700]/20 text-[#ffe16d] font-semibold">오늘의 별자리</span>
-          </div>
-          <p class="text-xs text-on-surface font-medium truncate">물병자리 오늘의 행운수: <strong class="text-[#ffe16d] font-bold">7, 14, 23, 31</strong> ✨</p>
-        </div>
-      </div>
-      <button class="flex items-center gap-0.5 text-xs font-bold text-[#ffe16d] bg-white/10 hover:bg-[#ffd700] hover:text-black py-1 px-2.5 rounded-full transition-colors border border-white/10">
-        <span>보기</span>
-        <span class="material-symbols-outlined text-xs">chevron_right</span>
-      </button>
-    </div>
-
-    <!-- 스티치 1번 캡처 원본 다크 크리스탈 글래스 챔버 -->
-    <div class="w-[280px] h-[280px] sm:w-[320px] sm:h-[320px] rounded-full glass-drum flex items-center justify-center relative shadow-2xl mx-auto flex-shrink-0 cursor-pointer" id="drumContainer">
-      <canvas class="absolute inset-0 w-full h-full z-10 rounded-full cursor-pointer" id="lotteryCanvas"></canvas>
-      <div class="glass-chamber-glare"></div>
-      <div class="glass-chamber-rim"></div>
-      <div class="chamber-blower-glow" id="blowerGlow" style="opacity: 0.3;"></div>
-      <div class="absolute inset-0 rounded-full pointer-events-none z-30 shadow-[inset_0_0_40px_rgba(0,0,0,0.85),_inset_0_3px_6px_rgba(255,255,255,0.4)]"></div>
-    </div>
-
-    <!-- Control Action Section -->
-    <div class="w-full flex flex-col items-center gap-2.5" id="controlContainer">
+    <!-- 럭셔리 골드 크리스탈 로또 머신 스테이지 -->
+    <div class="lotto-stage" id="stageContainer">
+      <!-- 2번째 럭셔리 골드 머신 이미지 100% 원본 -->
+      <img src="lotto_machine_concept.png" alt="럭셔리 골드 크리스탈 로또 머신" class="lotto-bg-img" id="machineBgImg"/>
       
-      <!-- 1회 단일 vs 5게임 토글 탭 -->
-      <div class="flex items-center bg-[#0c0e12] p-1 rounded-full border border-white/10 w-full max-w-[320px] shadow-inner">
-        <button class="flex-1 py-1.5 px-3 rounded-full text-xs font-bold transition-all text-black bg-[#FFD700] shadow-sm flex items-center justify-center gap-1" id="modeSingleBtn" type="button">
-          <span>1회 단일 추첨</span>
-        </button>
-        <button class="flex-1 py-1.5 px-3 rounded-full text-xs font-bold transition-all text-slate-400 hover:text-white flex items-center justify-center gap-1" id="modeMultiBtn" type="button">
-          <span class="material-symbols-outlined text-xs">auto_mode</span>
-          <span>5게임 한 번에 (5세트)</span>
-        </button>
-      </div>
-
-      <!-- 추첨 시작 버튼 -->
-      <button class="w-56 sm:w-64 py-3.5 bg-[#FFCC00] hover:bg-[#FFD700] text-[#221b00] font-headline-md text-base sm:text-lg font-extrabold uppercase rounded-full btn-bevel tracking-wider transition-all duration-200 active:scale-95 shadow-[0_10px_24px_rgba(255,215,0,0.25)] flex items-center justify-center gap-2" id="extractBtn">
-        <span class="material-symbols-outlined text-xl" id="btnIcon">play_circle</span>
-        <span id="btnLabel">1회 추첨 시작</span>
-      </button>
-
-      <!-- 범례 -->
-      <div class="flex items-center gap-2 text-[11px] text-slate-400 font-semibold tracking-wide">
-        <span class="inline-flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-[#f59e0b]"></span> 1~10</span>
-        <span class="inline-flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-[#2563eb]"></span> 11~20</span>
-        <span class="inline-flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-[#ef4444]"></span> 21~30</span>
-        <span class="inline-flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-[#64748b]"></span> 31~40</span>
-        <span class="inline-flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-[#10b981]"></span> 41~45</span>
+      <!-- 유리구 중앙 에어 회오리 & 물리 볼 캔버스 -->
+      <div class="glass-whirl-overlay" id="whirlOverlay">
+        <div class="whirl-core"></div>
+        <canvas class="absolute inset-0 w-full h-full z-20 cursor-pointer" id="lotteryCanvas"></canvas>
       </div>
     </div>
 
-    <!-- 이번 회차 추첨 결과 카드 -->
-    <div class="w-full bg-[#181a20] border border-white/10 rounded-3xl p-3.5 sm:p-4 shadow-2xl relative overflow-hidden">
-      <div class="flex flex-col items-center gap-2.5">
+    <!-- 안내 문구 -->
+    <p class="text-xs text-slate-400 font-medium text-center flex items-center justify-center gap-1 -mt-1">
+      <span>💡</span>
+      <span>원하는 게임 수를 선택하고 START를 눌러 행운을 확인하세요!</span>
+    </p>
+
+    <!-- 게임 수 선택 컨트롤러 (스텝퍼) -->
+    <div class="w-full max-w-[320px] bg-[#11192b]/90 border border-[#ffd700]/30 rounded-2xl p-2 px-4 shadow-lg flex items-center justify-between">
+      <span class="text-xs font-bold text-slate-300">추출 게임 수</span>
+      <div class="flex items-center gap-3">
+        <button id="btnMinus" class="w-7 h-7 rounded-lg bg-white/10 hover:bg-white/20 text-white font-bold flex items-center justify-center active:scale-90 transition-transform">
+          -
+        </button>
+        <span class="text-base font-extrabold text-[#ffd700] w-6 text-center tabular-nums" id="gameCountText">5</span>
+        <button id="btnPlus" class="w-7 h-7 rounded-lg bg-white/10 hover:bg-white/20 text-white font-bold flex items-center justify-center active:scale-90 transition-transform">
+          +
+        </button>
+      </div>
+    </div>
+
+    <!-- START 메인 추첨 버튼 -->
+    <button class="w-full max-w-[340px] py-4 btn-start-gold text-black font-extrabold text-lg sm:text-xl rounded-full uppercase tracking-wider flex items-center justify-center gap-2 active:scale-95 transition-transform" id="extractBtn">
+      <span class="material-symbols-outlined text-2xl" id="btnIcon">play_arrow</span>
+      <span id="btnLabel">START (행운의 번호 추첨)</span>
+    </button>
+
+    <!-- 서브 안내 -->
+    <p class="text-[11px] text-slate-400 text-center font-medium">
+      버튼을 누르면 유리구 속 볼들이 회전하며 6개의 행운 번호가 배출됩니다!
+    </p>
+
+    <!-- 당첨 번호 결과 카드 -->
+    <div class="w-full bg-[#11192b]/95 border border-white/10 rounded-2xl p-4 shadow-xl relative mt-1">
+      <div class="flex flex-col items-center gap-3">
         <div class="flex items-center justify-between w-full px-1">
-          <div class="flex items-center gap-1.5">
-            <span class="material-symbols-outlined text-[#FFD700] text-sm">stars</span>
-            <h2 class="text-xs sm:text-sm text-white font-bold tracking-wider">이번 회차 추첨 결과</h2>
-            <span class="material-symbols-outlined text-[#FFD700] text-sm">stars</span>
+          <div class="flex items-center gap-1.5 text-xs font-bold text-[#ffd700]">
+            <span class="material-symbols-outlined text-sm">emoji_events</span>
+            <span>당첨 번호 결과</span>
           </div>
-          <span class="text-[10px] font-bold text-[#FFD700] bg-[#FFD700]/10 px-2 py-0.5 rounded-full border border-[#FFD700]/20" id="drawModeBadge">단일 1게임</span>
+          <span class="text-[10px] text-slate-400 font-semibold" id="resultStatusText">대기 중</span>
         </div>
         
         <!-- 6 Result Slots -->
         <div class="grid grid-cols-6 gap-1.5 sm:gap-2" id="resultsTray">
-          <div class="result-slot" data-slot="1"><span class="text-white/25 text-xs sm:text-sm font-bold">1</span></div>
-          <div class="result-slot" data-slot="2"><span class="text-white/25 text-xs sm:text-sm font-bold">2</span></div>
-          <div class="result-slot" data-slot="3"><span class="text-white/25 text-xs sm:text-sm font-bold">3</span></div>
-          <div class="result-slot" data-slot="4"><span class="text-white/25 text-xs sm:text-sm font-bold">4</span></div>
-          <div class="result-slot" data-slot="5"><span class="text-white/25 text-xs sm:text-sm font-bold">5</span></div>
-          <div class="result-slot" data-slot="6"><span class="text-white/25 text-xs sm:text-sm font-bold">6</span></div>
+          <div class="result-slot" data-slot="1">?</div>
+          <div class="result-slot" data-slot="2">?</div>
+          <div class="result-slot" data-slot="3">?</div>
+          <div class="result-slot" data-slot="4">?</div>
+          <div class="result-slot" data-slot="5">?</div>
+          <div class="result-slot" data-slot="6">?</div>
         </div>
 
-        <!-- 5게임 자동 완성 전표 (5게임 선택 시 표시) -->
-        <div class="w-full flex flex-col gap-1.5 pt-2.5 border-t border-white/10 hidden" id="multiGameSheet">
-          <div class="flex items-center justify-between text-xs font-bold text-slate-400 px-1">
-            <span class="flex items-center gap-1">
-              <span class="material-symbols-outlined text-sm text-[#FFD700]">receipt_long</span>
-              5게임 자동 완성 전표 (A~E)
-            </span>
-          </div>
-          <div class="flex flex-col gap-1 text-xs" id="multiGamesList"></div>
+        <!-- 멀티 게임 리스트 (2게임 이상 선택 시 표시) -->
+        <div class="w-full flex flex-col gap-1.5 pt-3 border-t border-white/10" id="multiGamesContainer">
+          <!-- Dynamically populated -->
         </div>
       </div>
     </div>
 
   </main>
 
-  <!-- Info Modal -->
-  <div id="infoModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-md p-4 hidden">
-    <div class="bg-[#1e2023] border border-white/15 rounded-3xl p-5 w-full max-w-sm shadow-2xl relative">
-      <button id="closeModalBtn" class="absolute top-4 right-4 text-slate-400 hover:text-white p-1 rounded-full">
-        <span class="material-symbols-outlined">close</span>
-      </button>
-      <h3 class="text-base font-bold text-[#ffe16d] mb-2.5 flex items-center gap-1.5">
-        <span class="material-symbols-outlined text-[#ffd700]">auto_awesome</span>
-        AI 행운의 별자리 운세
-      </h3>
-      <div class="text-xs text-slate-200 space-y-2 leading-relaxed">
-        <p>🌟 <strong>오늘의 최고 행운 별자리</strong>: <span class="text-amber-400 font-bold">물병자리</span></p>
-        <p>✨ <strong>추천 행운수</strong>: <span class="text-yellow-400 font-bold">7, 14, 23, 31, 38, 42</span></p>
-        <p>🎯 <strong>제 1239회 공식 결과</strong>: 11, 13, 22, 32, 33, 36 (+8)</p>
-      </div>
-      <button id="modalConfirmBtn" class="mt-4 w-full py-2 bg-[#ffd700] text-black font-bold rounded-xl text-xs active:scale-95">
-        확인
-      </button>
-    </div>
-  </div>
-
-  <!-- Bottom Nav -->
-  <nav class="fixed bottom-0 left-0 right-0 z-40 bg-[#1e2023]/95 backdrop-blur-2xl border-t border-white/10 shadow-lg">
-    <div class="flex justify-around items-center h-14 max-w-md mx-auto px-4 text-[10px]">
-      <a class="flex flex-col items-center justify-center text-[#ffe16d] bg-[#2f486a]/50 rounded-full py-1 px-3.5" href="#">
-        <span class="material-symbols-outlined text-lg" style="font-variation-settings: 'FILL' 1;">casino</span>
-        <span>추첨</span>
-      </a>
-      <a class="flex flex-col items-center justify-center text-slate-400 hover:text-white" href="blogger_lotto_spots_post.html">
-        <span class="material-symbols-outlined text-lg">format_list_numbered</span>
-        <span>당첨 결과</span>
-      </a>
-      <button id="myLottoBtn" class="flex flex-col items-center justify-center text-slate-400 hover:text-white">
-        <span class="material-symbols-outlined text-lg">confirmation_number</span>
-        <span>내 복권</span>
-      </button>
-      <button id="myInfoBtn" class="flex flex-col items-center justify-center text-slate-400 hover:text-white">
-        <span class="material-symbols-outlined text-lg">person</span>
-        <span>내 정보</span>
-      </button>
-    </div>
-  </nav>
-
   <script>
-    // Audio Synthesizer
+    // ----------------------------------------------------
+    // 1. Web Audio API Sound Synthesizer
+    // ----------------------------------------------------
     let audioCtx = null;
     function getAudioContext() {
       if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -455,6 +332,9 @@
       } catch (e) {}
     }
 
+    // ----------------------------------------------------
+    // 2. Ball Theme & Colors
+    // ----------------------------------------------------
     const BALL_COLORS = {
       yellow: { top: '#fef08a', main: '#f59e0b', bottom: '#92400e', text: '#451a03', shadow: 'rgba(245,158,11,0.5)' },
       blue:   { top: '#93c5fd', main: '#2563eb', bottom: '#1e3a8a', text: '#172554', shadow: 'rgba(37,99,235,0.5)' },
@@ -471,35 +351,37 @@
       return BALL_COLORS.green;
     }
 
+    // ----------------------------------------------------
+    // 3. Canvas 3D Physics Balls Inside Glass Globe
+    // ----------------------------------------------------
     const canvas = document.getElementById('lotteryCanvas');
     const ctx = canvas.getContext('2d');
-    const drumContainer = document.getElementById('drumContainer');
+    const whirlOverlay = document.getElementById('whirlOverlay');
     const extractBtn = document.getElementById('extractBtn');
     const btnIcon = document.getElementById('btnIcon');
     const btnLabel = document.getElementById('btnLabel');
-    const blowerGlow = document.getElementById('blowerGlow');
     const resultsTray = document.getElementById('resultsTray');
-    const modeSingleBtn = document.getElementById('modeSingleBtn');
-    const modeMultiBtn = document.getElementById('modeMultiBtn');
-    const drawModeBadge = document.getElementById('drawModeBadge');
-    const multiGameSheet = document.getElementById('multiGameSheet');
-    const multiGamesList = document.getElementById('multiGamesList');
+    const resultStatusText = document.getElementById('resultStatusText');
+    const multiGamesContainer = document.getElementById('multiGamesContainer');
+    const btnMinus = document.getElementById('btnMinus');
+    const btnPlus = document.getElementById('btnPlus');
+    const gameCountText = document.getElementById('gameCountText');
 
-    let size = 300;
+    let gameCount = 5;
+    let size = 240;
     let dpr = window.devicePixelRatio || 1;
     let radius = size / 2;
     let balls = [];
-    const NUM_BALLS = 45;
-    let ballRadius = 14.5;
+    const NUM_BALLS = 45; // 1~45번 전체 볼 로드
+    let ballRadius = 13;
     let isRunning = false;
     let extractedCount = 0;
     const MAX_EXTRACTS = 6;
     let extractTimer = null;
-    let currentMode = 'single';
 
     function resizeCanvas() {
-      const rect = drumContainer.getBoundingClientRect();
-      size = Math.floor(rect.width) || 300;
+      const rect = whirlOverlay.getBoundingClientRect();
+      size = Math.floor(rect.width) || 240;
       dpr = window.devicePixelRatio || 1;
       
       canvas.width = size * dpr;
@@ -509,7 +391,7 @@
       
       ctx.scale(dpr, dpr);
       radius = size / 2;
-      ballRadius = Math.max(12, size * 0.048);
+      ballRadius = Math.max(9, size * 0.065);
       
       balls.forEach(b => {
         b.radius = ballRadius;
@@ -533,22 +415,22 @@
         if (this.isExtracted) return;
 
         if (isRunning) {
-          const distFromBottom = Math.hypot(this.x - radius, this.y - (size - 20));
+          const distFromBottom = Math.hypot(this.x - radius, this.y - (size - 12));
           if (distFromBottom < radius * 0.8) {
-            this.vy -= (30 + Math.random() * 32) * dt;
-            this.vx += (Math.random() - 0.5) * 24 * dt;
+            this.vy -= (32 + Math.random() * 32) * dt;
+            this.vx += (Math.random() - 0.5) * 26 * dt;
           }
 
           const dx = this.x - radius;
           const dy = this.y - radius;
-          this.vx += -dy * 1.3 * dt;
-          this.vy += dx * 1.3 * dt;
+          this.vx += -dy * 1.4 * dt;
+          this.vy += dx * 1.4 * dt;
 
-          this.vx += (Math.random() - 0.5) * 15 * dt;
-          this.vy += (Math.random() - 0.5) * 13 * dt;
+          this.vx += (Math.random() - 0.5) * 16 * dt;
+          this.vy += (Math.random() - 0.5) * 14 * dt;
           this.vy += 12 * dt;
         } else {
-          this.vy += 32 * dt;
+          this.vy += 28 * dt;
           this.vx *= 0.985;
           this.vy *= 0.985;
         }
@@ -588,11 +470,13 @@
         ctx.save();
         ctx.translate(this.x, this.y);
 
+        // 1. Drop shadow
         ctx.beginPath();
-        ctx.arc(1.5, 2.5, this.radius, 0, Math.PI * 2);
-        ctx.fillStyle = 'rgba(0, 0, 0, 0.45)';
+        ctx.arc(1, 2, this.radius, 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.4)';
         ctx.fill();
 
+        // 2. 3D Spherical Sphere Gradient
         const sphereGrad = ctx.createRadialGradient(
           -this.radius * 0.32, -this.radius * 0.32, this.radius * 0.15,
           0, 0, this.radius
@@ -606,10 +490,12 @@
         ctx.fillStyle = sphereGrad;
         ctx.fill();
 
+        // 3. Specular Rim
         ctx.lineWidth = 0.8;
-        ctx.strokeStyle = 'rgba(255, 255, 255, 0.35)';
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.4)';
         ctx.stroke();
 
+        // 4. White Center Badge
         const badgeRadius = this.radius * 0.58;
         const badgeGrad = ctx.createRadialGradient(-badgeRadius * 0.2, -badgeRadius * 0.2, 1, 0, 0, badgeRadius);
         badgeGrad.addColorStop(0, '#ffffff');
@@ -619,22 +505,16 @@
         ctx.beginPath();
         ctx.arc(0, 0, badgeRadius, 0, Math.PI * 2);
         ctx.fillStyle = badgeGrad;
-        ctx.shadowColor = 'rgba(0,0,0,0.3)';
-        ctx.shadowBlur = 2;
-        ctx.shadowOffsetY = 1;
         ctx.fill();
-        ctx.shadowColor = 'transparent';
 
-        ctx.lineWidth = 0.6;
-        ctx.strokeStyle = 'rgba(255, 255, 255, 0.9)';
-        ctx.stroke();
-
+        // 5. Ball Number
         ctx.fillStyle = this.theme.text;
         ctx.font = `900 ${Math.round(this.radius * 0.72)}px Montserrat, sans-serif`;
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
         ctx.fillText(this.num, 0, 0.8);
 
+        // 6. Glare
         const glareRadius = this.radius * 0.38;
         const glareGrad = ctx.createRadialGradient(
           -this.radius * 0.35, -this.radius * 0.35, 0.5,
@@ -694,19 +574,19 @@
 
     function initBalls() {
       balls = [];
-      const chamberRadius = radius - ballRadius - 8;
+      const chamberRadius = radius - ballRadius - 4;
       
       for (let i = 1; i <= NUM_BALLS; i++) {
         let placed = false;
         let attempts = 0;
         let x = radius, y = radius;
 
-        while (!placed && attempts < 250) {
+        while (!placed && attempts < 200) {
           attempts++;
           const angle = Math.PI * 0.15 + Math.random() * Math.PI * 0.7;
-          const r = Math.sqrt(Math.random()) * (chamberRadius - 6);
+          const r = Math.sqrt(Math.random()) * (chamberRadius - 4);
           const candidateX = radius + Math.cos(angle) * r;
-          const candidateY = radius + Math.sin(angle) * r + 10;
+          const candidateY = radius + Math.sin(angle) * r + 8;
 
           if (Math.hypot(candidateX - radius, candidateY - radius) <= chamberRadius) {
             let overlapping = false;
@@ -716,9 +596,9 @@
                 break;
               }
             }
-            if (!overlapping || attempts > 180) {
+            if (!overlapping || attempts > 150) {
               x = candidateX;
-              y = Math.min(candidateY, size - ballRadius - 10);
+              y = Math.min(candidateY, size - ballRadius - 6);
               placed = true;
             }
           }
@@ -743,11 +623,14 @@
       requestAnimationFrame(animate);
     }
 
+    // ----------------------------------------------------
+    // 4. Extraction & Multi-Game Logic
+    // ----------------------------------------------------
     function createResultBallElement(ball) {
       const resultBallEl = document.createElement('div');
       resultBallEl.className = 'result-ball';
       resultBallEl.style.background = `radial-gradient(circle at 35% 28%, ${ball.theme.top} 0%, ${ball.theme.main} 45%, ${ball.theme.bottom} 100%)`;
-      resultBallEl.style.boxShadow = `0 10px 20px ${ball.theme.shadow}, inset 0 2px 4px rgba(255,255,255,0.7), inset 0 -3px 5px rgba(0,0,0,0.5)`;
+      resultBallEl.style.boxShadow = `0 8px 16px ${ball.theme.shadow}, inset 0 2px 4px rgba(255,255,255,0.7), inset 0 -3px 5px rgba(0,0,0,0.5)`;
 
       const innerNum = document.createElement('div');
       innerNum.className = 'result-ball-inner';
@@ -785,15 +668,17 @@
         stopDraw();
         playSound('fanfare');
         if (window.confetti) {
-          confetti({ particleCount: 90, spread: 65, origin: { y: 0.6 } });
+          confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
         }
       }
     }
 
-    function generate5Games() {
-      multiGamesList.innerHTML = '';
+    function generateMultiGames() {
+      multiGamesContainer.innerHTML = '';
+      if (gameCount <= 1) return;
+
       const labels = ['A', 'B', 'C', 'D', 'E'];
-      labels.forEach(label => {
+      for (let i = 0; i < gameCount; i++) {
         const nums = [];
         while (nums.length < 6) {
           const r = Math.floor(Math.random() * 45) + 1;
@@ -802,9 +687,9 @@
         nums.sort((a, b) => a - b);
 
         const row = document.createElement('div');
-        row.className = 'flex items-center justify-between bg-surface-container/60 px-3 py-1.5 rounded-xl border border-white/5';
+        row.className = 'flex items-center justify-between bg-black/40 px-3 py-1.5 rounded-xl border border-white/5';
         row.innerHTML = `
-          <span class="font-black text-primary-container w-5">${label}</span>
+          <span class="font-black text-[#ffd700] w-5 text-xs">${labels[i] || (i+1)}</span>
           <div class="flex items-center gap-1">
             ${nums.map(n => {
               const th = getBallTheme(n);
@@ -813,15 +698,16 @@
             }).join('')}
           </div>
         `;
-        multiGamesList.appendChild(row);
-      });
+        multiGamesContainer.appendChild(row);
+      }
     }
 
     function startDraw() {
       isRunning = true;
-      blowerGlow.style.opacity = '1';
+      whirlOverlay.classList.add('whirl-spinning');
       btnIcon.textContent = 'hourglass_top';
       btnLabel.textContent = '추첨 진행 중...';
+      resultStatusText.textContent = '추첨 중...';
 
       balls.forEach(b => {
         if (!b.isExtracted) {
@@ -833,24 +719,24 @@
       clearInterval(extractTimer);
       extractTimer = setInterval(() => {
         extractOneBall();
-      }, 1000);
+      }, 900);
 
-      if (currentMode === 'multi') {
-        generate5Games();
-      }
+      generateMultiGames();
     }
 
     function stopDraw() {
       isRunning = false;
       clearInterval(extractTimer);
-      blowerGlow.style.opacity = '0.3';
+      whirlOverlay.classList.remove('whirl-spinning');
 
       if (extractedCount >= MAX_EXTRACTS) {
         btnIcon.textContent = 'replay';
         btnLabel.textContent = '다시 추첨하기';
+        resultStatusText.textContent = `${gameCount}게임 추첨 완료`;
       } else {
-        btnIcon.textContent = 'play_circle';
-        btnLabel.textContent = currentMode === 'single' ? '1회 추첨 시작' : '5게임 추첨 시작';
+        btnIcon.textContent = 'play_arrow';
+        btnLabel.textContent = 'START (행운의 번호 추첨)';
+        resultStatusText.textContent = '대기 중';
       }
     }
 
@@ -858,40 +744,34 @@
       extractedCount = 0;
       isRunning = false;
       clearInterval(extractTimer);
-      blowerGlow.style.opacity = '0.3';
+      whirlOverlay.classList.remove('whirl-spinning');
 
       for (let i = 1; i <= MAX_EXTRACTS; i++) {
         const slot = resultsTray.querySelector(`[data-slot="${i}"]`);
         if (slot) {
           slot.className = 'result-slot';
-          slot.innerHTML = `<span class="text-white/25 text-xs sm:text-sm font-bold">${i}</span>`;
+          slot.innerHTML = `?`;
         }
       }
 
+      multiGamesContainer.innerHTML = '';
       initBalls();
       stopDraw();
     }
 
-    // Toggle Mode
-    modeSingleBtn.addEventListener('click', () => {
-      currentMode = 'single';
-      modeSingleBtn.className = 'flex-1 py-1.5 px-3 rounded-full text-xs font-bold transition-all text-on-primary bg-primary-container shadow-sm flex items-center justify-center gap-1';
-      modeMultiBtn.className = 'flex-1 py-1.5 px-3 rounded-full text-xs font-bold transition-all text-on-surface-variant hover:text-on-surface flex items-center justify-center gap-1';
-      drawModeBadge.textContent = '단일 1게임';
-      multiGameSheet.classList.add('hidden');
-      btnLabel.textContent = '1회 추첨 시작';
-      resetDraw();
+    // Stepper Controls
+    btnMinus.addEventListener('click', () => {
+      if (gameCount > 1) {
+        gameCount--;
+        gameCountText.textContent = gameCount;
+      }
     });
 
-    modeMultiBtn.addEventListener('click', () => {
-      currentMode = 'multi';
-      modeMultiBtn.className = 'flex-1 py-1.5 px-3 rounded-full text-xs font-bold transition-all text-on-primary bg-primary-container shadow-sm flex items-center justify-center gap-1';
-      modeSingleBtn.className = 'flex-1 py-1.5 px-3 rounded-full text-xs font-bold transition-all text-on-surface-variant hover:text-on-surface flex items-center justify-center gap-1';
-      drawModeBadge.textContent = '5게임 동시추첨';
-      multiGameSheet.classList.remove('hidden');
-      btnLabel.textContent = '5게임 추첨 시작';
-      generate5Games();
-      resetDraw();
+    btnPlus.addEventListener('click', () => {
+      if (gameCount < 5) {
+        gameCount++;
+        gameCountText.textContent = gameCount;
+      }
     });
 
     extractBtn.addEventListener('click', () => {
@@ -904,7 +784,7 @@
       }
     });
 
-    drumContainer.addEventListener('click', () => {
+    whirlOverlay.addEventListener('click', () => {
       playSound('pop');
       balls.forEach(b => {
         if (!b.isExtracted) {
@@ -913,39 +793,6 @@
         }
       });
     });
-
-    // Countdown Timer
-    let timerSeconds = 104;
-    const countdownEl = document.getElementById('countdown');
-    setInterval(() => {
-      if (timerSeconds > 0) {
-        timerSeconds--;
-        const mins = String(Math.floor(timerSeconds / 60)).padStart(2, '0');
-        const secs = String(timerSeconds % 60).padStart(2, '0');
-        countdownEl.textContent = `${mins}:${secs}`;
-      } else {
-        timerSeconds = 180;
-      }
-    }, 1000);
-
-    // Modal
-    const infoModal = document.getElementById('infoModal');
-    const horoscopeCard = document.getElementById('horoscopeCard');
-    const menuBtn = document.getElementById('menuBtn');
-    const historyBtn = document.getElementById('historyBtn');
-    const myLottoBtn = document.getElementById('myLottoBtn');
-    const myInfoBtn = document.getElementById('myInfoBtn');
-    const closeModalBtn = document.getElementById('closeModalBtn');
-    const modalConfirmBtn = document.getElementById('modalConfirmBtn');
-
-    function openModal() { infoModal.classList.remove('hidden'); }
-    function closeModal() { infoModal.classList.add('hidden'); }
-
-    [horoscopeCard, menuBtn, historyBtn, myLottoBtn, myInfoBtn].forEach(el => {
-      if (el) el.addEventListener('click', openModal);
-    });
-    closeModalBtn.addEventListener('click', closeModal);
-    modalConfirmBtn.addEventListener('click', closeModal);
 
     // Init & Resize
     window.addEventListener('load', () => {

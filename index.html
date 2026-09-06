@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8"/>
   <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
-  <title>로또 6/45 행운의 추첨기 - 3D 라이브 시뮬레이터</title>
+  <title>로또 6/45 행운의 추첨 - 럭셔리 골드 크리스탈 시뮬레이터</title>
 
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -36,7 +36,7 @@
     }
 
     body {
-      background: radial-gradient(circle at 50% 15%, #131e38 0%, #0a1122 55%, #050811 100%);
+      background: radial-gradient(circle at 50% 20%, #15223c 0%, #0a101f 55%, #04070d 100%);
       background-attachment: fixed;
       min-height: 100vh;
       min-height: 100dvh;
@@ -46,7 +46,7 @@
       color: #f1f5f9;
     }
 
-    /* 럭셔리 골드 크리스탈 돔 스테이지 (완전 고정형) */
+    /* 럭셔리 골드 머신 스테이지 */
     .lotto-stage {
       position: relative;
       width: 100%;
@@ -56,100 +56,60 @@
       display: flex;
       align-items: center;
       justify-content: center;
+      border-radius: 32px;
+      overflow: hidden;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.8), 0 0 30px rgba(255, 215, 0, 0.15);
+      border: 1.5px solid rgba(255, 215, 0, 0.3);
+      background: #080c14;
     }
 
-    /* 황금 베이스와 골드 링 3D 프레임 */
-    .gold-machine-frame {
+    .lotto-bg-img {
       position: absolute;
       inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
       pointer-events: none;
-      z-index: 5;
+      z-index: 1;
     }
 
-    /* 하단 황금 돔 받침대 */
-    .gold-base-pedestal {
+    /* 유리구 중앙 에어 물리 볼 오버레이 레이어 (이미지 속 크리스탈 구체와 100% 일치) */
+    .glass-whirl-overlay {
       position: absolute;
-      bottom: 2%;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 86%;
-      height: 38%;
-      background: radial-gradient(ellipse at 50% 20%, #ffd966 0%, #d4af37 45%, #997a15 85%, #594406 100%);
-      border-radius: 50% 50% 20% 20% / 70% 70% 30% 30%;
-      box-shadow: 
-        0 15px 35px rgba(0,0,0,0.8),
-        inset 0 4px 8px rgba(255,255,255,0.7),
-        inset 0 -8px 16px rgba(0,0,0,0.7);
-      border: 2px solid rgba(255, 235, 150, 0.6);
-      z-index: 6;
-    }
-
-    /* 골든 스파이럴 레일 링 */
-    .gold-spiral-rail {
-      position: absolute;
-      top: 18%;
-      left: 6%;
-      width: 88%;
-      height: 64%;
-      border: 6px solid #e5c158;
-      border-radius: 50%;
-      transform: rotate(-15deg);
-      box-shadow: 
-        0 8px 20px rgba(0,0,0,0.6),
-        inset 0 2px 4px rgba(255,255,255,0.8),
-        inset 0 -2px 6px rgba(0,0,0,0.8);
-      pointer-events: none;
-      z-index: 7;
-    }
-
-    .gold-pillar {
-      position: absolute;
-      bottom: 24%;
-      right: 18%;
-      width: 14px;
-      height: 48px;
-      background: linear-gradient(90deg, #997a15 0%, #ffd966 50%, #594406 100%);
-      border-radius: 6px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.6);
-      z-index: 8;
-    }
-
-    /* 크리스탈 글래스 챔버 */
-    .crystal-dome {
-      position: absolute;
-      top: 4%;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 78%;
+      top: 6.5%;
+      left: 17.5%;
+      width: 65%;
       aspect-ratio: 1 / 1;
       border-radius: 50%;
-      background: radial-gradient(circle at 45% 30%, rgba(255, 255, 255, 0.12) 0%, rgba(30, 48, 80, 0.35) 60%, rgba(10, 16, 28, 0.75) 100%);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      border: 2px solid rgba(255, 255, 255, 0.25);
-      box-shadow: 
-        inset 0 0 45px rgba(255, 255, 255, 0.15),
-        inset 0 8px 20px rgba(255, 255, 255, 0.3),
-        inset 0 -20px 40px rgba(0, 0, 0, 0.8),
-        0 20px 50px rgba(0, 0, 0, 0.7);
+      pointer-events: auto;
       overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       z-index: 10;
     }
 
-    .dome-glare {
+    .whirl-core {
       position: absolute;
-      top: 5%;
-      left: 18%;
-      width: 65%;
-      height: 35%;
-      background: radial-gradient(ellipse at 50% 0%, rgba(255, 255, 255, 0.45) 0%, rgba(255, 255, 255, 0.08) 60%, transparent 85%);
-      border-radius: 50%;
-      pointer-events: none;
-      z-index: 25;
-      transform: rotate(-6deg);
+      inset: -15%;
+      background: radial-gradient(circle at center, rgba(254, 240, 138, 0.4) 0%, rgba(245, 158, 11, 0.2) 40%, transparent 70%);
+      opacity: 0;
+      transition: opacity 0.4s ease;
+      filter: blur(4px);
     }
 
-    /* 3D 로또 볼 스타일 */
+    .whirl-spinning .whirl-core {
+      opacity: 1;
+      animation: vortexSpin 1.4s linear infinite;
+    }
+
+    @keyframes vortexSpin {
+      0% { transform: rotate(0deg) scale(0.95); }
+      50% { transform: rotate(180deg) scale(1.1); }
+      100% { transform: rotate(360deg) scale(0.95); }
+    }
+
+    /* 3D 럭셔리 로또 볼 스타일 */
     .result-ball {
       width: 44px;
       height: 44px;
@@ -212,7 +172,7 @@
       border-radius: 50%;
       aspect-ratio: 1 / 1;
       background: radial-gradient(circle, rgba(10,16,30,0.7) 0%, rgba(18,26,45,0.9) 100%);
-      border: 2px dashed rgba(255, 215, 0, 0.35);
+      border: 2px dashed rgba(255, 215, 0, 0.4);
       box-shadow: inset 0 4px 10px rgba(0,0,0,0.8);
       display: flex;
       align-items: center;
@@ -241,7 +201,7 @@
       box-shadow: 
         inset 0 2px 0 rgba(255,255,255,0.6), 
         inset 0 -3px 0 rgba(0,0,0,0.3), 
-        0 10px 25px rgba(255, 140, 0, 0.4);
+        0 10px 25px rgba(255, 140, 0, 0.45);
       transition: all 0.15s ease-out;
     }
     .btn-start-gold:active {
@@ -255,30 +215,26 @@
   <!-- Main Container -->
   <main class="flex-grow flex flex-col items-center justify-center px-3 w-full max-w-md mx-auto gap-3.5 relative z-10 py-3">
 
-    <!-- 3D 골드 크리스탈 돔 스테이지 -->
+    <!-- 럭셔리 골드 크리스탈 로또 머신 스테이지 -->
     <div class="lotto-stage" id="stageContainer">
-      <!-- 황금 기계 프레임 (고정) -->
-      <div class="gold-machine-frame">
-        <div class="gold-spiral-rail"></div>
-        <div class="gold-base-pedestal"></div>
-        <div class="gold-pillar"></div>
-      </div>
-
-      <!-- 크리스탈 유리 돔 & 물리 볼 캔버스 -->
-      <div class="crystal-dome" id="domeWrapper">
-        <canvas class="absolute inset-0 w-full h-full z-10 cursor-pointer" id="lotteryCanvas"></canvas>
-        <div class="dome-glare"></div>
+      <!-- 2번째 럭셔리 골드 머신 이미지 100% 원본 -->
+      <img src="lotto_machine_concept.png" alt="럭셔리 골드 크리스탈 로또 머신" class="lotto-bg-img" id="machineBgImg"/>
+      
+      <!-- 유리구 중앙 에어 회오리 & 물리 볼 캔버스 -->
+      <div class="glass-whirl-overlay" id="whirlOverlay">
+        <div class="whirl-core"></div>
+        <canvas class="absolute inset-0 w-full h-full z-20 cursor-pointer" id="lotteryCanvas"></canvas>
       </div>
     </div>
 
-    <!-- 안내 문구 (말끔하게 정돈) -->
+    <!-- 안내 문구 -->
     <p class="text-xs text-slate-400 font-medium text-center flex items-center justify-center gap-1 -mt-1">
       <span>💡</span>
       <span>원하는 게임 수를 선택하고 START를 눌러 행운을 확인하세요!</span>
     </p>
 
     <!-- 게임 수 선택 컨트롤러 (스텝퍼) -->
-    <div class="w-full max-w-[320px] bg-[#11192b]/90 border border-white/10 rounded-2xl p-2 px-4 shadow-lg flex items-center justify-between">
+    <div class="w-full max-w-[320px] bg-[#11192b]/90 border border-[#ffd700]/30 rounded-2xl p-2 px-4 shadow-lg flex items-center justify-between">
       <span class="text-xs font-bold text-slate-300">추출 게임 수</span>
       <div class="flex items-center gap-3">
         <button id="btnMinus" class="w-7 h-7 rounded-lg bg-white/10 hover:bg-white/20 text-white font-bold flex items-center justify-center active:scale-90 transition-transform">
@@ -396,11 +352,11 @@
     }
 
     // ----------------------------------------------------
-    // 3. Canvas 3D Physics Balls (오직 돔 내부 공만 움직임)
+    // 3. Canvas 3D Physics Balls Inside Glass Globe
     // ----------------------------------------------------
     const canvas = document.getElementById('lotteryCanvas');
     const ctx = canvas.getContext('2d');
-    const domeWrapper = document.getElementById('domeWrapper');
+    const whirlOverlay = document.getElementById('whirlOverlay');
     const extractBtn = document.getElementById('extractBtn');
     const btnIcon = document.getElementById('btnIcon');
     const btnLabel = document.getElementById('btnLabel');
@@ -412,20 +368,20 @@
     const gameCountText = document.getElementById('gameCountText');
 
     let gameCount = 5;
-    let size = 260;
+    let size = 240;
     let dpr = window.devicePixelRatio || 1;
     let radius = size / 2;
     let balls = [];
-    const NUM_BALLS = 45;
-    let ballRadius = 14;
+    const NUM_BALLS = 45; // 1~45번 전체 볼 로드
+    let ballRadius = 13;
     let isRunning = false;
     let extractedCount = 0;
     const MAX_EXTRACTS = 6;
     let extractTimer = null;
 
     function resizeCanvas() {
-      const rect = domeWrapper.getBoundingClientRect();
-      size = Math.floor(rect.width) || 260;
+      const rect = whirlOverlay.getBoundingClientRect();
+      size = Math.floor(rect.width) || 240;
       dpr = window.devicePixelRatio || 1;
       
       canvas.width = size * dpr;
@@ -435,7 +391,7 @@
       
       ctx.scale(dpr, dpr);
       radius = size / 2;
-      ballRadius = Math.max(12, size * 0.052);
+      ballRadius = Math.max(9, size * 0.065);
       
       balls.forEach(b => {
         b.radius = ballRadius;
@@ -459,7 +415,7 @@
         if (this.isExtracted) return;
 
         if (isRunning) {
-          const distFromBottom = Math.hypot(this.x - radius, this.y - (size - 18));
+          const distFromBottom = Math.hypot(this.x - radius, this.y - (size - 12));
           if (distFromBottom < radius * 0.8) {
             this.vy -= (32 + Math.random() * 32) * dt;
             this.vx += (Math.random() - 0.5) * 26 * dt;
@@ -467,14 +423,14 @@
 
           const dx = this.x - radius;
           const dy = this.y - radius;
-          this.vx += -dy * 1.35 * dt;
-          this.vy += dx * 1.35 * dt;
+          this.vx += -dy * 1.4 * dt;
+          this.vy += dx * 1.4 * dt;
 
           this.vx += (Math.random() - 0.5) * 16 * dt;
           this.vy += (Math.random() - 0.5) * 14 * dt;
           this.vy += 12 * dt;
         } else {
-          this.vy += 32 * dt;
+          this.vy += 28 * dt;
           this.vx *= 0.985;
           this.vy *= 0.985;
         }
@@ -516,8 +472,8 @@
 
         // 1. Drop shadow
         ctx.beginPath();
-        ctx.arc(1.5, 2.5, this.radius, 0, Math.PI * 2);
-        ctx.fillStyle = 'rgba(0, 0, 0, 0.45)';
+        ctx.arc(1, 2, this.radius, 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.4)';
         ctx.fill();
 
         // 2. 3D Spherical Sphere Gradient
@@ -536,7 +492,7 @@
 
         // 3. Specular Rim
         ctx.lineWidth = 0.8;
-        ctx.strokeStyle = 'rgba(255, 255, 255, 0.35)';
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.4)';
         ctx.stroke();
 
         // 4. White Center Badge
@@ -549,11 +505,7 @@
         ctx.beginPath();
         ctx.arc(0, 0, badgeRadius, 0, Math.PI * 2);
         ctx.fillStyle = badgeGrad;
-        ctx.shadowColor = 'rgba(0,0,0,0.3)';
-        ctx.shadowBlur = 2;
-        ctx.shadowOffsetY = 1;
         ctx.fill();
-        ctx.shadowColor = 'transparent';
 
         // 5. Ball Number
         ctx.fillStyle = this.theme.text;
@@ -622,19 +574,19 @@
 
     function initBalls() {
       balls = [];
-      const chamberRadius = radius - ballRadius - 6;
+      const chamberRadius = radius - ballRadius - 4;
       
       for (let i = 1; i <= NUM_BALLS; i++) {
         let placed = false;
         let attempts = 0;
         let x = radius, y = radius;
 
-        while (!placed && attempts < 250) {
+        while (!placed && attempts < 200) {
           attempts++;
           const angle = Math.PI * 0.15 + Math.random() * Math.PI * 0.7;
-          const r = Math.sqrt(Math.random()) * (chamberRadius - 6);
+          const r = Math.sqrt(Math.random()) * (chamberRadius - 4);
           const candidateX = radius + Math.cos(angle) * r;
-          const candidateY = radius + Math.sin(angle) * r + 10;
+          const candidateY = radius + Math.sin(angle) * r + 8;
 
           if (Math.hypot(candidateX - radius, candidateY - radius) <= chamberRadius) {
             let overlapping = false;
@@ -644,9 +596,9 @@
                 break;
               }
             }
-            if (!overlapping || attempts > 180) {
+            if (!overlapping || attempts > 150) {
               x = candidateX;
-              y = Math.min(candidateY, size - ballRadius - 8);
+              y = Math.min(candidateY, size - ballRadius - 6);
               placed = true;
             }
           }
@@ -752,6 +704,7 @@
 
     function startDraw() {
       isRunning = true;
+      whirlOverlay.classList.add('whirl-spinning');
       btnIcon.textContent = 'hourglass_top';
       btnLabel.textContent = '추첨 진행 중...';
       resultStatusText.textContent = '추첨 중...';
@@ -774,6 +727,7 @@
     function stopDraw() {
       isRunning = false;
       clearInterval(extractTimer);
+      whirlOverlay.classList.remove('whirl-spinning');
 
       if (extractedCount >= MAX_EXTRACTS) {
         btnIcon.textContent = 'replay';
@@ -790,6 +744,7 @@
       extractedCount = 0;
       isRunning = false;
       clearInterval(extractTimer);
+      whirlOverlay.classList.remove('whirl-spinning');
 
       for (let i = 1; i <= MAX_EXTRACTS; i++) {
         const slot = resultsTray.querySelector(`[data-slot="${i}"]`);
@@ -829,7 +784,7 @@
       }
     });
 
-    domeWrapper.addEventListener('click', () => {
+    whirlOverlay.addEventListener('click', () => {
       playSound('pop');
       balls.forEach(b => {
         if (!b.isExtracted) {
