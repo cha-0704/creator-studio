@@ -1,833 +1,847 @@
 <!DOCTYPE html>
-<html lang="ko" class="dark">
+<html lang="ko">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>만능 AI 콘텐츠 & 쇼핑 숏츠 자동생성기 | Creator Studio Pro</title>
-  <meta name="description" content="쇼핑 숏츠, 일반 숏폼, 유튜브 롱폼, 스레드(Threads), 인포크링크 상세페이지, AI 이미지 프롬프트 올인원 만능 자동생성기">
-  
-  <!-- Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Montserrat:wght@700;800;900&family=Pretendard:wght@400;600;700;800;900&display=swap" rel="stylesheet">
-  
-  <!-- Lucide Icons -->
-  <script src="https://unpkg.com/lucide@latest"></script>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+  <title>로또스트림 라이브 - 실시간 행운 추첨</title>
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Fonts & Material Symbols -->
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800;900&family=Noto+Sans+KR:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+
+  <!-- Confetti -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+  <!-- Google AdSense -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6240419995457155" crossorigin="anonymous"></script>
+
+  <!-- Google Analytics (GA4) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-JRDZ1P2M3J"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-JRDZ1P2M3J');
+  </script>
 
   <style>
-    :root {
-      --bg-main: #0b0d11;
-      --bg-card: rgba(22, 25, 31, 0.95);
-      --bg-card-inner: rgba(13, 15, 19, 0.8);
-      --border-color: rgba(255, 255, 255, 0.08);
-      
-      --accent-gold: #ffd700;
-      --accent-purple: #a855f7;
-      --accent-pink: #ec4899;
-      --accent-blue: #3b82f6;
-      --accent-green: #10b981;
-      --accent-red: #ef4444;
-
-      --text-main: #f8fafc;
-      --text-dim: #94a3b8;
-      --text-muted: #64748b;
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
     }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
     body {
-      font-family: 'Pretendard', 'Inter', sans-serif;
-      background: radial-gradient(circle at 50% 0%, rgba(168, 85, 247, 0.15) 0%, transparent 60%), var(--bg-main);
-      background-attachment: fixed;
-      color: var(--text-main);
+      background-color: #0b0f19;
+      font-family: 'Noto Sans KR', sans-serif;
+      user-select: none;
+      overflow-x: hidden;
+      color: #f1f5f9;
       min-height: 100vh;
       display: flex;
       justify-content: center;
-      padding: 1rem;
     }
 
-    .app-wrapper {
+    /* 모바일 프레임 컨테이너 */
+    .app-viewport {
       width: 100%;
-      max-width: 900px;
+      max-width: 430px;
+      min-height: 100vh;
+      background-color: #0d1322;
       display: flex;
-      flex-direction: column;
-      gap: 1.25rem;
-      padding-bottom: 4rem;
+      flex-col;
+      position: relative;
+      box-shadow: 0 0 50px rgba(0,0,0,0.8);
+      padding-bottom: 85px; /* 하단 내비게이션 바 공간 */
     }
 
-    /* Header */
-    .studio-header {
-      background: var(--bg-card);
-      border: 1px solid var(--border-color);
-      border-radius: 20px;
-      padding: 1.25rem 1.5rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    /* 3D 구체 볼 챔버 */
+    .globe-container {
+      position: relative;
+      width: 290px;
+      height: 290px;
+      margin: 0 auto;
+      border-radius: 50%;
+      background: radial-gradient(circle at 50% 120%, #1e2638 0%, #111726 60%, #0a0e1a 100%);
+      border: 3px solid #2a3449;
+      box-shadow: inset 0 10px 25px rgba(0,0,0,0.8), inset 0 -15px 30px rgba(255,255,255,0.06), 0 12px 30px rgba(0,0,0,0.6);
+      overflow: hidden;
     }
 
-    .brand-group {
-      display: flex;
-      align-items: center;
-      gap: 10px;
+    .globe-highlight {
+      position: absolute;
+      top: 5%;
+      left: 15%;
+      width: 70%;
+      height: 35%;
+      border-radius: 50%;
+      background: radial-gradient(ellipse at center, rgba(255,255,255,0.12) 0%, rgba(255,255,255,0) 70%);
+      pointer-events: none;
+      z-index: 15;
     }
 
-    .brand-icon {
+    /* 라이브 펄스 닷 */
+    .live-dot {
+      width: 10px;
+      height: 10px;
+      background-color: #ef4444;
+      border-radius: 50%;
+      display: inline-block;
+      box-shadow: 0 0 10px #ef4444;
+      animation: livePulse 1.5s infinite;
+    }
+
+    @keyframes livePulse {
+      0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
+      70% { transform: scale(1.15); box-shadow: 0 0 0 8px rgba(239, 68, 68, 0); }
+      100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+    }
+
+    /* 3D 로또 볼 */
+    .drawn-ball {
       width: 42px;
       height: 42px;
-      border-radius: 12px;
-      background: linear-gradient(135deg, var(--accent-purple), var(--accent-pink));
+      border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
-      color: #fff;
-      box-shadow: 0 4px 15px rgba(236, 72, 153, 0.4);
-    }
-
-    .brand-text h1 {
-      font-size: 1.2rem;
+      font-family: 'Montserrat', sans-serif;
       font-weight: 900;
-      letter-spacing: -0.02em;
+      position: relative;
+      animation: popBall 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.5), inset 0 2px 3px rgba(255,255,255,0.8), inset 0 -3px 4px rgba(0,0,0,0.5);
+      flex-shrink: 0;
     }
 
-    .brand-text p {
-      font-size: 0.75rem;
-      color: var(--text-dim);
-    }
-
-    .badge-pro {
-      background: rgba(255, 215, 0, 0.15);
-      border: 1px solid rgba(255, 215, 0, 0.4);
-      color: var(--accent-gold);
-      font-size: 0.7rem;
-      font-weight: 800;
-      padding: 4px 10px;
-      border-radius: 9999px;
-    }
-
-    /* Format Switcher Tabs */
-    .format-tabs-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(135px, 1fr));
-      gap: 8px;
-    }
-
-    .tab-btn {
-      background: var(--bg-card);
-      border: 1px solid var(--border-color);
-      padding: 12px 10px;
-      border-radius: 14px;
-      color: var(--text-dim);
-      font-size: 0.82rem;
-      font-weight: 700;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 6px;
-      cursor: pointer;
-      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-
-    .tab-btn i { width: 20px; height: 20px; }
-    .tab-btn:hover { background: rgba(255, 255, 255, 0.05); color: #fff; transform: translateY(-2px); }
-    .tab-btn.active {
-      background: linear-gradient(135deg, rgba(168, 85, 247, 0.25), rgba(236, 72, 153, 0.25));
-      border-color: var(--accent-pink);
-      color: #fff;
-      box-shadow: 0 4px 15px rgba(236, 72, 153, 0.3);
-    }
-
-    /* Main Card Form */
-    .glass-card {
-      background: var(--bg-card);
-      border: 1px solid var(--border-color);
-      border-radius: 20px;
-      padding: 1.5rem;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.4);
-    }
-
-    .input-section-title {
-      font-size: 0.95rem;
-      font-weight: 800;
-      margin-bottom: 12px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .form-group {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-      margin-bottom: 14px;
-    }
-
-    .form-label {
-      font-size: 0.8rem;
-      font-weight: 700;
-      color: var(--text-dim);
-    }
-
-    .text-input, .select-input {
-      width: 100%;
-      background: var(--bg-card-inner);
-      border: 1px solid rgba(255, 255, 255, 0.12);
-      border-radius: 12px;
-      padding: 12px 14px;
-      color: #fff;
-      font-size: 0.92rem;
-      font-family: inherit;
-      outline: none;
-      transition: all 0.2s;
-    }
-
-    .text-input:focus, .select-input:focus {
-      border-color: var(--accent-pink);
-      box-shadow: 0 0 10px rgba(236, 72, 153, 0.3);
-    }
-
-    /* Quick Preset Chips */
-    .preset-chips-wrap {
-      display: flex;
-      gap: 6px;
-      flex-wrap: wrap;
-      margin-top: 4px;
-    }
-
-    .preset-chip {
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      padding: 5px 10px;
-      border-radius: 9999px;
-      font-size: 0.74rem;
-      color: var(--text-dim);
-      cursor: pointer;
-      transition: all 0.15s;
-    }
-
-    .preset-chip:hover {
-      background: rgba(255, 215, 0, 0.15);
-      border-color: var(--accent-gold);
-      color: var(--accent-gold);
-    }
-
-    .row-2-col {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-    }
-
-    @media (max-width: 600px) {
-      .row-2-col { grid-template-columns: 1fr; }
-    }
-
-    /* Big Generate Button */
-    .btn-generate-glow {
-      width: 100%;
-      height: 56px;
-      background: linear-gradient(135deg, #a855f7, #ec4899, #f59e0b);
-      border: none;
-      border-radius: 14px;
-      color: #fff;
-      font-size: 1.05rem;
-      font-weight: 900;
-      letter-spacing: 0.02em;
+    .drawn-ball-inner {
+      width: 22px;
+      height: 22px;
+      background: #ffffff;
+      border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 10px;
-      cursor: pointer;
-      box-shadow: 0 8px 25px rgba(236, 72, 153, 0.45);
-      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-      margin-top: 6px;
+      font-size: 13px;
+      box-shadow: inset 0 1px 2px rgba(0,0,0,0.3);
     }
 
-    .btn-generate-glow:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 12px 30px rgba(236, 72, 153, 0.65);
+    @keyframes popBall {
+      0% { transform: scale(0.3) translateY(20px); opacity: 0; }
+      100% { transform: scale(1) translateY(0); opacity: 1; }
     }
 
-    .btn-generate-glow:active { transform: translateY(1px); }
-
-    /* Results Area */
-    .results-wrapper {
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-      margin-top: 0.5rem;
-    }
-
-    .result-card {
-      background: var(--bg-card);
-      border: 1px solid var(--border-color);
-      border-radius: 18px;
-      padding: 1.25rem;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-
-    .result-card-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-      padding-bottom: 10px;
-    }
-
-    .result-card-title {
-      font-size: 0.95rem;
-      font-weight: 800;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .card-actions-row {
-      display: flex;
-      gap: 6px;
-    }
-
-    .btn-action-sm {
-      background: rgba(255, 255, 255, 0.06);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      color: #fff;
-      padding: 5px 10px;
-      border-radius: 8px;
-      font-size: 0.75rem;
-      font-weight: 700;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 4px;
-      transition: all 0.15s;
-    }
-
-    .btn-action-sm:hover { background: rgba(255, 255, 255, 0.15); }
-
-    /* Content Blocks inside results */
-    .script-timeline-box {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-
-    .timeline-item {
-      background: var(--bg-card-inner);
-      border-left: 3px solid var(--accent-purple);
-      border-radius: 0 10px 10px 0;
-      padding: 10px 12px;
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-    }
-
-    .t-time-tag {
-      font-size: 0.72rem;
-      font-weight: 800;
-      color: var(--accent-gold);
-    }
-
-    .t-scene {
-      font-size: 0.8rem;
-      color: var(--text-dim);
-    }
-
-    .t-narration {
-      font-size: 0.9rem;
-      font-weight: 700;
-      color: #fff;
-      line-height: 1.4;
-    }
-
-    .pre-text-box {
-      background: var(--bg-card-inner);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      border-radius: 12px;
-      padding: 14px;
-      font-size: 0.88rem;
-      line-height: 1.6;
-      color: #e2e8f0;
-      white-space: pre-wrap;
-      word-break: break-all;
-    }
-
-    /* Toast */
-    .toast-box {
+    /* 하단 탭바 */
+    .bottom-nav {
       position: fixed;
-      top: 30px;
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 9999;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      width: 90%;
-      max-width: 400px;
-      pointer-events: none;
-    }
-
-    .toast-item {
-      background: rgba(21, 24, 30, 0.98);
-      border: 1px solid var(--accent-pink);
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
-      padding: 12px 18px;
-      border-radius: 14px;
-      font-size: 0.88rem;
-      font-weight: 700;
-      color: #fff;
+      bottom: 0;
+      width: 100%;
+      max-width: 430px;
+      height: 72px;
+      background: #090e18;
+      border-top: 1px solid rgba(255,255,255,0.08);
       display: flex;
       align-items: center;
-      gap: 8px;
-      animation: toastPop 0.25s ease-out;
+      justify-content: space-around;
+      z-index: 50;
+      padding-bottom: env(safe-area-inset-bottom, 6px);
     }
 
-    @keyframes toastPop {
-      from { opacity: 0; transform: translateY(-10px); }
-      to { opacity: 1; transform: translateY(0); }
+    .nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3px;
+      color: #717d96;
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: color 0.2s;
+    }
+
+    .nav-item.active {
+      color: #ffd000;
+    }
+
+    .nav-active-box {
+      width: 38px;
+      height: 38px;
+      background: #1c263d;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #ffd000;
     }
   </style>
 </head>
 <body>
-  <div class="app-wrapper">
-    
-    <!-- Top Header -->
-    <header class="studio-header">
-      <div class="brand-group">
-        <div class="brand-icon"><i data-lucide="sparkles"></i></div>
-        <div class="brand-text">
-          <h1>만능 AI 크리에이터 스튜디오</h1>
-          <p>쇼핑 숏츠 • 롱폼 • 스레드 • 인포크링크 • 프롬프트 올인원 생성기</p>
-        </div>
+
+  <!-- 전체 모바일 프레임 -->
+  <div class="app-viewport flex flex-col px-4 pt-3 pb-24">
+
+    <!-- 1. 상단 헤더 바 -->
+    <header class="flex items-center justify-between py-2 border-b border-white/5">
+      <button class="text-slate-300 hover:text-white p-1" aria-label="메뉴">
+        <span class="material-symbols-outlined text-2xl">menu</span>
+      </button>
+
+      <div class="flex items-center gap-2">
+        <span class="live-dot"></span>
+        <h1 class="text-xl font-black text-[#ffd000] tracking-tight">로또스트림 라이브</h1>
       </div>
-      <span class="badge-pro">KODARI PRO</span>
+
+      <button class="text-slate-300 hover:text-white p-1" aria-label="추첨 이력">
+        <span class="material-symbols-outlined text-2xl">history</span>
+      </button>
     </header>
 
-    <!-- Format Tabs Grid -->
-    <div class="format-tabs-grid">
-      <button class="tab-btn active" data-mode="shopping_shorts">
-        <i data-lucide="shopping-bag"></i>
-        <span>쇼핑 숏츠 (30초)</span>
-      </button>
-      <button class="tab-btn" data-mode="general_shorts">
-        <i data-lucide="play-circle"></i>
-        <span>일반 바이럴 숏폼</span>
-      </button>
-      <button class="tab-btn" data-mode="long_form">
-        <i data-lucide="tv"></i>
-        <span>유튜브 롱폼 (5~10분)</span>
-      </button>
-      <button class="tab-btn" data-mode="threads_post">
-        <i data-lucide="message-square-text"></i>
-        <span>스레드 & 인스타 피드</span>
-      </button>
-      <button class="tab-btn" data-mode="inpock_copy">
-        <i data-lucide="link"></i>
-        <span>인포크링크 상세페이지</span>
-      </button>
-      <button class="tab-btn" data-mode="ai_prompt">
-        <i data-lucide="image"></i>
-        <span>AI 이미지/영상 프롬프트</span>
+    <!-- 2. 다음 추첨까지 카운트다운 뱃지 -->
+    <div class="flex justify-center mt-3">
+      <div class="bg-[#12192b] border border-white/10 rounded-full px-5 py-1.5 flex items-center gap-2 shadow-inner">
+        <span class="text-xs text-slate-400 font-medium">다음 추첨까지:</span>
+        <span class="text-sm font-black text-[#ffd000] tracking-wider tabular-nums" id="countdownTimer">00:24</span>
+      </div>
+    </div>
+
+    <!-- 3. AI 운세 추천 배너 카드 -->
+    <div class="mt-3 bg-[#111828] border border-[#f59e0b]/20 rounded-2xl p-3 flex items-center justify-between shadow-lg relative overflow-hidden">
+      <div class="flex items-center gap-3">
+        <div class="w-9 h-9 rounded-xl bg-[#f59e0b]/10 border border-[#f59e0b]/30 flex items-center justify-center text-[#ffd000] shrink-0">
+          <span class="material-symbols-outlined text-lg">auto_awesome</span>
+        </div>
+        <div class="flex flex-col">
+          <div class="flex items-center gap-1.5">
+            <span class="text-xs font-black text-[#ffd000]">AI 운세 추천</span>
+            <span class="bg-[#f59e0b]/20 text-[#ffd000] text-[10px] font-bold px-1.5 py-0.5 rounded">오늘의 별자리</span>
+          </div>
+          <p class="text-[11px] text-slate-300 font-medium mt-0.5">
+            물병자리 오늘의 행운수: <span class="text-white font-bold">7, 14, 23, 31</span> ✨
+          </p>
+        </div>
+      </div>
+      <button class="text-xs font-bold text-[#ffd000] hover:underline flex items-center shrink-0 pl-2">
+        <span>보기</span>
+        <span class="material-symbols-outlined text-sm">chevron_right</span>
       </button>
     </div>
 
-    <!-- Main Generator Input Card -->
-    <div class="glass-card">
-      <div class="input-section-title">
-        <i data-lucide="wand-2" class="text-pink" style="color:var(--accent-pink);"></i>
-        <span id="form-mode-title">쇼핑 숏츠 (30초) 생성 설정</span>
+    <!-- 4. 로또 추첨 구체 스테이지 -->
+    <div class="mt-3 flex justify-center relative">
+      <div class="globe-container">
+        <div class="globe-highlight"></div>
+        <canvas id="globeCanvas" class="w-full h-full cursor-pointer relative z-10"></canvas>
       </div>
+    </div>
 
-      <div class="form-group">
-        <label class="form-label" id="input-keyword-label">상품명 또는 주제 키워드</label>
-        <input type="text" id="input-keyword" class="text-input" placeholder="예: 추석 반전 롤링 용돈박스, 애사비 다이어트 효소, 목디스크 안마기">
-        
-        <!-- Quick Preset Suggestions -->
-        <div class="preset-chips-wrap">
-          <span style="font-size:0.72rem; color:var(--text-muted); line-height:24px;">추천 템플릿:</span>
-          <span class="preset-chip" data-val="추석 반전 롤링 용돈박스">🎁 추석 반전 용돈박스</span>
-          <span class="preset-chip" data-val="명절 기름진 전 컷팅 애사비 효소">🍷 명절 다이어트 애사비</span>
-          <span class="preset-chip" data-val="무선 목 어깨 온열 마사지기">💆 효도 목 안마기</span>
-          <span class="preset-chip" data-val="장거리 운전 무중력 차량용 목베개">🚗 귀성길 차량용 목쿠션</span>
-          <span class="preset-chip" data-val="초보자도 따라하는 AI 목소리 복제 수익화 비법">🎙️ AI 목소리 복제 수익화</span>
-        </div>
+    <!-- 5. 모드 선택 토글 (1회 단일 추첨 vs 5게임 한 번에) -->
+    <div class="mt-4 bg-[#090e18] p-1 rounded-full border border-white/10 flex items-center justify-between relative">
+      <button id="modeSingleBtn" class="flex-1 py-2.5 rounded-full bg-[#ffd000] text-black font-extrabold text-xs transition-all shadow-md text-center">
+        1회 단일 추첨
+      </button>
+      <div class="px-2 text-slate-500 flex items-center">
+        <span class="material-symbols-outlined text-sm">sync</span>
       </div>
-
-      <div class="row-2-col">
-        <div class="form-group">
-          <label class="form-label">타겟 고객층 / 톤앤매너</label>
-          <select id="select-tone" class="select-input">
-            <option value="chuseok">🌕 추석 명절 / 부모님 효도 & 반전</option>
-            <option value="viral">🔥 자극적 후킹 & 도파민 폭발 (조회수 떡상형)</option>
-            <option value="story">😢 감동 스토리 & 일상 공감형</option>
-            <option value="pro">💼 실용성 & 직장인/1인 사업자 전문형</option>
-            <option value="humor">😂 유머 & B급 꿀잼 반전형</option>
-          </select>
-        </div>
-
-        <div class="form-group">
-          <label class="form-label">인포크링크 구매 유도 (CTA)</label>
-          <select id="select-cta" class="select-input">
-            <option value="profile">📌 "프로필 링크에서 추석 한정 할인가로 확인!"</option>
-            <option value="comment">💬 "고정 댓글 링크 클릭 시 즉시 구매 가능!"</option>
-            <option value="dm">✉️ "댓글에 '추석' 남기시면 구매 링크 DM 발송!"</option>
-          </select>
-        </div>
-      </div>
-
-      <button id="btn-generate-all" class="btn-generate-glow">
-        <i data-lucide="zap"></i>
-        <span>원클릭 만능 콘텐츠 자동 생성하기</span>
+      <button id="modeMultiBtn" class="flex-1 py-2.5 rounded-full text-slate-400 font-bold text-xs hover:text-white transition-all text-center">
+        5게임 한 번에 (5세트)
       </button>
     </div>
 
-    <!-- Output Display Area -->
-    <div id="results-container" class="results-wrapper" style="display: none;">
-      
-      <!-- Box 1: Core Script (Shorts / Long-form / Threads / Prompt) -->
-      <div class="result-card">
-        <div class="result-card-header">
-          <div class="result-card-title">
-            <i data-lucide="clapperboard" style="color:var(--accent-purple);"></i>
-            <span id="res-box1-title">🎬 30초 쇼핑 숏츠 연출 & 완벽 대본</span>
-          </div>
-          <div class="card-actions-row">
-            <button id="btn-speak-script" class="btn-action-sm" title="AI 음성 미리듣기"><i data-lucide="volume-2"></i> 음성듣기</button>
-            <button id="btn-copy-script" class="btn-action-sm" title="대본 복사"><i data-lucide="copy"></i> 복사</button>
-          </div>
-        </div>
-        <div id="res-box1-content">
-          <!-- Timeline or text injected via JS -->
-        </div>
-      </div>
+    <!-- 6. 메인 추첨 시작 버튼 (START) -->
+    <button id="startDrawBtn" class="mt-3 w-full py-3.5 bg-[#ffd000] hover:bg-[#ffdc2e] active:scale-[0.98] text-black font-black text-lg rounded-full flex items-center justify-center gap-2 shadow-[0_8px_20px_rgba(255,208,0,0.35)] transition-all">
+      <span class="material-symbols-outlined text-2xl fill-1">play_arrow</span>
+      <span id="startBtnText">1회 추첨 시작</span>
+    </button>
 
-      <!-- Box 2: Social Viral Copy (Title, Hashtags, Threads Feed, Pinned Comment) -->
-      <div class="result-card">
-        <div class="result-card-header">
-          <div class="result-card-title">
-            <i data-lucide="hash" style="color:var(--accent-pink);"></i>
-            <span>🧵 스레드 떡상 피드 & 유튜브 제목/해시태그/고정댓글</span>
-          </div>
-          <div class="card-actions-row">
-            <button id="btn-copy-social" class="btn-action-sm"><i data-lucide="copy"></i> 복사</button>
-          </div>
-        </div>
-        <div class="pre-text-box" id="res-social-content"></div>
+    <!-- 7. 번호대 범례 (Legend) -->
+    <div class="mt-3 flex items-center justify-center gap-3 text-[11px] font-semibold text-slate-300">
+      <div class="flex items-center gap-1">
+        <span class="w-3 h-3 rounded-full bg-[#f59e0b] inline-block shadow-sm"></span>
+        <span>1~10</span>
       </div>
-
-      <!-- Box 3: Inpock Link Landing Copy -->
-      <div class="result-card">
-        <div class="result-card-header">
-          <div class="result-card-title">
-            <i data-lucide="shopping-cart" style="color:var(--accent-gold);"></i>
-            <span>🛍️ 인포크링크 즉시 등록용 상세페이지 카피 & 가격 가이드</span>
-          </div>
-          <div class="card-actions-row">
-            <button id="btn-copy-inpock" class="btn-action-sm"><i data-lucide="copy"></i> 복사</button>
-          </div>
-        </div>
-        <div class="pre-text-box" id="res-inpock-content"></div>
+      <div class="flex items-center gap-1">
+        <span class="w-3 h-3 rounded-full bg-[#2563eb] inline-block shadow-sm"></span>
+        <span>11~20</span>
       </div>
-
-      <!-- Box 4: AI Image / Video Generation Prompt (Midjourney / Sora / Kling) -->
-      <div class="result-card">
-        <div class="result-card-header">
-          <div class="result-card-title">
-            <i data-lucide="sparkle" style="color:var(--accent-blue);"></i>
-            <span>🎨 AI 이미지 & 숏폼 비디오 생성용 영어 프롬프트</span>
-          </div>
-          <div class="card-actions-row">
-            <button id="btn-copy-prompt" class="btn-action-sm"><i data-lucide="copy"></i> 복사</button>
-          </div>
-        </div>
-        <div class="pre-text-box" id="res-prompt-content" style="font-family:'Consolas', monospace; color:#93c5fd;"></div>
+      <div class="flex items-center gap-1">
+        <span class="w-3 h-3 rounded-full bg-[#ef4444] inline-block shadow-sm"></span>
+        <span>21~30</span>
       </div>
-
+      <div class="flex items-center gap-1">
+        <span class="w-3 h-3 rounded-full bg-[#475569] inline-block shadow-sm"></span>
+        <span>31~40</span>
+      </div>
+      <div class="flex items-center gap-1">
+        <span class="w-3 h-3 rounded-full bg-[#10b981] inline-block shadow-sm"></span>
+        <span>41~45</span>
+      </div>
     </div>
 
-    <!-- Toast Notification -->
-    <div id="toast-box" class="toast-box"></div>
+    <!-- 8. 이번 회차 추첨 결과 카드 -->
+    <div class="mt-3.5 bg-[#101728] border border-white/10 rounded-2xl p-4 shadow-xl">
+      <div class="flex items-center justify-between mb-3">
+        <div class="flex items-center gap-1.5 text-xs font-bold text-slate-300">
+          <span class="text-[#ffd000]">✪</span>
+          <span>이번 회차 추첨 결과</span>
+          <span class="text-[#ffd000]">✪</span>
+        </div>
+        <span id="badgeMode" class="bg-[#f59e0b]/20 border border-[#f59e0b]/30 text-[#ffd000] text-[10px] font-extrabold px-2 py-0.5 rounded-full">
+          단일 1게임
+        </span>
+      </div>
+
+      <!-- 단일 게임 6구 결과 트레이 -->
+      <div id="singleResultRow" class="grid grid-cols-6 gap-2">
+        <div class="result-slot aspect-square rounded-full border border-dashed border-slate-600 bg-black/30 flex items-center justify-center text-slate-600 font-bold text-xs" data-slot="1">1</div>
+        <div class="result-slot aspect-square rounded-full border border-dashed border-slate-600 bg-black/30 flex items-center justify-center text-slate-600 font-bold text-xs" data-slot="2">2</div>
+        <div class="result-slot aspect-square rounded-full border border-dashed border-slate-600 bg-black/30 flex items-center justify-center text-slate-600 font-bold text-xs" data-slot="3">3</div>
+        <div class="result-slot aspect-square rounded-full border border-dashed border-slate-600 bg-black/30 flex items-center justify-center text-slate-600 font-bold text-xs" data-slot="4">4</div>
+        <div class="result-slot aspect-square rounded-full border border-dashed border-slate-600 bg-black/30 flex items-center justify-center text-slate-600 font-bold text-xs" data-slot="5">5</div>
+        <div class="result-slot aspect-square rounded-full border border-dashed border-slate-600 bg-black/30 flex items-center justify-center text-slate-600 font-bold text-xs" data-slot="6">6</div>
+      </div>
+
+      <!-- 멀티 5게임 세트 결과 (5세트 모드 시 활성화) -->
+      <div id="multiResultRows" class="hidden flex-col gap-2 mt-2 pt-2 border-t border-white/5">
+        <!-- 5세트 리스트 동적 삽입 -->
+      </div>
+    </div>
 
   </div>
 
-  <script>
-    // ==========================================================================
-    // 만능 AI 생성기 로직 엔진 (Creator Studio Engine)
-    // ==========================================================================
-    let currentMode = 'shopping_shorts';
+  <!-- 9. 하단 내비게이션 바 -->
+  <nav class="bottom-nav">
+    <div class="nav-item active">
+      <div class="nav-active-box">
+        <span class="material-symbols-outlined text-xl">casino</span>
+      </div>
+      <span>추첨</span>
+    </div>
 
-    const ModeConfig = {
-      shopping_shorts: { title: '쇼핑 숏츠 (30초) 생성 설정', label: '판매할 상품명 / 꿀템 키워드' },
-      general_shorts: { title: '일반 바이럴 숏폼 (30~60초) 생성 설정', label: '숏폼 주제 / 썰 / 꿀팁 키워드' },
-      long_form: { title: '유튜브 롱폼 (5~10분 기획 및 대본) 설정', label: '유튜브 본편 영상 주제 / 기획 방향' },
-      threads_post: { title: '스레드(Threads) & 인스타 릴스 캡션 설정', label: '스레드에 올릴 썰 / 정보 / 상품 주제' },
-      inpock_copy: { title: '인포크링크 상세페이지 등록 카피 설정', label: '인포크링크에 등록할 상품/디지털 파일명' },
-      ai_prompt: { title: 'AI 이미지 & 영상 생성 프롬프트 설정', label: '생성하고 싶은 비주얼 컨셉 / 씬 설명' }
+    <div class="nav-item">
+      <span class="material-symbols-outlined text-2xl">format_list_bulleted</span>
+      <span>당첨 결과</span>
+    </div>
+
+    <div class="nav-item">
+      <span class="material-symbols-outlined text-2xl">confirmation_number</span>
+      <span>내 복권</span>
+    </div>
+
+    <div class="nav-item">
+      <span class="material-symbols-outlined text-2xl">person</span>
+      <span>내 정보</span>
+    </div>
+  </nav>
+
+  <script>
+    // ----------------------------------------------------
+    // 1. Web Audio 사운드 합성기
+    // ----------------------------------------------------
+    let audioCtx = null;
+    function getAudioContext() {
+      if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      if (audioCtx.state === 'suspended') audioCtx.resume();
+      return audioCtx;
+    }
+
+    function playSound(type) {
+      try {
+        const ctx = getAudioContext();
+        const now = ctx.currentTime;
+        if (type === 'pop') {
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(540, now);
+          osc.frequency.exponentialRampToValueAtTime(900, now + 0.1);
+          gain.gain.setValueAtTime(0.2, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.12);
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start(now);
+          osc.stop(now + 0.12);
+        } else if (type === 'fanfare') {
+          [523.25, 659.25, 783.99, 1046.50].forEach((freq, i) => {
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.type = 'triangle';
+            osc.frequency.setValueAtTime(freq, now + i * 0.08);
+            gain.gain.setValueAtTime(0.18, now + i * 0.08);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.08 + 0.35);
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            osc.start(now + i * 0.08);
+            osc.stop(now + i * 0.08 + 0.35);
+          });
+        }
+      } catch (e) {}
+    }
+
+    // ----------------------------------------------------
+    // 2. 번호대별 색상 스키마
+    // ----------------------------------------------------
+    const BALL_COLORS = {
+      yellow: { top: '#fef08a', main: '#f59e0b', bottom: '#b45309', text: '#78350f' },
+      blue:   { top: '#93c5fd', main: '#2563eb', bottom: '#1e3a8a', text: '#1e3a8a' },
+      red:    { top: '#fca5a5', main: '#ef4444', bottom: '#991b1b', text: '#991b1b' },
+      grey:   { top: '#cbd5e1', main: '#475569', bottom: '#0f172a', text: '#0f172a' },
+      green:  { top: '#86efac', main: '#10b981', bottom: '#064e3b', text: '#064e3b' }
     };
 
-    document.addEventListener('DOMContentLoaded', () => {
-      lucide.createIcons();
+    function getBallTheme(num) {
+      if (num <= 10) return BALL_COLORS.yellow;
+      if (num <= 20) return BALL_COLORS.blue;
+      if (num <= 30) return BALL_COLORS.red;
+      if (num <= 40) return BALL_COLORS.grey;
+      return BALL_COLORS.green;
+    }
 
-      // Tab Switching
-      const tabBtns = document.querySelectorAll('.tab-btn');
-      tabBtns.forEach(btn => {
-        btn.addEventListener('click', () => {
-          tabBtns.forEach(b => b.classList.remove('active'));
-          btn.classList.add('active');
-          currentMode = btn.dataset.mode;
-          
-          document.getElementById('form-mode-title').textContent = ModeConfig[currentMode].title;
-          document.getElementById('input-keyword-label').textContent = ModeConfig[currentMode].label;
-          lucide.createIcons();
-        });
+    // ----------------------------------------------------
+    // 3. 2D 캔버스 기반 45개 3D 볼 물리 엔진
+    // ----------------------------------------------------
+    const canvas = document.getElementById('globeCanvas');
+    const ctx = canvas.getContext('2d');
+    let size = 290;
+    let dpr = window.devicePixelRatio || 1;
+    let radius = size / 2;
+    let balls = [];
+    const TOTAL_BALLS = 45;
+    let ballRadius = 13.5;
+    let isExtracting = false;
+    let extractedBalls = [];
+    let extractTimer = null;
+    let isMultiMode = false;
+
+    function resizeCanvas() {
+      const rect = canvas.parentElement.getBoundingClientRect();
+      size = Math.floor(rect.width) || 290;
+      dpr = window.devicePixelRatio || 1;
+
+      canvas.width = size * dpr;
+      canvas.height = size * dpr;
+      canvas.style.width = size + 'px';
+      canvas.style.height = size + 'px';
+
+      ctx.scale(dpr, dpr);
+      radius = size / 2;
+      ballRadius = Math.max(10, size * 0.048);
+
+      balls.forEach(b => {
+        b.radius = ballRadius;
       });
+    }
 
-      // Presets
-      document.querySelectorAll('.preset-chip').forEach(chip => {
-        chip.addEventListener('click', () => {
-          document.getElementById('input-keyword').value = chip.dataset.val;
-          showToast(`선택: ${chip.dataset.val}`);
-        });
-      });
+    class LottoBall {
+      constructor(num, x, y) {
+        this.num = num;
+        this.theme = getBallTheme(num);
+        this.x = x;
+        this.y = y;
+        this.vx = (Math.random() - 0.5) * 1.5;
+        this.vy = Math.random() * 1.5;
+        this.radius = ballRadius;
+        this.mass = 1;
+        this.isExtracted = false;
+      }
 
-      // Generate Button
-      document.getElementById('btn-generate-all').addEventListener('click', () => {
-        const keyword = document.getElementById('input-keyword').value.trim();
-        if (!keyword) {
-          showToast('키워드 또는 상품명을 입력해 주세요!');
-          document.getElementById('input-keyword').focus();
-          return;
+      update(dt) {
+        if (this.isExtracted) return;
+
+        if (isExtracting) {
+          // 강한 에어 제트 & 소용돌이
+          const distFromBottom = Math.hypot(this.x - radius, this.y - (size - 15));
+          if (distFromBottom < radius * 0.85) {
+            this.vy -= (40 + Math.random() * 40) * dt;
+            this.vx += (Math.random() - 0.5) * 35 * dt;
+          }
+
+          const dx = this.x - radius;
+          const dy = this.y - radius;
+          this.vx += -dy * 1.6 * dt;
+          this.vy += dx * 1.6 * dt;
+
+          this.vx += (Math.random() - 0.5) * 20 * dt;
+          this.vy += (Math.random() - 0.5) * 18 * dt;
+          this.vy += 15 * dt;
+        } else {
+          // 안정적인 바닥 침강
+          this.vy += 26 * dt;
+          this.vx *= 0.985;
+          this.vy *= 0.985;
         }
 
-        generateAllOutputs(keyword);
+        this.x += this.vx * dt * 30;
+        this.y += this.vy * dt * 30;
+
+        // 원형 구체 경계 충돌
+        const dx = this.x - radius;
+        const dy = this.y - radius;
+        const dist = Math.hypot(dx, dy);
+        const maxDist = radius - this.radius - 2;
+
+        if (dist > maxDist) {
+          const nx = dx / (dist || 1);
+          const ny = dy / (dist || 1);
+
+          this.x = radius + nx * maxDist;
+          this.y = radius + ny * maxDist;
+
+          const dot = this.vx * nx + this.vy * ny;
+          if (dot > 0) {
+            const vnX = dot * nx;
+            const vnY = dot * ny;
+            const vtX = this.vx - vnX;
+            const vtY = this.vy - vnY;
+
+            const restitution = isExtracting ? 0.9 : 0.65;
+            this.vx = vtX * 0.95 - vnX * restitution;
+            this.vy = vtY * 0.95 - vnY * restitution;
+          }
+        }
+      }
+
+      draw(ctx) {
+        if (this.isExtracted) return;
+
+        ctx.save();
+        ctx.translate(this.x, this.y);
+
+        // 1. 드롭 섀도우
+        ctx.beginPath();
+        ctx.arc(1, 2, this.radius, 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.45)';
+        ctx.fill();
+
+        // 2. 3D 구체 그라데이션 본체
+        const sphereGrad = ctx.createRadialGradient(
+          -this.radius * 0.35, -this.radius * 0.35, this.radius * 0.1,
+          0, 0, this.radius
+        );
+        sphereGrad.addColorStop(0, this.theme.top);
+        sphereGrad.addColorStop(0.5, this.theme.main);
+        sphereGrad.addColorStop(1, this.theme.bottom);
+
+        ctx.beginPath();
+        ctx.arc(0, 0, this.radius, 0, Math.PI * 2);
+        ctx.fillStyle = sphereGrad;
+        ctx.fill();
+
+        // 3. 외곽 림
+        ctx.lineWidth = 0.8;
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.4)';
+        ctx.stroke();
+
+        // 4. 중앙 화이트 넘버 배지 (레퍼런스와 100% 동일)
+        const badgeRadius = this.radius * 0.58;
+        ctx.beginPath();
+        ctx.arc(0, 0, badgeRadius, 0, Math.PI * 2);
+        ctx.fillStyle = '#ffffff';
+        ctx.fill();
+        ctx.lineWidth = 0.5;
+        ctx.strokeStyle = '#cbd5e1';
+        ctx.stroke();
+
+        // 5. 번호 텍스트
+        ctx.fillStyle = '#0f172a';
+        ctx.font = `900 ${Math.round(this.radius * 0.72)}px Montserrat, sans-serif`;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(this.num, 0, 0.8);
+
+        // 6. 하이라이트 글레어
+        const glareRadius = this.radius * 0.35;
+        const glareGrad = ctx.createRadialGradient(
+          -this.radius * 0.35, -this.radius * 0.35, 0.5,
+          -this.radius * 0.35, -this.radius * 0.35, glareRadius
+        );
+        glareGrad.addColorStop(0, 'rgba(255, 255, 255, 0.9)');
+        glareGrad.addColorStop(1, 'rgba(255, 255, 255, 0)');
+
+        ctx.beginPath();
+        ctx.arc(-this.radius * 0.35, -this.radius * 0.35, glareRadius, 0, Math.PI * 2);
+        ctx.fillStyle = glareGrad;
+        ctx.fill();
+
+        ctx.restore();
+      }
+    }
+
+    function resolveCollisions() {
+      for (let i = 0; i < balls.length; i++) {
+        const b1 = balls[i];
+        if (b1.isExtracted) continue;
+
+        for (let j = i + 1; j < balls.length; j++) {
+          const b2 = balls[j];
+          if (b2.isExtracted) continue;
+
+          const dx = b2.x - b1.x;
+          const dy = b2.y - b1.y;
+          const dist = Math.hypot(dx, dy);
+          const minDist = b1.radius + b2.radius;
+
+          if (dist < minDist && dist > 0) {
+            const nx = dx / dist;
+            const ny = dy / dist;
+            const overlap = (minDist - dist) * 0.5;
+            b1.x -= nx * overlap;
+            b1.y -= ny * overlap;
+            b2.x += nx * overlap;
+            b2.y += ny * overlap;
+
+            const kx = b1.vx - b2.vx;
+            const ky = b1.vy - b2.vy;
+            const p = 2 * (nx * kx + ny * ky) / (b1.mass + b2.mass);
+
+            if (p > 0) {
+              const elasticity = isExtracting ? 0.9 : 0.75;
+              b1.vx -= p * b2.mass * nx * elasticity;
+              b1.vy -= p * b2.mass * ny * elasticity;
+              b2.vx += p * b1.mass * nx * elasticity;
+              b2.vy += p * b1.mass * ny * elasticity;
+            }
+          }
+        }
+      }
+    }
+
+    function initBalls() {
+      balls = [];
+      const chamberRadius = radius - ballRadius - 4;
+
+      for (let i = 1; i <= TOTAL_BALLS; i++) {
+        let placed = false;
+        let attempts = 0;
+        let x = radius, y = radius;
+
+        while (!placed && attempts < 200) {
+          attempts++;
+          const angle = Math.PI * 0.2 + Math.random() * Math.PI * 0.6;
+          const r = Math.sqrt(Math.random()) * (chamberRadius - 4);
+          const candidateX = radius + Math.cos(angle) * r;
+          const candidateY = radius + Math.sin(angle) * r + 10;
+
+          if (Math.hypot(candidateX - radius, candidateY - radius) <= chamberRadius) {
+            let overlapping = false;
+            for (const b of balls) {
+              if (Math.hypot(candidateX - b.x, candidateY - b.y) < ballRadius * 1.8) {
+                overlapping = true;
+                break;
+              }
+            }
+            if (!overlapping || attempts > 150) {
+              x = candidateX;
+              y = Math.min(candidateY, size - ballRadius - 6);
+              placed = true;
+            }
+          }
+        }
+
+        const ball = new LottoBall(i, x, y);
+        balls.push(ball);
+      }
+    }
+
+    let lastFrameTime = performance.now();
+    function animate(currentTime) {
+      const delta = Math.min((currentTime - lastFrameTime) / 1000, 0.05);
+      lastFrameTime = currentTime;
+
+      ctx.clearRect(0, 0, size, size);
+
+      balls.forEach(b => b.update(delta));
+      resolveCollisions();
+      balls.forEach(b => b.draw(ctx));
+
+      requestAnimationFrame(animate);
+    }
+
+    // ----------------------------------------------------
+    // 4. 추첨 및 UI 제어 로직
+    // ----------------------------------------------------
+    const startDrawBtn = document.getElementById('startDrawBtn');
+    const startBtnText = document.getElementById('startBtnText');
+    const modeSingleBtn = document.getElementById('modeSingleBtn');
+    const modeMultiBtn = document.getElementById('modeMultiBtn');
+    const badgeMode = document.getElementById('badgeMode');
+    const singleResultRow = document.getElementById('singleResultRow');
+    const multiResultRows = document.getElementById('multiResultRows');
+
+    // 모드 토글
+    modeSingleBtn.addEventListener('click', () => {
+      if (isExtracting) return;
+      isMultiMode = false;
+      modeSingleBtn.className = 'flex-1 py-2.5 rounded-full bg-[#ffd000] text-black font-extrabold text-xs transition-all shadow-md text-center';
+      modeMultiBtn.className = 'flex-1 py-2.5 rounded-full text-slate-400 font-bold text-xs hover:text-white transition-all text-center';
+      startBtnText.textContent = '1회 추첨 시작';
+      badgeMode.textContent = '단일 1게임';
+      multiResultRows.classList.add('hidden');
+      singleResultRow.classList.remove('hidden');
+    });
+
+    modeMultiBtn.addEventListener('click', () => {
+      if (isExtracting) return;
+      isMultiMode = true;
+      modeMultiBtn.className = 'flex-1 py-2.5 rounded-full bg-[#ffd000] text-black font-extrabold text-xs transition-all shadow-md text-center';
+      modeSingleBtn.className = 'flex-1 py-2.5 rounded-full text-slate-400 font-bold text-xs hover:text-white transition-all text-center';
+      startBtnText.textContent = '5게임 한 번에 추첨 시작';
+      badgeMode.textContent = '5게임 세트';
+      multiResultRows.classList.remove('hidden');
+    });
+
+    function createResultBallElement(ball) {
+      const el = document.createElement('div');
+      el.className = 'drawn-ball';
+      el.style.background = `radial-gradient(circle at 35% 28%, ${ball.theme.top} 0%, ${ball.theme.main} 50%, ${ball.theme.bottom} 100%)`;
+
+      const inner = document.createElement('div');
+      inner.className = 'drawn-ball-inner';
+      inner.style.color = ball.theme.text;
+      inner.textContent = ball.num;
+
+      el.appendChild(inner);
+      return el;
+    }
+
+    function extractSingleBall() {
+      if (extractedBalls.length >= 6) {
+        finishDraw();
+        return;
+      }
+
+      const available = balls.filter(b => !b.isExtracted);
+      if (available.length === 0) return;
+
+      const pick = available[Math.floor(Math.random() * available.length)];
+      pick.isExtracted = true;
+      extractedBalls.push(pick);
+
+      playSound('pop');
+
+      const slot = singleResultRow.querySelector(`[data-slot="${extractedBalls.length}"]`);
+      if (slot) {
+        slot.innerHTML = '';
+        slot.className = 'result-slot aspect-square rounded-full flex items-center justify-center';
+        slot.appendChild(createResultBallElement(pick));
+      }
+
+      if (extractedBalls.length >= 6) {
+        finishDraw();
+      }
+    }
+
+    function generate5Sets() {
+      multiResultRows.innerHTML = '';
+      const labels = ['A', 'B', 'C', 'D', 'E'];
+      for (let i = 0; i < 5; i++) {
+        const nums = [];
+        while (nums.length < 6) {
+          const r = Math.floor(Math.random() * 45) + 1;
+          if (!nums.includes(r)) nums.push(r);
+        }
+        nums.sort((a, b) => a - b);
+
+        const row = document.createElement('div');
+        row.className = 'flex items-center justify-between bg-black/40 px-3 py-1.5 rounded-xl border border-white/5';
+        row.innerHTML = `
+          <span class="font-black text-[#ffd000] w-5 text-xs">${labels[i]}</span>
+          <div class="flex items-center gap-1.5">
+            ${nums.map(n => {
+              const th = getBallTheme(n);
+              return `<span class="w-6 h-6 rounded-full font-black flex items-center justify-center text-[10px] shadow-sm text-black" style="background:${th.main}">${String(n).padStart(2, '0')}</span>`;
+            }).join('')}
+          </div>
+        `;
+        multiResultRows.appendChild(row);
+      }
+    }
+
+    function startExtraction() {
+      isExtracting = true;
+      startBtnText.textContent = '추첨 진행 중...';
+      startDrawBtn.classList.add('opacity-80');
+
+      balls.forEach(b => {
+        if (!b.isExtracted) {
+          b.vy = -(Math.random() * 35 + 25);
+          b.vx = (Math.random() - 0.5) * 40;
+        }
       });
 
-      // Copy Buttons
-      document.getElementById('btn-copy-script').addEventListener('click', () => {
-        const text = extractScriptText();
-        copyToClipboard(text);
-        showToast('대본이 복사되었습니다! 📋');
-      });
+      if (isMultiMode) {
+        generate5Sets();
+      }
 
-      document.getElementById('btn-copy-social').addEventListener('click', () => {
-        copyToClipboard(document.getElementById('res-social-content').textContent);
-        showToast('스레드 & 제목 태그가 복사되었습니다! 📋');
-      });
+      clearInterval(extractTimer);
+      extractTimer = setInterval(() => {
+        extractSingleBall();
+      }, 700);
+    }
 
-      document.getElementById('btn-copy-inpock').addEventListener('click', () => {
-        copyToClipboard(document.getElementById('res-inpock-content').textContent);
-        showToast('인포크링크 상세페이지 카피가 복사되었습니다! 🛍️');
-      });
+    function finishDraw() {
+      isExtracting = false;
+      clearInterval(extractTimer);
+      playSound('fanfare');
+      if (window.confetti) {
+        confetti({ particleCount: 90, spread: 65, origin: { y: 0.6 } });
+      }
 
-      document.getElementById('btn-copy-prompt').addEventListener('click', () => {
-        copyToClipboard(document.getElementById('res-prompt-content').textContent);
-        showToast('AI 프롬프트가 복사되었습니다! 🎨');
-      });
+      startBtnText.textContent = '다시 추첨하기';
+      startDrawBtn.classList.remove('opacity-80');
+    }
 
-      // Web Speech API Voice Reader
-      document.getElementById('btn-speak-script').addEventListener('click', () => {
-        const text = extractNarrationOnly();
-        if ('speechSynthesis' in window) {
-          window.speechSynthesis.cancel();
-          const ut = new SpeechSynthesisUtterance(text);
-          ut.lang = 'ko-KR';
-          ut.rate = 1.05;
-          window.speechSynthesis.speak(ut);
-          showToast('AI 음성으로 대본을 읽어드립니다. 🎙️');
-        } else {
-          showToast('브라우저가 음성 읽기를 지원하지 않습니다.');
+    function resetAndDraw() {
+      extractedBalls = [];
+      for (let i = 1; i <= 6; i++) {
+        const slot = singleResultRow.querySelector(`[data-slot="${i}"]`);
+        if (slot) {
+          slot.className = 'result-slot aspect-square rounded-full border border-dashed border-slate-600 bg-black/30 flex items-center justify-center text-slate-600 font-bold text-xs';
+          slot.textContent = i;
+        }
+      }
+      initBalls();
+      startExtraction();
+    }
+
+    startDrawBtn.addEventListener('click', () => {
+      if (isExtracting) return;
+      if (extractedBalls.length >= 6) {
+        resetAndDraw();
+      } else {
+        startExtraction();
+      }
+    });
+
+    // 캔버스 터치 시 튀기기
+    canvas.addEventListener('click', () => {
+      playSound('pop');
+      balls.forEach(b => {
+        if (!b.isExtracted) {
+          b.vx += (Math.random() - 0.5) * 25;
+          b.vy -= (Math.random() * 20 + 10);
         }
       });
     });
 
-    // ==========================================================================
-    // All-In-One Generator Engine
-    // ==========================================================================
-    function generateAllOutputs(keyword) {
-      const tone = document.getElementById('select-tone').value;
-      const cta = document.getElementById('select-cta').value;
+    // 카운트다운 타이머 시뮬레이션
+    let countdownSec = 24;
+    const countdownEl = document.getElementById('countdownTimer');
+    setInterval(() => {
+      countdownSec--;
+      if (countdownSec < 0) countdownSec = 60;
+      countdownEl.textContent = `00:${String(countdownSec).padStart(2, '0')}`;
+    }, 1000);
 
-      document.getElementById('results-container').style.display = 'flex';
-      document.getElementById('results-container').scrollIntoView({ behavior: 'smooth' });
-
-      // 1. Script Generation (Timeline)
-      renderTimelineScript(keyword, tone, cta);
-
-      // 2. Threads & YouTube Metadata
-      renderSocialContent(keyword, tone, cta);
-
-      // 3. Inpock Link Product Copy
-      renderInpockContent(keyword, tone);
-
-      // 4. AI Prompts
-      renderAiPrompts(keyword);
-
-      showToast('⚡ 모든 포맷의 콘텐츠가 완벽하게 생성되었습니다!');
-    }
-
-    function renderTimelineScript(keyword, tone, cta) {
-      const box = document.getElementById('res-box1-content');
-      box.innerHTML = '';
-
-      let items = [];
-      if (currentMode === 'shopping_shorts' || currentMode === 'general_shorts') {
-        items = [
-          {
-            time: '⏱️ [00:00 - 00:03] 3초 시선강탈 후킹',
-            scene: '👀 화면 클로즈업: 충격받은 표정 또는 제품을 작동시키는 결정적 순간 줌인',
-            narration: `올해 추석 부모님께 '${keyword}' 선물해드렸더니... 집안 분위기 완전히 뒤집어졌습니다.`
-          },
-          {
-            time: '⏱️ [00:03 - 00:12] 공감 유발 & 문제 제기',
-            scene: '💔 매번 뻔한 과일세트나 흰 봉투 드리고 어색했던 명절 기억 오버랩',
-            narration: `매년 뻔한 참치캔이나 밋밋한 흰 봉투 드리고 눈치 보셨죠? 이번엔 진짜 차원이 다릅니다.`
-          },
-          {
-            time: '⏱️ [00:12 - 00:22] 반전 카타르시스 & 실제 시연',
-            scene: '✨ 실제 제품 작동 장면: 돈이 줄줄 뽑혀 나오거나 시원하게 마사지되는 쾌감 클로즈업',
-            narration: `상자 열자마자 돈이 끝없이 뽑혀 나오는데, 엄마 아빠가 이렇게 소리 지르며 웃으시는 거 10년 만에 처음 봤습니다!`
-          },
-          {
-            time: '⏱️ [00:22 - 00:30] 인포크링크 구매 유도 (CTA)',
-            scene: '👉 스마트폰 프로필 화면을 가리키는 손동작 + 한정수량 자막 강조',
-            narration: `추석 연휴 전에 배송 마감된다고 하니까, 프로필 링크 누르고 품절 전에 꼭 챙겨두세요!`
-          }
-        ];
-      } else if (currentMode === 'long_form') {
-        items = [
-          { time: '📌 [오프닝 00:00-01:00]', scene: '🎯 핵심 주제 및 결론 3초 요약', narration: `여러분, 오늘은 '${keyword}'을 활용해서 이번 연휴에 완벽하게 성과를 내는 3단계 핵심 비법을 공개합니다.` },
-          { time: '💡 [본론 1 01:00-03:30]', scene: '📊 실제 시장 분석 데이터 및 팩트 체크', narration: `첫 번째로 왜 일반적인 방식은 실패하고, 이 방법만이 폭발적인 반응을 얻는지 원리를 짚어드립니다.` },
-          { time: '🔥 [본론 2 03:30-07:00]', scene: '💻 화면 시연: 실전 적용 A to Z 완벽 가이드', narration: `자, 제가 화면을 보면서 그대로 따라 하실 수 있게 하나씩 보여드릴 테니 일시정지 누르고 따라오세요.` },
-          { time: '🎁 [엔딩 07:00-08:30]', scene: '🚀 요약 정리 및 프로필 인포크링크 혜택 안내', narration: `오늘 사용한 템플릿과 세부 자료는 더보기란과 고정댓글 링크에서 무료로 받아가실 수 있습니다!` }
-        ];
-      } else {
-        items = [
-          { time: '📝 [핵심 요약]', scene: '🔥 스레드 및 바이럴에 최적화된 핵심 본문', narration: `'${keyword}'에 대해 사람들이 모르는 충격적인 사실 3가지... 타래(댓글)에 계속됩니다 👇` }
-        ];
-      }
-
-      const timelineWrap = document.createElement('div');
-      timelineWrap.className = 'script-timeline-box';
-
-      items.forEach(item => {
-        const div = document.createElement('div');
-        div.className = 'timeline-item';
-        div.innerHTML = `
-          <span class="t-time-tag">${item.time}</span>
-          <span class="t-scene">${item.scene}</span>
-          <p class="t-narration">${item.narration}</p>
-        `;
-        timelineWrap.appendChild(div);
-      });
-
-      box.appendChild(timelineWrap);
-    }
-
-    function renderSocialContent(keyword, tone, cta) {
-      const el = document.getElementById('res-social-content');
-      let out = '';
-
-      out += `🧵 [스레드(Threads) / 인스타그램 릴스 떡상 본문]\n`;
-      out += `────────────────────────────────────\n`;
-      out += `올해 추석 선물로 '${keyword}' 골랐는데 반응 실화냐... ㄷㄷ\n\n`;
-      out += `매년 뻔한 선물세트 사가면 영혼 없는 "고맙다" 소리만 듣다가\n`;
-      out += `이번에 이거 들고 갔더니 부모님이 찐으로 오열하심 ㅋㅋㅋ\n\n`;
-      out += `1. 가성비 미쳤는데 감동은 100배\n`;
-      out += `2. 친척들 다 몰려와서 어디서 샀냐고 난리남\n`;
-      out += `3. 품절 대란이라 지금 안 사면 추석 전 배송 불가능\n\n`;
-      out += `📌 구매처 물어보시는 분들이 많아서 프로필 링크(인포크링크)에 최저가 좌표 남겨뒀습니다! 👇\n\n`;
-      out += `────────────────────────────────────\n`;
-      out += `🏷️ [유튜브 쇼츠 추천 제목 3종]\n`;
-      out += `1) 추석에 부모님께 '${keyword}' 드렸더니 벌어진 대참사 ㅋㅋㅋ\n`;
-      out += `2) 솔직히 이번 추석 선물 1등은 무조건 이겁니다.\n`;
-      out += `3) 용돈 10만원으로 100만원 감동 주는 추석 치트키 아이템\n\n`;
-      out += `🔍 [알고리즘 추천 해시태그]\n`;
-      out += `#추석선물 #부모님선물 #${keyword.replace(/ /g, '')} #명절선물추천 #인포크링크 #쇼핑쇼츠 #꿀템추천\n\n`;
-      out += `📌 [유튜브 고정 댓글 템플릿]\n`;
-      out += `영상 속 제품 구매 좌표(인포크링크) 👉 프로필 상단 링크를 클릭하시면 추석 특별 할인가로 구매 가능합니다! 🎁`;
-
-      el.textContent = out;
-    }
-
-    function renderInpockContent(keyword, tone) {
-      const el = document.getElementById('res-inpock-content');
-      let out = '';
-
-      out += `🛍️ [인포크링크(Inpock Link) 상품 등록용 상세페이지]\n`;
-      out += `────────────────────────────────────\n`;
-      out += `【상품명】 [추석특가] ${keyword} (한정수량 당일출고)\n`;
-      out += `【추천 판매가】 정가 49,000원 ➜ 특별 할인가 29,800원 (40% OFF)\n\n`;
-      out += `【한 줄 후킹 문구】\n`;
-      out += `"부모님 감동 200% 보장! 이번 추석 가장 센스 있는 선물의 정답"\n\n`;
-      out += `【핵심 특장점 3가지】\n`;
-      out += `✅ 1. 여는 순간 함성이 터지는 독보적인 비주얼 & 감동 연출\n`;
-      out += `✅ 2. 고급스러운 명절 선물용 패키지 기본 제공으로 포장 고민 끝!\n`;
-      out += `✅ 3. 추석 연휴 전 안전 도착 보장 (오후 2시 이전 주문 시 당일 출고)\n\n`;
-      out += `【구매 안내 및 배송 공지】\n`;
-      out += `명절 물량 폭주로 조기 품절될 수 있으니 서둘러 주문해 주세요! 🚚`;
-
-      el.textContent = out;
-    }
-
-    function renderAiPrompts(keyword) {
-      const el = document.getElementById('res-prompt-content');
-      let out = '';
-
-      out += `// 🎨 Midjourney v6 / DALL-E 3 썸네일 생성용 프롬프트\n`;
-      out += `A cinematic, ultra-realistic close-up shot of Korean parents opening a surprise gift box filled with '${keyword}', joyful and tearful emotional facial expression, warm Chuseok holiday living room background, cozy festive lighting, 8k resolution, photorealistic, cinematic shot, --ar 9:16 --v 6.0\n\n`;
-      out += `// 🎥 Kling / Sora / Runway 숏폼 영상 생성용 프롬프트\n`;
-      out += `Smooth dynamic vertical camera pan, Korean elderly parents happily pulling money rolling out from a surprise gift box on the table, extreme happiness, high definition 60fps, professional lighting.`;
-
-      el.textContent = out;
-    }
-
-    function extractScriptText() {
-      const items = document.querySelectorAll('.timeline-item');
-      let text = '';
-      items.forEach(it => {
-        text += `${it.querySelector('.t-time-tag').textContent}\n`;
-        text += `${it.querySelector('.t-scene').textContent}\n`;
-        text += `${it.querySelector('.t-narration').textContent}\n\n`;
-      });
-      return text;
-    }
-
-    function extractNarrationOnly() {
-      const items = document.querySelectorAll('.t-narration');
-      let text = '';
-      items.forEach(it => {
-        text += it.textContent + ' ';
-      });
-      return text;
-    }
-
-    function copyToClipboard(text) {
-      if (navigator.clipboard) navigator.clipboard.writeText(text);
-      else {
-        const ta = document.createElement('textarea');
-        ta.value = text;
-        document.body.appendChild(ta);
-        ta.select();
-        document.execCommand('copy');
-        document.body.removeChild(ta);
-      }
-    }
-
-    function showToast(msg) {
-      const box = document.getElementById('toast-box');
-      const t = document.createElement('div');
-      t.className = 'toast-item';
-      t.innerHTML = `<i data-lucide="check-circle" style="color:#ffd700; width:18px; height:18px;"></i> <span>${msg}</span>`;
-      box.appendChild(t);
-      lucide.createIcons();
-
-      setTimeout(() => {
-        t.style.opacity = '0';
-        t.style.transform = 'translateY(-10px)';
-        t.style.transition = 'all 0.25s ease';
-        setTimeout(() => t.remove(), 250);
-      }, 2200);
-    }
+    // 초기화
+    window.addEventListener('load', () => {
+      resizeCanvas();
+      initBalls();
+      requestAnimationFrame(animate);
+    });
+    window.addEventListener('resize', resizeCanvas);
   </script>
 </body>
 </html>
