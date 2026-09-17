@@ -294,23 +294,25 @@
       <span class="font-headline-md text-sm text-primary-fixed-dim font-bold tabular-nums drop-shadow-[0_0_8px_rgba(255,215,0,0.4)]" id="countdown">01:44</span>
     </div>
 
-    <!-- AI 운세 추천 Banner Card -->
-    <div id="horoscopeCard" class="w-full max-w-[420px] bg-gradient-to-r from-surface-container/90 via-surface-container-high/90 to-surface-container/90 border border-primary-container/30 rounded-2xl p-3 px-4 shadow-lg backdrop-blur-md flex items-center justify-between gap-3 group cursor-pointer hover:border-primary-container/60 transition-all active:scale-95">
-      <div class="flex items-center gap-2.5">
-        <div class="w-8 h-8 rounded-full bg-primary-container/15 flex items-center justify-center text-primary-container text-base shadow-[0_0_10px_rgba(255,215,0,0.25)]">
-          <span class="material-symbols-outlined text-[18px]">auto_awesome</span>
+    <!-- 행운 보석 & 소지품 픽 Banner Card -->
+    <div id="themeSelectorCard" class="w-full max-w-[420px] bg-gradient-to-r from-surface-container/95 via-surface-container-high/90 to-surface-container/95 border border-primary-container/40 rounded-2xl p-3 px-4 shadow-xl backdrop-blur-md flex items-center justify-between gap-3 group cursor-pointer hover:border-primary-container/80 transition-all active:scale-[0.98]">
+      <div class="flex items-center gap-2.5 min-w-0">
+        <div class="w-10 h-10 rounded-2xl bg-primary-container/20 border border-primary-container/30 flex items-center justify-center text-primary-container text-xl shadow-[0_0_15px_rgba(255,215,0,0.3)] shrink-0" id="themeActiveIcon">
+          💎
         </div>
-        <div class="flex flex-col text-left">
+        <div class="flex flex-col text-left truncate">
           <div class="flex items-center gap-1.5">
-            <span class="text-[11px] font-bold text-primary-container uppercase tracking-wider">AI 운세 추천</span>
-            <span class="text-[10px] px-1.5 py-0.2 rounded-full bg-primary-container/20 text-primary-fixed-dim font-semibold">오늘의 별자리</span>
+            <span class="text-[11px] font-black text-primary-container uppercase tracking-wider">나만의 행운 픽</span>
+            <span class="text-[10px] px-2 py-0.5 rounded-full bg-primary-container/20 text-primary-fixed-dim font-bold border border-primary-container/30" id="themeActiveCategory">기본 보석</span>
           </div>
-          <p class="text-xs text-on-surface font-medium truncate">물병자리 오늘의 행운수: <strong class="text-primary-fixed font-bold">7, 14, 23, 31</strong> ✨</p>
+          <p class="text-xs text-on-surface font-bold truncate" id="themeActiveTitle">
+            💎 다이아몬드 (영원한 부와 승리)
+          </p>
         </div>
       </div>
-      <button class="flex items-center gap-1 text-xs font-bold text-primary-fixed-dim bg-surface-container-highest/80 hover:bg-primary-container hover:text-black py-1.5 px-3 rounded-full transition-colors border border-white/10">
-        <span>보기</span>
-        <span class="material-symbols-outlined text-xs">chevron_right</span>
+      <button class="flex items-center gap-1 text-xs font-bold text-black bg-primary-container hover:bg-primary-fixed-dim py-1.5 px-3 rounded-xl transition-all shadow-md active:scale-95 shrink-0">
+        <span>변경</span>
+        <span class="material-symbols-outlined text-xs">tune</span>
       </button>
     </div>
 
@@ -376,6 +378,20 @@
           <div class="result-slot" data-slot="4"><span class="text-white/25 text-xs sm:text-sm font-bold">4</span></div>
           <div class="result-slot" data-slot="5"><span class="text-white/25 text-xs sm:text-sm font-bold">5</span></div>
           <div class="result-slot" data-slot="6"><span class="text-white/25 text-xs sm:text-sm font-bold">6</span></div>
+        </div>
+
+        <!-- 보석 & 소지품 행운 리딩 리포트 -->
+        <div id="themeReadingBox" class="w-full bg-surface-container/70 border border-primary-container/25 rounded-2xl p-3 px-3.5 flex flex-col gap-1.5 transition-all">
+          <div class="flex items-center justify-between">
+            <span class="flex items-center gap-1.5 text-xs font-black text-primary-container" id="themeReadingTitle">
+              <span class="material-symbols-outlined text-sm">auto_awesome</span>
+              🔮 💎 다이아몬드 & 빅데이터 리딩
+            </span>
+            <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">과학적 통계 최적화</span>
+          </div>
+          <p class="text-xs text-on-surface/90 leading-relaxed font-medium" id="themeReadingDesc">
+            💎 다이아몬드의 불변의 승리 기운과 역대 최다 빈출수(34, 18), 총합 135 황금 구간이 결합되었습니다. [추첨 시작]을 눌러 행운을 확인하세요.
+          </p>
         </div>
 
         <!-- 5게임 자동 완성 전표 Sheet (5게임 모드 활성화 시 표시) -->
@@ -487,25 +503,93 @@
 
   </main>
 
-  <!-- Info / History Modal -->
+  <!-- Gemstone & Pocket Item Theme Modal -->
   <div id="infoModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-md p-4 hidden">
-    <div class="bg-surface-container border border-white/15 rounded-3xl p-5 w-full max-w-md shadow-2xl relative">
-      <button id="closeModalBtn" class="absolute top-4 right-4 text-on-surface-variant hover:text-white p-1 rounded-full">
-        <span class="material-symbols-outlined">close</span>
+    <div class="bg-surface-container border border-white/15 rounded-3xl p-5 w-full max-w-md shadow-2xl relative flex flex-col gap-4">
+      <button id="closeModalBtn" class="absolute top-4 right-4 text-on-surface-variant hover:text-white p-1.5 rounded-full hover:bg-white/10 transition-colors">
+        <span class="material-symbols-outlined text-lg">close</span>
       </button>
-      <h3 class="text-base sm:text-lg font-bold text-primary-fixed-dim mb-3 flex items-center gap-2">
-        <span class="material-symbols-outlined">auto_awesome</span>
-        AI 행운의 별자리 운세
-      </h3>
-      <div class="text-sm text-on-surface/90 space-y-2.5 leading-relaxed">
-        <p>🌟 <strong>오늘의 최고 행운 별자리</strong>: <span class="text-amber-400 font-bold">물병자리 (1.20 ~ 2.18)</span></p>
-        <p>✨ <strong>추천 행운수</strong>: <span class="text-yellow-400 font-bold">7, 14, 23, 31, 38, 42</span></p>
-        <p>🎯 <strong>제 1239회 공식 결과</strong>: 11, 13, 22, 32, 33, 36 (+8)</p>
-        <p>🔮 <strong>조언</strong>: 직관을 믿고 선택한 번호가 큰 행운을 부릅니다!</p>
+
+      <div class="flex items-center gap-2">
+        <span class="material-symbols-outlined text-primary-container text-xl">auto_awesome</span>
+        <h3 class="text-base font-bold text-primary-fixed-dim">나만의 행운 픽 선택</h3>
       </div>
-      <button id="modalConfirmBtn" class="mt-4 w-full py-2.5 bg-primary-container text-[#221b00] font-bold rounded-xl text-sm active:scale-95 transition-transform">
-        확인
-      </button>
+
+      <!-- 상단 모드 전환 탭 (보석 vs 소지품) -->
+      <div class="flex items-center bg-surface-container-lowest p-1 rounded-2xl border border-white/10 w-full shadow-inner">
+        <button id="tabGemBtn" class="flex-1 py-2 px-3 rounded-xl text-xs font-bold transition-all text-black bg-primary-container shadow-sm flex items-center justify-center gap-1.5">
+          <span>💎 행운 보석 (4대 원석)</span>
+        </button>
+        <button id="tabItemBtn" class="flex-1 py-2 px-3 rounded-xl text-xs font-bold transition-all text-on-surface-variant hover:text-white flex items-center justify-center gap-1.5">
+          <span>🎒 오늘의 소지품 (택 1)</span>
+        </button>
+      </div>
+
+      <!-- 1. 보석 선택 패널 (4종 직관 선택) -->
+      <div id="panelGems" class="grid grid-cols-2 gap-2.5">
+        <button class="theme-select-btn flex flex-col items-center gap-1.5 p-3 rounded-2xl bg-surface-container-high/80 hover:bg-surface-bright border border-white/10 hover:border-primary-container/60 transition-all active:scale-95 group text-center" 
+                data-type="gem" data-icon="💎" data-title="다이아몬드" data-sub="영원한 부와 승리" data-reading="💎 다이아몬드의 불변의 승리 기운과 역대 최다 빈출수(34, 18), 총합 135 황금 구간이 결합되었습니다.">
+          <span class="text-2xl group-hover:scale-110 transition-transform">💎</span>
+          <span class="text-xs font-extrabold text-on-surface">다이아몬드</span>
+          <span class="text-[10px] text-amber-300/80 font-medium">영원한 부 & 승리</span>
+        </button>
+
+        <button class="theme-select-btn flex flex-col items-center gap-1.5 p-3 rounded-2xl bg-surface-container-high/80 hover:bg-surface-bright border border-white/10 hover:border-primary-container/60 transition-all active:scale-95 group text-center" 
+                data-type="gem" data-icon="🔴" data-title="루비" data-sub="열정의 강렬한 승부수" data-reading="🔴 루비의 붉은 열정 기운과 20번대 행운 볼, 총합 142 황금 균형이 강력한 1등 에너지를 형성합니다.">
+          <span class="text-2xl group-hover:scale-110 transition-transform">🔴</span>
+          <span class="text-xs font-extrabold text-on-surface">루비 (Ruby)</span>
+          <span class="text-[10px] text-red-300/80 font-medium">강렬한 승부수</span>
+        </button>
+
+        <button class="theme-select-btn flex flex-col items-center gap-1.5 p-3 rounded-2xl bg-surface-container-high/80 hover:bg-surface-bright border border-white/10 hover:border-primary-container/60 transition-all active:scale-95 group text-center" 
+                data-type="gem" data-icon="🔵" data-title="사파이어" data-sub="지혜와 성공의 통찰" data-reading="🔵 사파이어의 냉철한 지혜와 10번대 중심 볼, 홀짝 3:3 황금 균형이 정밀하게 조합되었습니다.">
+          <span class="text-2xl group-hover:scale-110 transition-transform">🔵</span>
+          <span class="text-xs font-extrabold text-on-surface">사파이어</span>
+          <span class="text-[10px] text-sky-300/80 font-medium">지혜 & 명예</span>
+        </button>
+
+        <button class="theme-select-btn flex flex-col items-center gap-1.5 p-3 rounded-2xl bg-surface-container-high/80 hover:bg-surface-bright border border-white/10 hover:border-primary-container/60 transition-all active:scale-95 group text-center" 
+                data-type="gem" data-icon="🟢" data-title="에메랄드" data-sub="치유와 번영의 행운" data-reading="🟢 에메랄드의 풍요와 생명력, 40번대 피날레 행운 볼이 조화롭게 배치된 대길(大吉) 조합입니다.">
+          <span class="text-2xl group-hover:scale-110 transition-transform">🟢</span>
+          <span class="text-xs font-extrabold text-on-surface">에메랄드</span>
+          <span class="text-[10px] text-emerald-300/80 font-medium">풍요 & 번영</span>
+        </button>
+      </div>
+
+      <!-- 2. 소지품 선택 패널 (4종 직관 선택) -->
+      <div id="panelItems" class="grid grid-cols-2 gap-2.5 hidden">
+        <button class="theme-select-btn flex flex-col items-center gap-1.5 p-3 rounded-2xl bg-surface-container-high/80 hover:bg-surface-bright border border-white/10 hover:border-primary-container/60 transition-all active:scale-95 group text-center" 
+                data-type="item" data-icon="🔑" data-title="열쇠 / 차키" data-sub="1등 행운의 문 개방" data-reading="🔑 굳게 닫힌 1등 행운의 문을 여는 열쇠의 기운과 역대 1,160회 통계 82% 집중 구간이 완벽 결합되었습니다.">
+          <span class="text-2xl group-hover:scale-110 transition-transform">🔑</span>
+          <span class="text-xs font-extrabold text-on-surface">열쇠 / 차키</span>
+          <span class="text-[10px] text-amber-300/80 font-medium">행운의 문 열림</span>
+        </button>
+
+        <button class="theme-select-btn flex flex-col items-center gap-1.5 p-3 rounded-2xl bg-surface-container-high/80 hover:bg-surface-bright border border-white/10 hover:border-primary-container/60 transition-all active:scale-95 group text-center" 
+                data-type="item" data-icon="💳" data-title="지갑 / 카드" data-sub="직접적인 재물 유입" data-reading="💳 지갑 속 금전운을 가득 채우는 부의 에너지와 역대 1등 최다 빈출 구간이 다이렉트로 매칭되었습니다.">
+          <span class="text-2xl group-hover:scale-110 transition-transform">💳</span>
+          <span class="text-xs font-extrabold text-on-surface">지갑 / 카드</span>
+          <span class="text-[10px] text-blue-300/80 font-medium">재물운 직결</span>
+        </button>
+
+        <button class="theme-select-btn flex flex-col items-center gap-1.5 p-3 rounded-2xl bg-surface-container-high/80 hover:bg-surface-bright border border-white/10 hover:border-primary-container/60 transition-all active:scale-95 group text-center" 
+                data-type="item" data-icon="📱" data-title="스마트폰" data-sub="현대인의 분신과 직관" data-reading="📱 매 순간 연결된 스마트폰의 빠른 정보운과 직관력, 홀짝 3:3 황금비율이 완벽하게 튜닝되었습니다.">
+          <span class="text-2xl group-hover:scale-110 transition-transform">📱</span>
+          <span class="text-xs font-extrabold text-on-surface">스마트폰</span>
+          <span class="text-[10px] text-purple-300/80 font-medium">직관과 연결</span>
+        </button>
+
+        <button class="theme-select-btn flex flex-col items-center gap-1.5 p-3 rounded-2xl bg-surface-container-high/80 hover:bg-surface-bright border border-white/10 hover:border-primary-container/60 transition-all active:scale-95 group text-center" 
+                data-type="item" data-icon="⌚" data-title="시계 / 반지" data-sub="최고의 황금 타이밍" data-reading="⌚ 인생을 바꾸는 기적의 타이밍 기운과 최근 반등 타이밍에 도달한 최적의 번호군이 조합되었습니다.">
+          <span class="text-2xl group-hover:scale-110 transition-transform">⌚</span>
+          <span class="text-xs font-extrabold text-on-surface">시계 / 반지</span>
+          <span class="text-[10px] text-emerald-300/80 font-medium">황금 타이밍</span>
+        </button>
+      </div>
+
+      <p class="text-[11px] text-on-surface-variant/70 text-center">
+        💡 선택하신 보석 또는 소지품의 기운이 실시간 물리 추첨 알고리즘에 즉시 반영됩니다.
+      </p>
     </div>
   </div>
 
@@ -918,6 +1002,10 @@
         if (window.confetti) {
           confetti({ particleCount: 90, spread: 65, origin: { y: 0.6 } });
         }
+        if (themeReadingBox && currentTheme) {
+          themeReadingBox.classList.add('border-primary-container', 'shadow-lg');
+          setTimeout(() => themeReadingBox.classList.remove('border-primary-container', 'shadow-lg'), 2000);
+        }
       }
     }
 
@@ -1062,24 +1150,84 @@
       }
     }, 1000);
 
-    // Modal Events
+    // =========================================================================
+    // 나만의 행운 픽 (보석 & 소지품) 테마 선택 시스템
+    // =========================================================================
     const infoModal = document.getElementById('infoModal');
-    const horoscopeCard = document.getElementById('horoscopeCard');
+    const themeSelectorCard = document.getElementById('themeSelectorCard');
     const menuBtn = document.getElementById('menuBtn');
     const historyBtn = document.getElementById('historyBtn');
     const myLottoBtn = document.getElementById('myLottoBtn');
     const myInfoBtn = document.getElementById('myInfoBtn');
     const closeModalBtn = document.getElementById('closeModalBtn');
-    const modalConfirmBtn = document.getElementById('modalConfirmBtn');
 
-    function openModal() { infoModal.classList.remove('hidden'); }
-    function closeModal() { infoModal.classList.add('hidden'); }
+    const tabGemBtn = document.getElementById('tabGemBtn');
+    const tabItemBtn = document.getElementById('tabItemBtn');
+    const panelGems = document.getElementById('panelGems');
+    const panelItems = document.getElementById('panelItems');
 
-    [horoscopeCard, menuBtn, historyBtn, myLottoBtn, myInfoBtn].forEach(el => {
+    const themeActiveIcon = document.getElementById('themeActiveIcon');
+    const themeActiveCategory = document.getElementById('themeActiveCategory');
+    const themeActiveTitle = document.getElementById('themeActiveTitle');
+    const themeReadingBox = document.getElementById('themeReadingBox');
+    const themeReadingTitle = document.getElementById('themeReadingTitle');
+    const themeReadingDesc = document.getElementById('themeReadingDesc');
+
+    let currentTheme = {
+      type: 'gem',
+      icon: '💎',
+      title: '다이아몬드',
+      sub: '영원한 부와 승리',
+      reading: '💎 다이아몬드의 불변의 승리 기운과 역대 최다 빈출수(34, 18), 총합 135 황금 구간이 결합되었습니다.'
+    };
+
+    function openModal() { if (infoModal) infoModal.classList.remove('hidden'); }
+    function closeModal() { if (infoModal) infoModal.classList.add('hidden'); }
+
+    if (themeSelectorCard) themeSelectorCard.addEventListener('click', openModal);
+    [menuBtn, historyBtn, myLottoBtn, myInfoBtn].forEach(el => {
       if (el) el.addEventListener('click', openModal);
     });
-    closeModalBtn.addEventListener('click', closeModal);
-    modalConfirmBtn.addEventListener('click', closeModal);
+    if (closeModalBtn) closeModalBtn.addEventListener('click', closeModal);
+
+    // 탭 전환 (보석 vs 소지품)
+    if (tabGemBtn && tabItemBtn) {
+      tabGemBtn.addEventListener('click', () => {
+        tabGemBtn.className = 'flex-1 py-2 px-3 rounded-xl text-xs font-bold transition-all text-black bg-primary-container shadow-sm flex items-center justify-center gap-1.5';
+        tabItemBtn.className = 'flex-1 py-2 px-3 rounded-xl text-xs font-bold transition-all text-on-surface-variant hover:text-white flex items-center justify-center gap-1.5';
+        panelGems.classList.remove('hidden');
+        panelItems.classList.add('hidden');
+      });
+
+      tabItemBtn.addEventListener('click', () => {
+        tabItemBtn.className = 'flex-1 py-2 px-3 rounded-xl text-xs font-bold transition-all text-black bg-primary-container shadow-sm flex items-center justify-center gap-1.5';
+        tabGemBtn.className = 'flex-1 py-2 px-3 rounded-xl text-xs font-bold transition-all text-on-surface-variant hover:text-white flex items-center justify-center gap-1.5';
+        panelItems.classList.remove('hidden');
+        panelGems.classList.add('hidden');
+      });
+    }
+
+    // 테마 아이템 선택
+    document.querySelectorAll('.theme-select-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const type = btn.getAttribute('data-type');
+        const icon = btn.getAttribute('data-icon');
+        const title = btn.getAttribute('data-title');
+        const sub = btn.getAttribute('data-sub');
+        const reading = btn.getAttribute('data-reading');
+
+        currentTheme = { type, icon, title, sub, reading };
+
+        if (themeActiveIcon) themeActiveIcon.textContent = icon;
+        if (themeActiveCategory) themeActiveCategory.textContent = (type === 'gem' ? '행운 보석' : '내 소지품');
+        if (themeActiveTitle) themeActiveTitle.textContent = `${icon} ${title} (${sub})`;
+        if (themeReadingTitle) themeReadingTitle.innerHTML = `<span class="material-symbols-outlined text-sm">auto_awesome</span> 🔮 ${icon} ${title} & 빅데이터 리딩`;
+        if (themeReadingDesc) themeReadingDesc.textContent = reading + ' [추첨 시작]을 눌러 행운을 확인하세요!';
+
+        playSound('pop');
+        closeModal();
+      });
+    });
 
     // =========================================================================
     // 전국 로또 1등 명당 동네 이름 검색 & 필터 로직
